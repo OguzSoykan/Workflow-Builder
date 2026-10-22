@@ -15,6 +15,12 @@ import { basename, dirname, join, resolve, sep } from 'node:path';
 const scanner = process.env.GITLEAKS_BIN || 'gitleaks';
 const root = process.cwd();
 const temporary = mkdtempSync(join(tmpdir(), 'workflow-secrets-'));
+if (
+  dirname(temporary) !== resolve(tmpdir()) ||
+  !basename(temporary).startsWith('workflow-secrets-')
+) {
+  throw new Error('Refusing unsafe temporary path.');
+}
 function scan(args, expected = 0) {
   const result = spawnSync(scanner, [...args, '--redact', '--no-banner'], { stdio: 'inherit' });
   if (result.error)
@@ -58,11 +64,5 @@ try {
     console.log('PASS: Git history, source snapshot and built assets scanned.');
   }
 } finally {
-  if (
-    dirname(temporary) !== resolve(tmpdir()) ||
-    !basename(temporary).startsWith('workflow-secrets-')
-  ) {
-    throw new Error('Refusing unsafe temporary cleanup.');
-  }
   rmSync(temporary, { recursive: true, force: true });
 }
