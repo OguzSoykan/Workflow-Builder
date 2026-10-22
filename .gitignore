@@ -1,0 +1,24 @@
+# Local secrets; examples must contain placeholders only.
+.env
+.env.*
+!.env.example
+!.env.*.example
+.dev.vars
+.dev.vars.*
+!.dev.vars.example
+!.dev.vars.*.example
+*.pem
+*.key
+*service-account*.json
+*serviceAccount*.json
+
+# Generated development artifacts (no application scaffold exists yet).
+node_modules/
+dist/
+coverage/
+.wrangler/
+test-results/
+playwright-report/
+*.log
+.DS_Store
+Thumbs.db
