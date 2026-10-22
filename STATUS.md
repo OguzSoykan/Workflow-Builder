@@ -11,14 +11,14 @@
 | WB-PM yönetim temeli | Main'de | Kullanıcı dokümantasyon commit'ini GitHub main'e gönderip devam talimatı verdi |
 | Kaynak planlar | Korundu | Sekiz dosya docs altına taşındı; eski README = PLANNING_README; PRD v1.1 içerik değişikliği yok |
 | GitHub | Doğrulandı | [OguzSoykan/Workflow-Builder](https://github.com/OguzSoykan/Workflow-Builder), public, default main; GitHub oturumu OguzSoykan, origin doğru; fetch başarılı |
-| WB-001A | In Progress | Dört npm workspace, strict TS, sabit Node/npm, tek lockfile, ADR-012; temiz checkout kontrolü sırada |
+| WB-001A | Review | Dört npm workspace, strict TS, sabit Node/npm, tek lockfile, ADR-012; temiz checkout ve negatif kontroller geçti; [taslak PR #1](https://github.com/OguzSoykan/Workflow-Builder/pull/1) |
 | Diğer Faz 1 kartları | Backlog | WB-001B/C ve WB-002/003/004 alt işleri başlamadı |
 | Faz 2–6 | Başlamadı | ROADMAP ve korunan backlog'da planlandı |
 | Uygulama / CI / deploy | Henüz yok | Yalnızca dört boş module entry point ve araç zinciri; health UI/API, test runner, CI, cloud kaynağı veya ücretli API çağrısı yok |
 
 ## Doğrulama kaydı
 
-WB-001A için dört workspace typecheck ve 12 pozitif/negatif compiler probe geçti. Public paketler çözülüyor; deep import ve core/contract ambient DOM/Node tipleri reddediliyor. Node 24.22.1/npm 11.19.1, SHA256 ile doğrulanmış resmi portable dağıtımdan kullanıldı; global Node 20.20.2/npm 10.8.2 kurulumu değiştirilmedi. Güncel kanıtlar [WB-001A kaydında](docs/verification/WB-001A.md).
+WB-001A için temiz checkout `npm ci`, dört workspace typecheck ve 12 pozitif/negatif compiler probe geçti. Public paketler çözülüyor; deep import ve core/contract ambient DOM/Node tipleri reddediliyor. Yanlış Node/npm kombinasyonları `EBADENGINE` ile reddedildi, lockfile değişmedi ve temiz checkout clean kaldı. Node 24.22.1/npm 11.19.1, SHA256 ile doğrulanmış resmi portable dağıtımdan kullanıldı; global Node 20.20.2/npm 10.8.2 kurulumu değiştirilmedi. Güncel kanıtlar [WB-001A kaydında](docs/verification/WB-001A.md).
 
 Linter/formatter/runtime build/unit/integration/E2E ve hosted CI henüz yok; WB-001A için TASKS'taki **N/A** istisnası uygulanır. WB-001 üst işi veya Faz 1 tamamlandı sayılmaz. GitHub API kontrolünde main `protected=false`; required checks henüz kurulmadı. `.github/PULL_REQUEST_TEMPLATE.md` enforcement değildir.
 
@@ -48,4 +48,5 @@ Detay ve bağımlı görevler [DECISIONS](docs/DECISIONS.md) içinde. Bu riskler
 - Secret ön kontrolü: Yaygın GitHub/OpenAI token ve private-key imza taramasında eşleşme yok. Bu ön kontrol gelecekteki CI secret scanner yerine geçmez.
 - Dosya envanteri: Yalnızca Markdown, Git ignore/attributes ve yerel Git geçmişi; uygulama özelliği veya bağımlılık eklenmedi.
 - Dokümantasyon diff incelemesi: `git diff --cached --check` geçti; Markdown'ın orijinal iki boşluklu satır sonları `.gitattributes` ile geçerli kabul edilir. Kaynak belgeleri sırf biçim için değiştirilmedi.
-- WB-001A dalı: `feat/WB-001A-workspace`; [ADR-012](docs/adr/ADR-012-workspace-toolchain.md), [doğrulama](docs/verification/WB-001A.md). PR/push kanıtı tamamlandığında eklenecek; insan review bekliyor.
+- `5f32f1b`: WB-001A araç zinciri ve workspace uygulaması; aynı commit ayrı temiz checkout'ta doğrulandı.
+- WB-001A dalı GitHub'a gönderildi: `feat/WB-001A-workspace`; [taslak PR #1](https://github.com/OguzSoykan/Workflow-Builder/pull/1), [ADR-012](docs/adr/ADR-012-workspace-toolchain.md), [doğrulama](docs/verification/WB-001A.md). İnsan review/merge bekliyor; main'e merge veya deploy yapılmadı.
