@@ -14,7 +14,7 @@
 - İzinli tipler: `feat`, `fix`, `docs`, `test`, `refactor`, `chore`, `ci`. Başlık tek işi anlatır; kart ID'si başlık veya gövdede bulunur. Gövde gerektiğinde neden, kapsam ve doğrulama içerir.
 - Commit küçük ve tutarlı olsun. İlgisiz format/dependency güncellemelerini karıştırma. Secrets, kişisel veri, build/coverage, node_modules commitlenmez; lockfile ilgili değişiklikle commitlenir.
 - `git add -- <ilgili yollar>` ve staged diff incelemesi kullan; tüm kullanıcı dosyalarını sorgusuz stage etme. Git user.name/email mevcutsa yeniden isteme; commit kimliği GitHub hesap yetkisi değildir.
-- Bu repo başlangıcında orijinal paketi koruyan baseline commit `main` üzerindedir. Dokümantasyon düzenlemesi görev dalındadır; inceleme öncesi ana dala sessiz merge edilmez.
+- Bu repo başlangıcındaki baseline ve dokümantasyon commit'leri kullanıcı tarafından `OguzSoykan/Workflow-Builder` main'e gönderildi. Yeni işler güncel main'den görev dalına ayrılır; inceleme öncesi ana dala sessiz merge edilmez.
 
 ## PR akışı
 

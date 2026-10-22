@@ -1,0 +1,14 @@
+{
+  "name": "@workflow-builder/web",
+  "version": "0.0.0",
+  "private": true,
+  "type": "module",
+  "exports": {},
+  "scripts": {
+    "typecheck": "tsc --project tsconfig.json"
+  },
+  "dependencies": {
+    "@workflow-builder/workflow-contract": "0.0.0",
+    "@workflow-builder/workflow-core": "0.0.0"
+  }
+}
