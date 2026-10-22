@@ -1,0 +1,66 @@
+import type { Workflow } from '../src';
+export const example = (): Workflow => ({
+  schemaVersion: 1,
+  workflowId: 'purchase',
+  title: 'Satın alma',
+  locale: 'tr',
+  inputs: [
+    {
+      key: 'amount',
+      label: 'Tutar',
+      type: 'number',
+      required: true,
+      defaultValue: 50,
+      validation: { min: 0 },
+    },
+    { key: 'reason', label: 'Gerekçe', type: 'string', required: false, defaultValue: '' },
+    { key: 'urgent', label: 'Acil', type: 'boolean', required: false, defaultValue: false },
+    { key: 'date', label: 'Tarih', type: 'date', required: true, defaultValue: '2024-02-29' },
+    {
+      key: 'team',
+      label: 'Ekip',
+      type: 'enum',
+      required: true,
+      options: ['IT', 'HR'],
+      defaultValue: 'IT',
+    },
+  ],
+  nodes: [
+    { id: 's', label: 'Başla', type: 'start', position: { x: 0, y: 0 }, config: {} },
+    {
+      id: 'c',
+      label: 'Tutar?',
+      type: 'condition',
+      position: { x: 1, y: 0 },
+      config: { fieldKey: 'amount', operator: 'gt', value: 10000 },
+    },
+    {
+      id: 'a',
+      label: 'Onay',
+      type: 'approval',
+      position: { x: 2, y: 0 },
+      config: { roleLabel: 'Yönetici' },
+    },
+    {
+      id: 'e',
+      label: 'Tamam',
+      type: 'end',
+      position: { x: 3, y: 0 },
+      config: { outcome: 'completed' },
+    },
+    {
+      id: 'r',
+      label: 'Ret',
+      type: 'end',
+      position: { x: 3, y: 1 },
+      config: { outcome: 'rejected' },
+    },
+  ],
+  edges: [
+    { id: 'sc', sourceNodeId: 's', sourceHandle: 'next', targetNodeId: 'c' },
+    { id: 'ca', sourceNodeId: 'c', sourceHandle: 'true', targetNodeId: 'a' },
+    { id: 'ce', sourceNodeId: 'c', sourceHandle: 'false', targetNodeId: 'e' },
+    { id: 'ae', sourceNodeId: 'a', sourceHandle: 'approved', targetNodeId: 'e' },
+    { id: 'ar', sourceNodeId: 'a', sourceHandle: 'rejected', targetNodeId: 'r' },
+  ],
+});

@@ -6,6 +6,7 @@
     "lib": ["ES2022"],
     "types": [],
     "strict": true,
+    "skipLibCheck": true,
     "noUncheckedIndexedAccess": true,
     "exactOptionalPropertyTypes": true,
     "noImplicitOverride": true,

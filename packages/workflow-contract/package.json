@@ -8,5 +8,9 @@
   },
   "scripts": {
     "typecheck": "tsc --project tsconfig.json"
+  },
+  "dependencies": {
+    "@noble/hashes": "2.4.0",
+    "zod": "4.6.7"
   }
 }
