@@ -23,7 +23,9 @@
     "dev:web": "npm run dev --workspace=@workflow-builder/web",
     "test": "vitest run",
     "test:coverage": "vitest run --coverage",
-    "test:e2e": "playwright test"
+    "test:e2e": "playwright test",
+    "secrets:check": "node scripts/check-secrets.mjs",
+    "secrets:self-test": "node scripts/check-secrets.mjs --self-test"
   },
   "devDependencies": {
     "@eslint/js": "10.0.1",
