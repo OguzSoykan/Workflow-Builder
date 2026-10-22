@@ -4,17 +4,17 @@
 
 ## Gerçek ilerleme
 
-| Alan | Durum | Kanıt / kalan iş |
-|---|---|---|
-| İlk inceleme | Tamamlandı | C:\proje-v1 altında sekiz Markdown dosyası; başlangıçta .git, kod veya paket altyapısı yoktu |
-| Yerel Git | Tamamlandı | `main` ve `origin/main` başlangıçta `775b001`; çalışma dalı `feat/WB-001A-workspace` |
-| WB-PM yönetim temeli | Main'de | Kullanıcı dokümantasyon commit'ini GitHub main'e gönderip devam talimatı verdi |
-| Kaynak planlar | Korundu | Sekiz dosya docs altına taşındı; eski README = PLANNING_README; PRD v1.1 içerik değişikliği yok |
-| GitHub | Doğrulandı | [OguzSoykan/Workflow-Builder](https://github.com/OguzSoykan/Workflow-Builder), public, default main; GitHub oturumu OguzSoykan, origin doğru; fetch başarılı |
-| WB-001A | Review | Dört npm workspace, strict TS, sabit Node/npm, tek lockfile, ADR-012; temiz checkout ve negatif kontroller geçti; [taslak PR #1](https://github.com/OguzSoykan/Workflow-Builder/pull/1) |
-| Diğer Faz 1 kartları | Backlog | WB-001B/C ve WB-002/003/004 alt işleri başlamadı |
-| Faz 2–6 | Başlamadı | ROADMAP ve korunan backlog'da planlandı |
-| Uygulama / CI / deploy | Henüz yok | Yalnızca dört boş module entry point ve araç zinciri; health UI/API, test runner, CI, cloud kaynağı veya ücretli API çağrısı yok |
+| Alan                   | Durum      | Kanıt / kalan iş                                                                                                                                                                        |
+| ---------------------- | ---------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| İlk inceleme           | Tamamlandı | C:\proje-v1 altında sekiz Markdown dosyası; başlangıçta .git, kod veya paket altyapısı yoktu                                                                                            |
+| Yerel Git              | Tamamlandı | `main` ve `origin/main` başlangıçta `775b001`; çalışma dalı `feat/WB-001A-workspace`                                                                                                    |
+| WB-PM yönetim temeli   | Main'de    | Kullanıcı dokümantasyon commit'ini GitHub main'e gönderip devam talimatı verdi                                                                                                          |
+| Kaynak planlar         | Korundu    | Sekiz dosya docs altına taşındı; eski README = PLANNING_README; PRD v1.1 içerik değişikliği yok                                                                                         |
+| GitHub                 | Doğrulandı | [OguzSoykan/Workflow-Builder](https://github.com/OguzSoykan/Workflow-Builder), public, default main; GitHub oturumu OguzSoykan, origin doğru; fetch başarılı                            |
+| WB-001A                | Review     | Dört npm workspace, strict TS, sabit Node/npm, tek lockfile, ADR-012; temiz checkout ve negatif kontroller geçti; [taslak PR #1](https://github.com/OguzSoykan/Workflow-Builder/pull/1) |
+| Diğer Faz 1 kartları   | Backlog    | WB-001B/C ve WB-002/003/004 alt işleri başlamadı                                                                                                                                        |
+| Faz 2–6                | Başlamadı  | ROADMAP ve korunan backlog'da planlandı                                                                                                                                                 |
+| Uygulama / CI / deploy | Henüz yok  | Yalnızca dört boş module entry point ve araç zinciri; health UI/API, test runner, CI, cloud kaynağı veya ücretli API çağrısı yok                                                        |
 
 ## Doğrulama kaydı
 

@@ -29,15 +29,15 @@ GitHub bağlantısı yoksa yerel diff + commit ile somut inceleme paketi hazırl
 
 ## İnceleme odakları
 
-| Alan | İnceleyenin değerlendireceği kanıt |
-|---|---|
-| Ürün/kapsam | PRD v1.1 korunuyor; onaysız karar/faz geçişi yok; ilgili FR/AC karşılanıyor |
-| Modülerlik | Public arayüzler, saf core, tekrarın önlenmesi; gereksiz bağımlılık/soyutlama yok |
-| Doğruluk | Başarı/hata/sınır senaryoları; deterministic hash/issue; girdi mutasyonu ve yarış koşulları |
-| Güvenlik | Güvenilmeyen graph/prompt, owner isolation, token doğrulaması, log/secret gizliliği; ilgili fazda |
+| Alan            | İnceleyenin değerlendireceği kanıt                                                                            |
+| --------------- | ------------------------------------------------------------------------------------------------------------- |
+| Ürün/kapsam     | PRD v1.1 korunuyor; onaysız karar/faz geçişi yok; ilgili FR/AC karşılanıyor                                   |
+| Modülerlik      | Public arayüzler, saf core, tekrarın önlenmesi; gereksiz bağımlılık/soyutlama yok                             |
+| Doğruluk        | Başarı/hata/sınır senaryoları; deterministic hash/issue; girdi mutasyonu ve yarış koşulları                   |
+| Güvenlik        | Güvenilmeyen graph/prompt, owner isolation, token doğrulaması, log/secret gizliliği; ilgili fazda             |
 | Maliyet/hosting | Free hedefi, bounded input/CPU; ilgili fazda atomik bütçe/rezervasyon ve fail-closed; canlı API testleri açık |
-| Operasyon | Gerçek komut sonuçları, environment ayrımı, geri alma ve migration etkisi |
-| Dokümantasyon | TASKS/STATUS ve contract/ADR uyumu; TBD öneriler kesin karar diye gösterilmiyor |
+| Operasyon       | Gerçek komut sonuçları, environment ayrımı, geri alma ve migration etkisi                                     |
+| Dokümantasyon   | TASKS/STATUS ve contract/ADR uyumu; TBD öneriler kesin karar diye gösterilmiyor                               |
 
 ## Kalite ve geri alma
 
