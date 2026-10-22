@@ -2,7 +2,7 @@
 
 ## Mevcut yetki sınırı
 
-Kullanıcının 22 Ekim 2026 “devam et” talimatı, önerilen ilk uygulama görevi **WB-001A — Workspace, sürümler ve modül sınırları** için onaydır. Bu kart kapsamında scaffold, npm kurulumu, strict TS ve doğrulama yapılabilir; onayı yeniden isteme. Cloud kaynakları, ücretli API çağrısı veya deploy kapsam dışıdır. Sonraki görevler ve faz geçişleri için mevcut kullanıcı talimatının kapsamını kontrol et; açıkça izin verilmemiş kartları kendiliğinden başlatma.
+Kullanıcının 22 Ekim 2026 “PR onayını yap, Faz 1 için kalan görevleri de tamamla” talimatı **WB-001–004 ve tüm Faz 1 alt kartları** için uygulama, doğrulama, PR ve birleştirme yetkisidir. Her kart için yeniden onay isteme. PR #1 bu talimatla birleştirildi. Tek GitHub hesabı kendi PR'ına resmi Approve review veremez; kullanıcı oturum onayı ve agent öz incelemesi açıkça kaydedilir, bağımsız insan review uydurulmaz. Cloud kaynakları, ücretli API çağrısı, deploy ve Faz 2 kapsam dışıdır. Ürün gereksinimi değişikliği ayrıca onay gerektirir.
 
 ## Kaynakların önceliği
 

@@ -11,9 +11,9 @@
 
 ## Kabul kriterleri ve kanıt
 
-| Kriter / kapı | Komut veya inceleme | Sonuç / CI bağlantısı |
-|---|---|---|
-| Göreve özgü kabul | | PASS / FAIL / NOT RUN / gerekçeli N/A |
+| Kriter / kapı     | Komut veya inceleme | Sonuç / CI bağlantısı                 |
+| ----------------- | ------------------- | ------------------------------------- |
+| Göreve özgü kabul |                     | PASS / FAIL / NOT RUN / gerekçeli N/A |
 
 <!-- Dokümantasyon PR'ında link, kaynak koruma ve diff kontrolü yeterlidir.
 Uygulama PR'ında typecheck/lint/format/test/build ve ilgili negatif testleri yazın.

@@ -10,34 +10,34 @@
 
 ### Ortak kalite kapıları
 
-| Kapı | Gerekli kanıt |
-|---|---|
-| Q-DOC | İlgili doküman linkleri ve WB/D/FR/AC referansları; diff/whitespace kontrolü; değişen karar için onay kaydı |
-| Q-STATIC | Strict `typecheck`, `lint`, `format:check`; modül bağımlılıklarının ters dönmediği inceleme |
-| Q-TEST | Göreve özgü başarı, hata ve sınır testleri; deterministik tekrar; test sonuçlarının gerçek kaydı |
-| Q-BUILD | Etkilenen paketler ve ilgili tüketicilerin build'i; faz çıkışında web + Worker birlikte |
-| Q-SEC | Secret/PII yok; minimum gerekçeli bağımlılık; güvenilmeyen girdiler sınırlı; canlı/ücretli servis çağrısı yok; scanner hazır olduğunda kaynak + build çıktısı taraması |
-| Q-CI | Lockfile ile temiz kurulum, uygulanabilir kontroller başarılı; bozuk type/test değişikliği CI'ı kırar; secret yok; deploy yok |
-| Q-REVIEW | Tek amaçlı küçük diff, kabul kriteri/kanıt eşlemesi ve review kaydı; öz inceleme bağımsız review diye sunulmaz |
+| Kapı     | Gerekli kanıt                                                                                                                                                          |
+| -------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Q-DOC    | İlgili doküman linkleri ve WB/D/FR/AC referansları; diff/whitespace kontrolü; değişen karar için onay kaydı                                                            |
+| Q-STATIC | Strict `typecheck`, `lint`, `format:check`; modül bağımlılıklarının ters dönmediği inceleme                                                                            |
+| Q-TEST   | Göreve özgü başarı, hata ve sınır testleri; deterministik tekrar; test sonuçlarının gerçek kaydı                                                                       |
+| Q-BUILD  | Etkilenen paketler ve ilgili tüketicilerin build'i; faz çıkışında web + Worker birlikte                                                                                |
+| Q-SEC    | Secret/PII yok; minimum gerekçeli bağımlılık; güvenilmeyen girdiler sınırlı; canlı/ücretli servis çağrısı yok; scanner hazır olduğunda kaynak + build çıktısı taraması |
+| Q-CI     | Lockfile ile temiz kurulum, uygulanabilir kontroller başarılı; bozuk type/test değişikliği CI'ı kırar; secret yok; deploy yok                                          |
+| Q-REVIEW | Tek amaçlı küçük diff, kabul kriteri/kanıt eşlemesi ve review kaydı; öz inceleme bağımsız review diye sunulmaz                                                         |
 
 WB-001A'da henüz uygulama/test runner yoktur: Q-TEST yerine workspace/config doğrulaması, Q-BUILD yerine kurulmuş temel TS kontrolü kullanılır ve gerekçe yazılır. WB-001B health kanıtını manuel smoke ile verebilir; WB-001C aynı davranışı otomatikleştirir. Bu istisnalar üst WB-001 veya Faz 1 kapısını kaldırmaz. Cloud staging smoke, yalnızca staging/deploy'u etkileyen sonraki görevlerde gerekir; Faz 1 yerel/CI doğrulamasıyla kapanır.
 
 ## Özet ve sıra
 
-| ID | Üst iş | Boyut | Görev | Bağımlılıklar | Durum |
-|---|---|---|---|---|---|
-| WB-001A | WB-001 | S | Workspace, sürümler, modül sınırları | Uygulama onayı alındı | Review |
-| WB-001B | WB-001 | S | React/Worker health iskeleti | 001A | Backlog |
-| WB-001C | WB-001 | S | Vitest ve Playwright smoke altyapısı | 001B | Backlog |
-| WB-004A | WB-004 | S | PR CI ve secret kalite kapısı | 001C, GitHub erişimi | Backlog |
-| WB-002A | WB-002 | S | Şema v1 ve tipli alanlar | 001C; D-02/D-04/D-15 | Backlog |
-| WB-002B | WB-002 | S | Canonical serialization ve hash | 002A; D-01 | Backlog |
-| WB-002C | WB-002 | S | Fixture, round-trip ve limit matrisi | 002A/002B; D-02/D-15 | Backlog |
-| WB-003A | WB-003 | S | Yapısal graph validator | 002C | Backlog |
-| WB-003B | WB-003 | S | Condition/input semantik validator | 003A; D-04 | Backlog |
-| WB-003C | WB-003 | S | Determinizm ve kötü girdi sertleştirmesi | 003B | Backlog |
-| WB-004B | WB-004 | S | OpenAPI, env ve ADR dokümantasyonu | 001B/002C; D-03/D-11/D-15 | Backlog |
-| WB-004C | WB-004 | S | Faz 1 çıkış kanıtı ve inceleme | Diğer tüm Faz 1 alt görevleri | Backlog |
+| ID      | Üst iş | Boyut | Görev                                    | Bağımlılıklar                 | Durum   |
+| ------- | ------ | ----- | ---------------------------------------- | ----------------------------- | ------- |
+| WB-001A | WB-001 | S     | Workspace, sürümler, modül sınırları     | Uygulama onayı alındı         | Review  |
+| WB-001B | WB-001 | S     | React/Worker health iskeleti             | 001A                          | Backlog |
+| WB-001C | WB-001 | S     | Vitest ve Playwright smoke altyapısı     | 001B                          | Backlog |
+| WB-004A | WB-004 | S     | PR CI ve secret kalite kapısı            | 001C, GitHub erişimi          | Backlog |
+| WB-002A | WB-002 | S     | Şema v1 ve tipli alanlar                 | 001C; D-02/D-04/D-15          | Backlog |
+| WB-002B | WB-002 | S     | Canonical serialization ve hash          | 002A; D-01                    | Backlog |
+| WB-002C | WB-002 | S     | Fixture, round-trip ve limit matrisi     | 002A/002B; D-02/D-15          | Backlog |
+| WB-003A | WB-003 | S     | Yapısal graph validator                  | 002C                          | Backlog |
+| WB-003B | WB-003 | S     | Condition/input semantik validator       | 003A; D-04                    | Backlog |
+| WB-003C | WB-003 | S     | Determinizm ve kötü girdi sertleştirmesi | 003B                          | Backlog |
+| WB-004B | WB-004 | S     | OpenAPI, env ve ADR dokümantasyonu       | 001B/002C; D-03/D-11/D-15     | Backlog |
+| WB-004C | WB-004 | S     | Faz 1 çıkış kanıtı ve inceleme           | Diğer tüm Faz 1 alt görevleri | Backlog |
 
 Önerilen yürütme sırası tablodaki sıradır. `004A` erkene alınarak sonraki kod PR'ları CI ile korunur. Tek aktif uygulama kartı; daha sonraki bir karar yalnızca ona bağlı kartları bekletir. D-03/D-11'in sonraki faz politikaları OpenAPI'de açık `TBD` olabilir; Faz 1 şemasını etkileyen payload kısmı çözülmeden ilgili schema kesinleştirilmez.
 

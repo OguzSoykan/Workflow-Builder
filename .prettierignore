@@ -1,0 +1,16 @@
+node_modules
+**/dist
+**/.wrangler
+coverage
+playwright-report
+test-results
+package-lock.json
+# Preserve the original planning pack byte-for-byte.
+docs/PRD.md
+docs/ARCHITECTURE.md
+docs/WORKFLOW_CONTRACT.md
+docs/DATA_MODEL.md
+docs/API_CONTRACT.md
+docs/BACKLOG.md
+docs/CODEX_PHASE_1.md
+docs/PLANNING_README.md

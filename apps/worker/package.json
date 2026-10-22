@@ -5,10 +5,13 @@
   "type": "module",
   "exports": {},
   "scripts": {
-    "typecheck": "tsc --project tsconfig.json"
+    "typecheck": "tsc --project tsconfig.json",
+    "build": "wrangler deploy --config ../../infra/wrangler.jsonc --dry-run --outdir dist",
+    "dev": "wrangler dev --config ../../infra/wrangler.jsonc --local --show-interactive-dev-session=false"
   },
   "dependencies": {
     "@workflow-builder/workflow-contract": "0.0.0",
-    "@workflow-builder/workflow-core": "0.0.0"
+    "@workflow-builder/workflow-core": "0.0.0",
+    "hono": "4.13.13"
   }
 }
