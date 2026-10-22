@@ -22,6 +22,14 @@ PR #1, kullanıcı onayıyla `18a9018` olarak main'e squash merge edildi. Aynı 
 - Geçici bozuk assertion nonzero exit ile reddedildi; probe dosyası kaldırıldı.
 - Ayrı package typecheck core/contract'ı Node/DOM tiplerinden bağımsız kontrol etmeye devam eder; test araçları ayrı tsconfig'tedir.
 
+## WB-004A — CI kalite kapısı
+
+- [Tip hatası denemesi](https://github.com/OguzSoykan/Workflow-Builder/actions/runs/39842997729): Typecheck adımında failure; sonraki adımlar çalışmadı.
+- [Bozuk assertion denemesi](https://github.com/OguzSoykan/Workflow-Builder/actions/runs/39843201908): statik kontroller geçti, Unit tests and coverage adımında failure.
+- Gitleaks 8.30.1 resmi SHA256 ile doğrulanır. Git geçmişi + kaynak snapshot + web/Worker build çıktısı taranır; local temiz tarama geçti. Ayrı geçici sentetik credential denemesinde scanner exit 1 döndü; gerçek secret kullanılmadı ve fixture git'e hiç eklenmedi.
+- Geçici CI tip/test probe'ları final ağaçtan kaldırılır; başarısız deneme commit'leri PR geçmişinde kanıttır. Main'e yalnızca temiz son diff birleştirilir.
+- Workflow `contents: read`, SHA sabitlenmiş actions ve deploy içermeyen build kullanır. Başarılı hosted sonuç ve main koruması faz çıkış kaydına eklenecek.
+
 ## Sıradaki kapılar
 
-WB-004A hosted CI/negatif denemeler, WB-002 schema/hash/fixtures, WB-003 validator, WB-004B API/env dokümanları, WB-004C temiz checkout ve çıkış raporu henüz tamamlanmış sayılmaz.
+WB-002 schema/hash/fixtures, WB-003 validator, WB-004B API/env dokümanları, WB-004C temiz checkout ve çıkış raporu henüz tamamlanmış sayılmaz.
