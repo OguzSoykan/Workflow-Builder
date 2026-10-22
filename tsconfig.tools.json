@@ -1,5 +1,11 @@
 {
   "extends": "./tsconfig.base.json",
-  "compilerOptions": { "types": ["node"] },
-  "include": ["apps/web/vite.config.ts"]
+  "compilerOptions": { "types": ["node"], "lib": ["ES2022", "DOM"], "resolveJsonModule": true },
+  "include": [
+    "apps/web/vite.config.ts",
+    "*.config.ts",
+    "apps/worker/test/**/*.ts",
+    "packages/*/test/**/*.ts",
+    "tests/**/*.ts"
+  ]
 }
