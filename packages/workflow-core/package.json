@@ -1,0 +1,15 @@
+{
+  "name": "@workflow-builder/workflow-core",
+  "version": "0.0.0",
+  "private": true,
+  "type": "module",
+  "exports": {
+    ".": "./src/index.ts"
+  },
+  "scripts": {
+    "typecheck": "tsc --project tsconfig.json"
+  },
+  "dependencies": {
+    "@workflow-builder/workflow-contract": "0.0.0"
+  }
+}

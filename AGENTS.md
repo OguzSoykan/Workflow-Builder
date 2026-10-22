@@ -2,7 +2,7 @@
 
 ## Mevcut yetki sınırı
 
-Bu çalışma yalnızca dokümantasyon ve yerel Git hazırlığıdır. Uygulama kodu, scaffold, bağımlılık kurulumu, cloud kaynakları, ücretli API çağrısı veya deploy başlatma. Kullanıcı uygulama için onay verdiğinde, açıkça izin verdiği görev kapsamını uygula; daha önce verilmiş onayı yeniden isteme. Faz değişimi ayrıca onay gerektirir.
+Kullanıcının 22 Ekim 2026 “devam et” talimatı, önerilen ilk uygulama görevi **WB-001A — Workspace, sürümler ve modül sınırları** için onaydır. Bu kart kapsamında scaffold, npm kurulumu, strict TS ve doğrulama yapılabilir; onayı yeniden isteme. Cloud kaynakları, ücretli API çağrısı veya deploy kapsam dışıdır. Sonraki görevler ve faz geçişleri için mevcut kullanıcı talimatının kapsamını kontrol et; açıkça izin verilmemiş kartları kendiliğinden başlatma.
 
 ## Kaynakların önceliği
 

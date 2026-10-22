@@ -35,4 +35,4 @@ PRD §2 ve AC'ler aynen korunur: ERP arayüz/TR-EN; dört node; manuel approval 
 
 ## Operasyonel takip
 
-GitHub hedefi kullanıcı tarafından `OguzSoykan` olarak belirtildi; depo adı mevcut klasöre göre `proje-v1`, görünürlük belirtilmediği için private varsayıldı. Git kimliği yerelde mevcut; GitHub kimlik doğrulaması ayrı bir gereksinimdir. Remote/PR oluşturulması ve bağlantı kanıtı [STATUS](../STATUS.md) içinde tutulur. Secret/token bu belgeye yazılmaz.
+22 Ekim 2026 kullanıcı depoyu oluşturduğunu bildirdi. Doğrulanan gerçek hedef [OguzSoykan/Workflow-Builder](https://github.com/OguzSoykan/Workflow-Builder), görünürlük **public**, varsayılan dal `main`. Önceki `proje-v1/private` varsayımı bu bilgiyle değiştirildi; depo yeniden oluşturulmaz veya görünürlüğü değiştirilmez. GitHub oturumu ve remote eşleşiyor; `main` koruması kontrol anında kapalı. Remote/PR kanıtı [STATUS](../STATUS.md) içinde tutulur; secret/token yazılmaz.

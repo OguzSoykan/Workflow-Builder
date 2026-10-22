@@ -1,12 +1,12 @@
 # Görevler ve Faz 1 kabul planı
 
-**22 Ekim 2026:** WB-PM dokümantasyon paketi hazır (`Review`); uygulama görevlerinin tamamı `Backlog` durumunda ve kullanıcı uygulama onayı bekliyor. [STATUS](STATUS.md) güncel yürütme kaydıdır. WB-001–004 kimlikleri korunur; aşağıdaki alt görevler onların bütün kabul koşullarını kapsar.
+**22 Ekim 2026:** WB-PM dokümantasyon paketi kullanıcı tarafından GitHub main'e taşındı; “devam et” talimatıyla WB-001A onaylandı ve başladı. Diğer uygulama görevleri `Backlog` durumunda. [STATUS](STATUS.md) güncel yürütme kaydıdır. WB-001–004 kimlikleri korunur; aşağıdaki alt görevler onların bütün kabul koşullarını kapsar.
 
 ## Hazır ve tamamlanmış iş tanımı
 
 **Ready:** Açık kapsam, kaynak FR/AC/contract, tamamlanmış bağımlılıklar, çözümlenmiş ilgili D-kararları, izin verilen çalışma kapsamı, pozitif/negatif doğrulama ve maliyet etkisi belli. Bir kartın onayı aynı üst işteki diğer kartlara kendiliğinden izin vermez; kullanıcı birden fazla kartı/fazı açıkça onaylayabilir.
 
-**Done:** Kartın kabul kriterleri + uygulanabilir kapıları geçti; diff/review kanıtı ve gerekli dokümanlar güncel; [Git sürecindeki](docs/DEVELOPMENT.md) merge/review tamam. Kanıt yoksa `Review` veya `Blocked`; bağımlılığı bekleyen henüz başlanmamış işler `Backlog` kalır. Test komutları altyapı kurulduğunda kesinleşir; aşağıdaki adlar beklenen script sözleşmesidir, şu an mevcut değildir.
+**Done:** Kartın kabul kriterleri + uygulanabilir kapıları geçti; diff/review kanıtı ve gerekli dokümanlar güncel; [Git sürecindeki](docs/DEVELOPMENT.md) merge/review tamam. Kanıt yoksa `Review` veya `Blocked`; bağımlılığı bekleyen henüz başlanmamış işler `Backlog` kalır. Şu anda `typecheck` vardır; diğer script adları ilgili kartta kurulacak sözleşmedir.
 
 ### Ortak kalite kapıları
 
@@ -26,7 +26,7 @@ WB-001A'da henüz uygulama/test runner yoktur: Q-TEST yerine workspace/config do
 
 | ID | Üst iş | Boyut | Görev | Bağımlılıklar | Durum |
 |---|---|---|---|---|---|
-| WB-001A | WB-001 | S | Workspace, sürümler, modül sınırları | Uygulama onayı | Backlog |
+| WB-001A | WB-001 | S | Workspace, sürümler, modül sınırları | Uygulama onayı alındı | In Progress |
 | WB-001B | WB-001 | S | React/Worker health iskeleti | 001A | Backlog |
 | WB-001C | WB-001 | S | Vitest ve Playwright smoke altyapısı | 001B | Backlog |
 | WB-004A | WB-004 | S | PR CI ve secret kalite kapısı | 001C, GitHub erişimi | Backlog |
@@ -47,6 +47,7 @@ WB-001A'da henüz uygulama/test runner yoktur: Q-TEST yerine workspace/config do
 - **Kabul:** Temiz checkout'ta sabit sürüm + lockfile ile kurulum tekrarlanır; workspace paketleri çözümlenir; strict TS yanlış tipi reddeder; core/contract config'i React/Worker/D1/LLM import'u gerektirmez. README gerçek kurulum komutlarını gösterir.
 - **Doğrulama:** Temiz kurulum + temel TS kontrolü; geçici yanlış tip fixture'ı beklenen nonzero sonucu verir ve teslimden çıkarılır. Henüz olmayan runtime/test kapıları açıkça N/A'dır.
 - **Kapılar:** Q-DOC, Q-STATIC (mevcut config), Q-SEC, Q-REVIEW. Ek UI paketi, cloud binding, uygulama özelliği yok.
+- **Teslim kanıtı:** [ADR-012](docs/adr/ADR-012-workspace-toolchain.md), [doğrulama kaydı](docs/verification/WB-001A.md); dal `feat/WB-001A-workspace`.
 
 ## WB-001B — Minimal health iskeleti
 
