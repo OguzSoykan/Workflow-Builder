@@ -1,0 +1,1139 @@
+{
+  "openapi": "3.1.0",
+  "info": {
+    "title": "Workflow Builder API — Phase 1 draft",
+    "version": "0.1.0",
+    "description": "Only GET /api/health is implemented. All /api/v1 operations are planning specifications. Unresolved schema and product decisions remain explicit TBD placeholders. Firebase client owns registration/login/password handling. Browser owns validation and simulation. No cloud resources are provisioned."
+  },
+  "servers": [
+    {
+      "url": "http://127.0.0.1:8787",
+      "description": "Local only; staging/production origins are not provisioned."
+    }
+  ],
+  "paths": {
+    "/api/health": {
+      "get": {
+        "operationId": "getHealth",
+        "summary": "Check service availability without bindings",
+        "x-status": "implemented",
+        "security": [],
+        "responses": {
+          "200": {
+            "description": "Worker is running.",
+            "headers": {
+              "X-Request-ID": {
+                "$ref": "#/components/headers/RequestId"
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Health"
+                }
+              }
+            }
+          },
+          "500": {
+            "$ref": "#/components/responses/Error500"
+          }
+        }
+      }
+    },
+    "/api/v1/me": {
+      "get": {
+        "operationId": "getMe",
+        "summary": "Current profile, emailVerified and cloudSyncAllowed",
+        "x-status": "planned",
+        "description": "Specification only; not implemented in Phase 1.",
+        "security": [
+          {
+            "firebaseBearer": []
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Planned success envelope; data shape TBD.",
+            "headers": {
+              "X-Request-ID": {
+                "$ref": "#/components/headers/RequestId"
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PlannedResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "$ref": "#/components/responses/Error400"
+          },
+          "401": {
+            "$ref": "#/components/responses/Error401"
+          },
+          "404": {
+            "$ref": "#/components/responses/Error404"
+          }
+        },
+        "x-decisions": ["D-05"]
+      },
+      "patch": {
+        "operationId": "updateMe",
+        "summary": "Update own display name and locale",
+        "x-status": "planned",
+        "description": "Specification only; not implemented in Phase 1.",
+        "security": [
+          {
+            "firebaseBearer": []
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Planned success envelope; data shape TBD.",
+            "headers": {
+              "X-Request-ID": {
+                "$ref": "#/components/headers/RequestId"
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PlannedResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "$ref": "#/components/responses/Error400"
+          },
+          "401": {
+            "$ref": "#/components/responses/Error401"
+          },
+          "404": {
+            "$ref": "#/components/responses/Error404"
+          }
+        },
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ProfileUpdate"
+              }
+            }
+          }
+        }
+      },
+      "delete": {
+        "operationId": "deleteMe",
+        "summary": "P1 account deletion plan; policy and confirmation payload TBD",
+        "x-status": "planned",
+        "description": "Specification only; not implemented in Phase 1.",
+        "security": [
+          {
+            "firebaseBearer": []
+          }
+        ],
+        "responses": {
+          "202": {
+            "description": "Planned success envelope; data shape TBD.",
+            "headers": {
+              "X-Request-ID": {
+                "$ref": "#/components/headers/RequestId"
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PlannedResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "$ref": "#/components/responses/Error400"
+          },
+          "401": {
+            "$ref": "#/components/responses/Error401"
+          },
+          "404": {
+            "$ref": "#/components/responses/Error404"
+          }
+        },
+        "x-decisions": ["D-09"]
+      }
+    },
+    "/api/v1/workflows": {
+      "get": {
+        "operationId": "listWorkflows",
+        "summary": "List own workflows excluding deleted entries",
+        "x-status": "planned",
+        "description": "Specification only; not implemented in Phase 1.",
+        "security": [
+          {
+            "firebaseBearer": []
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Planned success envelope; data shape TBD.",
+            "headers": {
+              "X-Request-ID": {
+                "$ref": "#/components/headers/RequestId"
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PlannedResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "$ref": "#/components/responses/Error400"
+          },
+          "401": {
+            "$ref": "#/components/responses/Error401"
+          },
+          "404": {
+            "$ref": "#/components/responses/Error404"
+          }
+        },
+        "parameters": [
+          {
+            "name": "cursor",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "limit",
+            "in": "query",
+            "schema": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 25
+            }
+          }
+        ]
+      },
+      "post": {
+        "operationId": "createWorkflow",
+        "summary": "Atomically create owner-private workflow and revision 1",
+        "x-status": "planned",
+        "description": "Specification only; not implemented in Phase 1.",
+        "security": [
+          {
+            "firebaseBearer": []
+          }
+        ],
+        "responses": {
+          "201": {
+            "description": "Planned success envelope; data shape TBD.",
+            "headers": {
+              "X-Request-ID": {
+                "$ref": "#/components/headers/RequestId"
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PlannedResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "$ref": "#/components/responses/Error400"
+          },
+          "401": {
+            "$ref": "#/components/responses/Error401"
+          },
+          "403": {
+            "$ref": "#/components/responses/Error403"
+          },
+          "413": {
+            "$ref": "#/components/responses/Error413"
+          },
+          "422": {
+            "$ref": "#/components/responses/Error422"
+          }
+        },
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/WorkflowCreate"
+              }
+            }
+          }
+        },
+        "x-decisions": ["D-02", "D-03", "D-05", "D-15"]
+      }
+    },
+    "/api/v1/workflows/{id}": {
+      "get": {
+        "operationId": "getWorkflow",
+        "summary": "Fetch own workflow and current revision",
+        "x-status": "planned",
+        "description": "Specification only; not implemented in Phase 1.",
+        "security": [
+          {
+            "firebaseBearer": []
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Planned success envelope; data shape TBD.",
+            "headers": {
+              "X-Request-ID": {
+                "$ref": "#/components/headers/RequestId"
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PlannedResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "$ref": "#/components/responses/Error400"
+          },
+          "401": {
+            "$ref": "#/components/responses/Error401"
+          },
+          "404": {
+            "$ref": "#/components/responses/Error404"
+          }
+        }
+      },
+      "put": {
+        "operationId": "updateWorkflow",
+        "summary": "Atomically append revision if expectedRevision and baseContentHash match",
+        "x-status": "planned",
+        "description": "Specification only; not implemented in Phase 1.",
+        "security": [
+          {
+            "firebaseBearer": []
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Planned success envelope; data shape TBD.",
+            "headers": {
+              "X-Request-ID": {
+                "$ref": "#/components/headers/RequestId"
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PlannedResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "$ref": "#/components/responses/Error400"
+          },
+          "401": {
+            "$ref": "#/components/responses/Error401"
+          },
+          "403": {
+            "$ref": "#/components/responses/Error403"
+          },
+          "404": {
+            "$ref": "#/components/responses/Error404"
+          },
+          "409": {
+            "$ref": "#/components/responses/Error409"
+          },
+          "413": {
+            "$ref": "#/components/responses/Error413"
+          },
+          "422": {
+            "$ref": "#/components/responses/Error422"
+          }
+        },
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/WorkflowUpdate"
+              }
+            }
+          }
+        },
+        "x-decisions": ["D-01", "D-03", "D-15"]
+      },
+      "delete": {
+        "operationId": "deleteWorkflow",
+        "summary": "Soft-delete own workflow",
+        "x-status": "planned",
+        "description": "Specification only; not implemented in Phase 1.",
+        "security": [
+          {
+            "firebaseBearer": []
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "Deleted; response body is empty.",
+            "headers": {
+              "X-Request-ID": {
+                "$ref": "#/components/headers/RequestId"
+              }
+            }
+          },
+          "401": {
+            "$ref": "#/components/responses/Error401"
+          },
+          "404": {
+            "$ref": "#/components/responses/Error404"
+          }
+        },
+        "x-decisions": ["D-09"]
+      },
+      "parameters": [
+        {
+          "name": "id",
+          "in": "path",
+          "required": true,
+          "schema": {
+            "type": "string"
+          }
+        }
+      ]
+    },
+    "/api/v1/workflows/{id}/revisions": {
+      "get": {
+        "operationId": "listRevisions",
+        "summary": "List own workflow revision metadata",
+        "x-status": "planned",
+        "description": "Specification only; not implemented in Phase 1.",
+        "security": [
+          {
+            "firebaseBearer": []
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Planned success envelope; data shape TBD.",
+            "headers": {
+              "X-Request-ID": {
+                "$ref": "#/components/headers/RequestId"
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PlannedResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "$ref": "#/components/responses/Error400"
+          },
+          "401": {
+            "$ref": "#/components/responses/Error401"
+          },
+          "404": {
+            "$ref": "#/components/responses/Error404"
+          }
+        },
+        "parameters": [
+          {
+            "name": "cursor",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "limit",
+            "in": "query",
+            "schema": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 25
+            }
+          }
+        ]
+      },
+      "parameters": [
+        {
+          "name": "id",
+          "in": "path",
+          "required": true,
+          "schema": {
+            "type": "string"
+          }
+        }
+      ]
+    },
+    "/api/v1/workflows/{id}/revisions/{n}": {
+      "get": {
+        "operationId": "getRevision",
+        "summary": "Fetch immutable snapshot belonging to owner",
+        "x-status": "planned",
+        "description": "Specification only; not implemented in Phase 1.",
+        "security": [
+          {
+            "firebaseBearer": []
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Planned success envelope; data shape TBD.",
+            "headers": {
+              "X-Request-ID": {
+                "$ref": "#/components/headers/RequestId"
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PlannedResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "$ref": "#/components/responses/Error400"
+          },
+          "401": {
+            "$ref": "#/components/responses/Error401"
+          },
+          "404": {
+            "$ref": "#/components/responses/Error404"
+          }
+        }
+      },
+      "parameters": [
+        {
+          "name": "id",
+          "in": "path",
+          "required": true,
+          "schema": {
+            "type": "string"
+          }
+        },
+        {
+          "name": "n",
+          "in": "path",
+          "required": true,
+          "schema": {
+            "type": "integer",
+            "minimum": 1
+          }
+        }
+      ]
+    },
+    "/api/v1/workflows/{id}/restore": {
+      "post": {
+        "operationId": "restoreWorkflow",
+        "summary": "P1 restore creates a new revision without overwriting history",
+        "x-status": "planned",
+        "description": "Specification only; not implemented in Phase 1.",
+        "security": [
+          {
+            "firebaseBearer": []
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Planned success envelope; data shape TBD.",
+            "headers": {
+              "X-Request-ID": {
+                "$ref": "#/components/headers/RequestId"
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PlannedResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "$ref": "#/components/responses/Error400"
+          },
+          "401": {
+            "$ref": "#/components/responses/Error401"
+          },
+          "404": {
+            "$ref": "#/components/responses/Error404"
+          },
+          "409": {
+            "$ref": "#/components/responses/Error409"
+          },
+          "422": {
+            "$ref": "#/components/responses/Error422"
+          }
+        },
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/Restore"
+              }
+            }
+          }
+        },
+        "x-decisions": ["D-14"]
+      },
+      "parameters": [
+        {
+          "name": "id",
+          "in": "path",
+          "required": true,
+          "schema": {
+            "type": "string"
+          }
+        }
+      ]
+    },
+    "/api/v1/ai/workflows/generate": {
+      "post": {
+        "operationId": "generateProposal",
+        "summary": "Propose workflow generate without saving or applying it",
+        "x-status": "planned",
+        "description": "Specification only; not implemented in Phase 1. Request/response payload, candidateGraph vs candidateWorkflow, Turnstile scope, member quotas and idempotency requirement remain TBD. Provider calls require an atomic global budget reservation; errors fail closed. Client approval is required before any change.",
+        "security": [
+          {},
+          {
+            "firebaseBearer": []
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Planned success envelope; data shape TBD.",
+            "headers": {
+              "X-Request-ID": {
+                "$ref": "#/components/headers/RequestId"
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PlannedResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "$ref": "#/components/responses/Error400"
+          },
+          "401": {
+            "$ref": "#/components/responses/Error401"
+          },
+          "403": {
+            "$ref": "#/components/responses/Error403"
+          },
+          "409": {
+            "$ref": "#/components/responses/Error409"
+          },
+          "413": {
+            "$ref": "#/components/responses/Error413"
+          },
+          "422": {
+            "$ref": "#/components/responses/Error422"
+          },
+          "429": {
+            "$ref": "#/components/responses/Error429"
+          },
+          "502": {
+            "$ref": "#/components/responses/Error502"
+          },
+          "503": {
+            "$ref": "#/components/responses/Error503"
+          }
+        },
+        "x-decisions": ["D-01", "D-05", "D-07", "D-11", "D-12"],
+        "parameters": [
+          {
+            "name": "Idempotency-Key",
+            "in": "header",
+            "required": false,
+            "description": "Recommended by source plan; mandatory use, replay and lifetime TBD (D-11).",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "description": "TBD payload; not a usable runtime validator.",
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "x-decisions": ["D-05", "D-11"]
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/ai/workflows/edit": {
+      "post": {
+        "operationId": "editProposal",
+        "summary": "Propose workflow edit without saving or applying it",
+        "x-status": "planned",
+        "description": "Specification only; not implemented in Phase 1. Request/response payload, candidateGraph vs candidateWorkflow, Turnstile scope, member quotas and idempotency requirement remain TBD. Provider calls require an atomic global budget reservation; errors fail closed. Client approval is required before any change.",
+        "security": [
+          {},
+          {
+            "firebaseBearer": []
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Planned success envelope; data shape TBD.",
+            "headers": {
+              "X-Request-ID": {
+                "$ref": "#/components/headers/RequestId"
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PlannedResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "$ref": "#/components/responses/Error400"
+          },
+          "401": {
+            "$ref": "#/components/responses/Error401"
+          },
+          "403": {
+            "$ref": "#/components/responses/Error403"
+          },
+          "409": {
+            "$ref": "#/components/responses/Error409"
+          },
+          "413": {
+            "$ref": "#/components/responses/Error413"
+          },
+          "422": {
+            "$ref": "#/components/responses/Error422"
+          },
+          "429": {
+            "$ref": "#/components/responses/Error429"
+          },
+          "502": {
+            "$ref": "#/components/responses/Error502"
+          },
+          "503": {
+            "$ref": "#/components/responses/Error503"
+          }
+        },
+        "x-decisions": ["D-01", "D-05", "D-07", "D-11", "D-12"],
+        "parameters": [
+          {
+            "name": "Idempotency-Key",
+            "in": "header",
+            "required": false,
+            "description": "Recommended by source plan; mandatory use, replay and lifetime TBD (D-11).",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "description": "TBD payload; not a usable runtime validator.",
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "x-decisions": ["D-05", "D-11"]
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/ai/limits": {
+      "get": {
+        "operationId": "getAiLimits",
+        "summary": "Coarse AI availability and remaining usage; never expose secrets or raw ledger",
+        "x-status": "planned",
+        "description": "Specification only; not implemented in Phase 1.",
+        "security": [
+          {},
+          {
+            "firebaseBearer": []
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Planned success envelope; data shape TBD.",
+            "headers": {
+              "X-Request-ID": {
+                "$ref": "#/components/headers/RequestId"
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PlannedResponse"
+                }
+              }
+            }
+          },
+          "429": {
+            "$ref": "#/components/responses/Error429"
+          },
+          "503": {
+            "$ref": "#/components/responses/Error503"
+          }
+        },
+        "x-decisions": ["D-05", "D-07", "D-12"]
+      }
+    }
+  },
+  "components": {
+    "securitySchemes": {
+      "firebaseBearer": {
+        "type": "http",
+        "scheme": "bearer",
+        "bearerFormat": "Firebase ID token",
+        "description": "Worker validates signature and claims; ownership comes from token sub, never client owner_uid."
+      }
+    },
+    "schemas": {
+      "Error": {
+        "type": "object",
+        "properties": {
+          "error": {
+            "type": "object",
+            "properties": {
+              "code": {
+                "type": "string"
+              },
+              "messageKey": {
+                "type": "string"
+              },
+              "details": {}
+            },
+            "required": ["code", "messageKey"],
+            "additionalProperties": false
+          },
+          "requestId": {
+            "type": "string"
+          }
+        },
+        "required": ["error", "requestId"],
+        "additionalProperties": false,
+        "examples": [
+          {
+            "error": {
+              "code": "ROUTE_NOT_FOUND",
+              "messageKey": "errors.routeNotFound"
+            },
+            "requestId": "synthetic-request-id"
+          }
+        ]
+      },
+      "Health": {
+        "type": "object",
+        "properties": {
+          "data": {
+            "type": "object",
+            "properties": {
+              "status": {
+                "const": "ok"
+              }
+            },
+            "required": ["status"],
+            "additionalProperties": false
+          },
+          "meta": {
+            "type": "object",
+            "properties": {
+              "requestId": {
+                "type": "string"
+              }
+            },
+            "required": ["requestId"],
+            "additionalProperties": false
+          }
+        },
+        "required": ["data", "meta"],
+        "additionalProperties": false,
+        "examples": [
+          {
+            "data": {
+              "status": "ok"
+            },
+            "meta": {
+              "requestId": "synthetic-request-id"
+            }
+          }
+        ]
+      },
+      "PlannedResponse": {
+        "type": "object",
+        "description": "TBD: response payload will be finalized in the owning phase; this is not an implemented contract.",
+        "x-decisions": ["D-03", "D-11", "D-15"]
+      },
+      "WorkflowDraft": {
+        "type": "object",
+        "description": "TBD (WB-002): canonical workflow schema, byte/input limits and field policies await D-02/D-04/D-15. This placeholder must not be used to validate runtime input.",
+        "x-decisions": ["D-02", "D-04", "D-15"]
+      },
+      "ProfileUpdate": {
+        "type": "object",
+        "properties": {
+          "preferredLocale": {
+            "enum": ["tr", "en"]
+          },
+          "displayName": {
+            "type": "string",
+            "maxLength": 100
+          }
+        },
+        "required": [],
+        "additionalProperties": false
+      },
+      "WorkflowCreate": {
+        "type": "object",
+        "properties": {
+          "workflow": {
+            "$ref": "#/components/schemas/WorkflowDraft"
+          },
+          "source": {
+            "enum": ["manual", "ai_create", "ai_edit", "import", "restore"]
+          }
+        },
+        "required": ["workflow", "source"],
+        "additionalProperties": false
+      },
+      "WorkflowUpdate": {
+        "type": "object",
+        "properties": {
+          "workflow": {
+            "$ref": "#/components/schemas/WorkflowDraft"
+          },
+          "expectedRevision": {
+            "type": "integer",
+            "minimum": 1
+          },
+          "baseContentHash": {
+            "type": "string"
+          },
+          "source": {
+            "enum": ["manual", "ai_create", "ai_edit", "import", "restore"]
+          }
+        },
+        "required": ["workflow", "expectedRevision", "baseContentHash", "source"],
+        "additionalProperties": false
+      },
+      "Restore": {
+        "type": "object",
+        "properties": {
+          "sourceRevision": {
+            "type": "integer",
+            "minimum": 1
+          },
+          "expectedRevision": {
+            "type": "integer",
+            "minimum": 1
+          }
+        },
+        "required": ["sourceRevision", "expectedRevision"],
+        "additionalProperties": false
+      }
+    },
+    "responses": {
+      "Error500": {
+        "description": "Unexpected internal error; no stack or raw input is exposed.",
+        "headers": {
+          "X-Request-ID": {
+            "$ref": "#/components/headers/RequestId"
+          }
+        },
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "#/components/schemas/Error"
+            }
+          }
+        }
+      },
+      "Error400": {
+        "description": "Invalid JSON/request or unsupported schema version.",
+        "headers": {
+          "X-Request-ID": {
+            "$ref": "#/components/headers/RequestId"
+          }
+        },
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "#/components/schemas/Error"
+            }
+          }
+        }
+      },
+      "Error401": {
+        "description": "Invalid or expired Firebase ID token.",
+        "headers": {
+          "X-Request-ID": {
+            "$ref": "#/components/headers/RequestId"
+          }
+        },
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "#/components/schemas/Error"
+            }
+          }
+        }
+      },
+      "Error404": {
+        "description": "Resource absent or owned by someone else; never disclose foreign data.",
+        "headers": {
+          "X-Request-ID": {
+            "$ref": "#/components/headers/RequestId"
+          }
+        },
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "#/components/schemas/Error"
+            }
+          }
+        }
+      },
+      "Error403": {
+        "description": "Feature disabled; email verification policy TBD (D-05).",
+        "headers": {
+          "X-Request-ID": {
+            "$ref": "#/components/headers/RequestId"
+          }
+        },
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "#/components/schemas/Error"
+            }
+          }
+        }
+      },
+      "Error413": {
+        "description": "Graph/prompt size limit exceeded; precise envelope size TBD (D-02).",
+        "headers": {
+          "X-Request-ID": {
+            "$ref": "#/components/headers/RequestId"
+          }
+        },
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "#/components/schemas/Error"
+            }
+          }
+        }
+      },
+      "Error422": {
+        "description": "Graph or patch validation failed.",
+        "headers": {
+          "X-Request-ID": {
+            "$ref": "#/components/headers/RequestId"
+          }
+        },
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "#/components/schemas/Error"
+            }
+          }
+        }
+      },
+      "Error409": {
+        "description": "Revision/hash/idempotency conflict.",
+        "headers": {
+          "X-Request-ID": {
+            "$ref": "#/components/headers/RequestId"
+          }
+        },
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "#/components/schemas/Error"
+            }
+          }
+        }
+      },
+      "Error429": {
+        "description": "Quota, rate or budget limit; thresholds/policy TBD (D-05/D-07).",
+        "headers": {
+          "X-Request-ID": {
+            "$ref": "#/components/headers/RequestId"
+          }
+        },
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "#/components/schemas/Error"
+            }
+          }
+        }
+      },
+      "Error502": {
+        "description": "Invalid provider response.",
+        "headers": {
+          "X-Request-ID": {
+            "$ref": "#/components/headers/RequestId"
+          }
+        },
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "#/components/schemas/Error"
+            }
+          }
+        }
+      },
+      "Error503": {
+        "description": "Provider or budget ledger unavailable; fail closed.",
+        "headers": {
+          "X-Request-ID": {
+            "$ref": "#/components/headers/RequestId"
+          }
+        },
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "#/components/schemas/Error"
+            }
+          }
+        }
+      }
+    },
+    "headers": {
+      "RequestId": {
+        "description": "Server-generated request correlation ID.",
+        "schema": {
+          "type": "string"
+        }
+      }
+    }
+  }
+}

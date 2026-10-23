@@ -1,0 +1,5 @@
+# Phase 1 health works without this file. No active secrets or bindings.
+# Future server-only placeholders; do not uncomment before the owning phase.
+# OPENAI_API_KEY=<REPLACE_ME>
+# TURNSTILE_SECRET_KEY=<REPLACE_ME>
+# SESSION_SIGNING_SECRET=<REPLACE_ME>
