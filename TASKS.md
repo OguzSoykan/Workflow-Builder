@@ -1,12 +1,15 @@
 # Görevler ve Faz 1 kabul planı
 
-**22 Ekim 2026:** WB-PM dokümantasyon paketi kullanıcı tarafından GitHub main'e taşındı; “devam et” talimatıyla WB-001A uygulandı, yerel kapıları geçti ve `Review` durumunda. Diğer uygulama görevleri `Backlog`. [STATUS](STATUS.md) güncel yürütme kaydıdır. WB-001–004 kimlikleri korunur; aşağıdaki alt görevler onların bütün kabul koşullarını kapsar.
+**23 Ekim 2026:** WB-001A/B main'de. `feat/WB-001C-phase1-completion` dalında
+WB-001C, WB-004A ve WB-004B hazırlığı uygulandı; tam araç zinciri/Worker/hosted CI
+kanıtı ve şema ürün kararları eksik olduğundan Faz 1 kapanmadı. [STATUS](STATUS.md)
+gerçek sonuçları gösterir. WB-001–004 kabul koşulları korunur.
 
 ## Hazır ve tamamlanmış iş tanımı
 
 **Ready:** Açık kapsam, kaynak FR/AC/contract, tamamlanmış bağımlılıklar, çözümlenmiş ilgili D-kararları, izin verilen çalışma kapsamı, pozitif/negatif doğrulama ve maliyet etkisi belli. Bir kartın onayı aynı üst işteki diğer kartlara kendiliğinden izin vermez; kullanıcı birden fazla kartı/fazı açıkça onaylayabilir.
 
-**Done:** Kartın kabul kriterleri + uygulanabilir kapıları geçti; diff/review kanıtı ve gerekli dokümanlar güncel; [Git sürecindeki](docs/DEVELOPMENT.md) merge/review tamam. Kanıt yoksa `Review` veya `Blocked`; bağımlılığı bekleyen henüz başlanmamış işler `Backlog` kalır. Şu anda `typecheck` vardır; diğer script adları ilgili kartta kurulacak sözleşmedir.
+**Done:** Kartın kabul kriterleri + uygulanabilir kapıları geçti; diff/review kanıtı ve gerekli dokümanlar güncel; [Git sürecindeki](docs/DEVELOPMENT.md) merge/review tamam. Kanıt yoksa `Review` veya `Blocked`; bağımlılığı bekleyen henüz başlanmamış işler `Backlog` kalır. Yerel scriptler kurulmuştur; script varlığı başarılı yürütme kanıtı değildir.
 
 ### Ortak kalite kapıları
 
@@ -26,18 +29,18 @@ WB-001A'da henüz uygulama/test runner yoktur: Q-TEST yerine workspace/config do
 
 | ID      | Üst iş | Boyut | Görev                                    | Bağımlılıklar                 | Durum   |
 | ------- | ------ | ----- | ---------------------------------------- | ----------------------------- | ------- |
-| WB-001A | WB-001 | S     | Workspace, sürümler, modül sınırları     | Uygulama onayı alındı         | Review  |
-| WB-001B | WB-001 | S     | React/Worker health iskeleti             | 001A                          | Backlog |
-| WB-001C | WB-001 | S     | Vitest ve Playwright smoke altyapısı     | 001B                          | Backlog |
-| WB-004A | WB-004 | S     | PR CI ve secret kalite kapısı            | 001C, GitHub erişimi          | Backlog |
-| WB-002A | WB-002 | S     | Şema v1 ve tipli alanlar                 | 001C; D-02/D-04/D-15          | Backlog |
+| WB-001A | WB-001 | S     | Workspace, sürümler, modül sınırları     | Uygulama onayı alındı         | Done    |
+| WB-001B | WB-001 | S     | React/Worker health iskeleti             | 001A                          | Done    |
+| WB-001C | WB-001 | S     | Vitest ve Playwright smoke altyapısı     | 001B                          | Blocked |
+| WB-004A | WB-004 | S     | PR CI ve secret kalite kapısı            | 001C, GitHub erişimi          | Blocked |
+| WB-002A | WB-002 | S     | Şema v1 ve tipli alanlar                 | 001C; D-02/D-04/D-15          | Blocked |
 | WB-002B | WB-002 | S     | Canonical serialization ve hash          | 002A; D-01                    | Backlog |
 | WB-002C | WB-002 | S     | Fixture, round-trip ve limit matrisi     | 002A/002B; D-02/D-15          | Backlog |
 | WB-003A | WB-003 | S     | Yapısal graph validator                  | 002C                          | Backlog |
 | WB-003B | WB-003 | S     | Condition/input semantik validator       | 003A; D-04                    | Backlog |
 | WB-003C | WB-003 | S     | Determinizm ve kötü girdi sertleştirmesi | 003B                          | Backlog |
-| WB-004B | WB-004 | S     | OpenAPI, env ve ADR dokümantasyonu       | 001B/002C; D-03/D-11/D-15     | Backlog |
-| WB-004C | WB-004 | S     | Faz 1 çıkış kanıtı ve inceleme           | Diğer tüm Faz 1 alt görevleri | Backlog |
+| WB-004B | WB-004 | S     | OpenAPI, env ve ADR dokümantasyonu       | 001B/002C; D-03/D-11/D-15     | Blocked |
+| WB-004C | WB-004 | S     | Faz 1 çıkış kanıtı ve inceleme           | Diğer tüm Faz 1 alt görevleri | Blocked |
 
 Önerilen yürütme sırası tablodaki sıradır. `004A` erkene alınarak sonraki kod PR'ları CI ile korunur. Tek aktif uygulama kartı; daha sonraki bir karar yalnızca ona bağlı kartları bekletir. D-03/D-11'in sonraki faz politikaları OpenAPI'de açık `TBD` olabilir; Faz 1 şemasını etkileyen payload kısmı çözülmeden ilgili schema kesinleştirilmez.
 
@@ -47,7 +50,7 @@ WB-001A'da henüz uygulama/test runner yoktur: Q-TEST yerine workspace/config do
 - **Kabul:** Temiz checkout'ta sabit sürüm + lockfile ile kurulum tekrarlanır; workspace paketleri çözümlenir; strict TS yanlış tipi reddeder; core/contract config'i React/Worker/D1/LLM import'u gerektirmez. README gerçek kurulum komutlarını gösterir.
 - **Doğrulama:** Temiz kurulum + temel TS kontrolü; geçici yanlış tip fixture'ı beklenen nonzero sonucu verir ve teslimden çıkarılır. Henüz olmayan runtime/test kapıları açıkça N/A'dır.
 - **Kapılar:** Q-DOC, Q-STATIC (mevcut config), Q-SEC, Q-REVIEW. Ek UI paketi, cloud binding, uygulama özelliği yok.
-- **Teslim kanıtı:** [ADR-012](docs/adr/ADR-012-workspace-toolchain.md), [doğrulama kaydı](docs/verification/WB-001A.md); dal `feat/WB-001A-workspace`, [taslak PR #1](https://github.com/OguzSoykan/Workflow-Builder/pull/1). İnsan review/merge bekleniyor.
+- **Teslim kanıtı:** [ADR-012](docs/adr/ADR-012-workspace-toolchain.md), [doğrulama kaydı](docs/verification/WB-001A.md); dal `feat/WB-001A-workspace`, [taslak PR #1](https://github.com/OguzSoykan/Workflow-Builder/pull/1). PR #1 `18a9018` olarak kullanıcı oturum onayıyla main'e birleştirildi; bağımsız insan review iddiası yok.
 
 ## WB-001B — Minimal health iskeleti
 
@@ -129,3 +132,16 @@ WB-001A'da henüz uygulama/test runner yoktur: Q-TEST yerine workspace/config do
 ## Sonraki fazların işleri
 
 WB-005–027 bu teslimde uygulama kartlarına bölünmedi. Kapsam/bağımlılıkları [ROADMAP](ROADMAP.md) ve [BACKLOG](docs/BACKLOG.md) içinde korunur; ilgili faz onayından önce aynı küçük kart formatına ayrılır. Böylece henüz ihtiyaç olmayan altyapı tasarlanmaz.
+
+## 23 Ekim devam kaydı
+
+- WB-001C: 7 Worker testi izole önbellek araç zincirinde geçti; 6 Playwright senaryosu
+  eklendi. Gerçek Wrangler/Chromium smoke çalıştırılamadığı için Done değildir.
+- WB-004A: CI, secret scanner ve negatif kapı deneyleri hazır. 2 scanner testi ve
+  kasıtlı bozuk tip/assertion deneyleri geçti. GitHub erişimi yok; hosted kanıt eksik.
+- WB-004B: 15 operasyonlu OpenAPI taslağı, env örnekleri, ADR-013 ve 3 API doküman
+  testi hazır. Workflow şeması ve onaysız politikalar açık TBD; kart kapanmadı.
+- WB-002A/B/C ve WB-003A/B/C: D-01/02/04 karar önerisi kullanıcıya sunuldu; yanıt
+  kaydedilmedi. Şema/hash/validator uygulaması başlamadı; bunlara bağlı kartlar bekler.
+- WB-004C: yukarıdaki kararlar, tam sabit sürümlü kurulum, Worker build/E2E, kaynak +
+  Worker artifact secret taraması ve hosted CI/PR kanıtı olmadan kapanamaz.

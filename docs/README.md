@@ -18,3 +18,12 @@ Güncel faz planı [ROADMAP](../ROADMAP.md), uygulanabilir alt görevler [TASKS]
 Kaynak belgelerin gelecekte yapılacak kodlamayı tarif etmesi uygulama onayı değildir. Orijinal `CODEX_PHASE_1` kaynak önceliği ve repo başlangıcı ifadelerinin güncel yorumu AGENTS'ta tanımlıdır. Teknik kabul koşulları azaltılmamıştır.
 
 ADR-001–011 mevcut Architecture tablosunda kalır; kopya karar kaynağı oluşturulmaz. [ADR-012](adr/ADR-012-workspace-toolchain.md) WB-001A workspace/araç zinciri kararını, [WB-001A doğrulaması](verification/WB-001A.md) gerçek kontrol sonuçlarını kaydeder. Yeni ADR'ler 013'ten devam eder; gerekçe, alternatif, sonuç, durum ve onay bilgisi içerir. Ürün değişikliğinde ayrıca ürün sahibi onayı gerekir. Boş OpenAPI/fixture dizinleri oluşturulmaz.
+
+## Faz 1 uygulama belgeleri
+
+- [ADR-013](adr/ADR-013-phase1-quality.md): test, CI ve secret kapısı kararları.
+- [Ortamlar](ENVIRONMENTS.md): local/CI/staging/production ve public/secret ayrımı.
+- [OpenAPI taslağı](openapi.json): yalnız health uygulanmış; diğer rotalar ve
+  çözümlenmemiş workflow/AI payload'ları açıkça işaretli.
+- [Faz 1 doğrulaması](verification/PHASE-1.md): gerçek komutlar, araç sürümü
+  farklılıkları ve kapanmayan kapılar.

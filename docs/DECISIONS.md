@@ -36,3 +36,22 @@ PRD §2 ve AC'ler aynen korunur: ERP arayüz/TR-EN; dört node; manuel approval 
 ## Operasyonel takip
 
 22 Ekim 2026 kullanıcı depoyu oluşturduğunu bildirdi. Doğrulanan gerçek hedef [OguzSoykan/Workflow-Builder](https://github.com/OguzSoykan/Workflow-Builder), görünürlük **public**, varsayılan dal `main`. Önceki `proje-v1/private` varsayımı bu bilgiyle değiştirildi; depo yeniden oluşturulmaz veya görünürlüğü değiştirilmez. GitHub oturumu ve remote eşleşiyor; `main` koruması kontrol anında kapalı. Remote/PR kanıtı [STATUS](../STATUS.md) içinde tutulur; secret/token yazılmaz.
+
+## 23 Ekim 2026 — Faz 1 için sunulan karar önerisi (henüz onaylanmadı)
+
+Kullanıcıya bu oturumda D-01/D-02/D-04 için aşağıdaki somut öneri sunuldu. Henüz
+yanıt gelmedi; bu bölüm onay kaydı veya kesin ürün sözleşmesi değildir.
+
+- D-02: en fazla 30 input; workflow JSON'u UTF-8 olarak en fazla 262144 byte
+  (256 KiB). HTTP envelope limiti sonraki API görevinde ayrıca belirlenir.
+- D-04: case-sensitive metin; optional alan default olmadan tanımlanabilir, null
+  kabul edilmez. Enum `in` izinli option değerlerinden oluşan liste alır.
+- D-01: başlık/etiket/dil ve iş mantığı hash'e girer; position/layout girmez.
+  SHA-256, stable ID/key sıralaması ve metadata/hash dışlaması teknik ADR ile
+  belirtilecek. Layout değişikliklerinin AI apply sırasında korunması sonraki
+  fazda açık kalır; hash tek başına layout çakışmasını çözmüş sayılmaz.
+- D-03/D-11: taslak saklama, AI payload/patch/idempotency politikaları sonraki
+  fazların kararlarıdır; OpenAPI taslağında TBD olarak görünür.
+
+Öneriler netleşmeden WB-002/003 uygulanmadı. D-15 ID/unknown-key/issue-code teknik
+kararları şema uygulamasıyla kaydedilecek; yeni auth/AI/hosting politikası yoktur.
