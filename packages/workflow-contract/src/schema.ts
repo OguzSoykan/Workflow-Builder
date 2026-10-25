@@ -277,8 +277,7 @@ export function getWorkflowJsonSchema() {
 }
 
 export type ParseWorkflowResult =
-  | { success: true; data: Workflow }
-  | { success: false; issues: ValidationIssue[] };
+  { success: true; data: Workflow } | { success: false; issues: ValidationIssue[] };
 
 function mapIssue(issue: z.core.$ZodIssue, input: unknown): ValidationIssue {
   let code: IssueCode = 'SCHEMA_INVALID';
