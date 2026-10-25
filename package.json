@@ -23,11 +23,14 @@
     "dev:web": "npm run dev --workspace=@workflow-builder/web",
     "test": "vitest run && npm run test:security && npm run test:docs",
     "test:coverage": "vitest run --coverage",
-    "test:e2e": "playwright test",
+    "test:e2e": "node scripts/build-contract-probe.mjs && playwright test",
     "test:security": "node --test scripts/secret-scan.test.mjs",
     "test:negative-gates": "node scripts/verify-negative-gates.mjs",
     "secret:scan": "node scripts/secret-scan.mjs",
-    "test:docs": "node --test scripts/openapi.test.mjs"
+    "test:docs": "node --test scripts/openapi.test.mjs",
+    "dev:contract-test": "wrangler dev --config tests/platform/wrangler.jsonc --local --show-interactive-dev-session=false",
+    "docs:sync-api": "node scripts/sync-openapi.mjs && prettier --write docs/openapi.json",
+    "benchmark:validator": "node scripts/benchmark-validator.mjs"
   },
   "devDependencies": {
     "@eslint/js": "10.0.1",

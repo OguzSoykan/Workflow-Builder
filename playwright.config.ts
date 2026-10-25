@@ -11,11 +11,20 @@ export default defineConfig({
     trace: 'retain-on-failure',
   },
   projects: [{ name: 'chromium', use: { ...devices['Desktop Chrome'] } }],
-  webServer: {
-    command: 'npm run dev',
-    url: 'http://127.0.0.1:8787/api/health',
-    reuseExistingServer: false,
-    timeout: 120_000,
-    env: { WRANGLER_SEND_METRICS: 'false' },
-  },
+  webServer: [
+    {
+      command: 'npm run dev',
+      url: 'http://127.0.0.1:8787/api/health',
+      reuseExistingServer: false,
+      timeout: 120_000,
+      env: { WRANGLER_SEND_METRICS: 'false' },
+    },
+    {
+      command: 'npm run dev:contract-test',
+      url: 'http://127.0.0.1:8788/',
+      reuseExistingServer: false,
+      timeout: 120_000,
+      env: { WRANGLER_SEND_METRICS: 'false' },
+    },
+  ],
 });
