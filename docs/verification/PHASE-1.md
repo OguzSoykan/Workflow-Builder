@@ -192,3 +192,16 @@ baseline'ıyla byte-for-byte aynı. Contract/core compiler probe'ları URL, fetc
 process'i her iki pakette de reddetti; geçici dosyalar temizlendi.
 `playwright test --list` 8 senaryoyu buldu; listeleme test yürütme kanıtı değildir.
 Diff ve modül/maliyet/secret öz incelemesi yapıldı; remote PR oluşturulmadı.
+
+### 26 Ekim devam kontrolü: sabit npm kurulumu
+
+`curl -I https://registry.npmjs.org/` exit 6 (`Could not resolve host`),
+`git ls-remote origin HEAD` exit 128 (`Could not resolve host: github.com`)
+ile sonuçlandı. Yerel nvm sürümlerinde gereken Node 24.22.1 bulunmuyor.
+Bu nedenle temiz kurulum, gerçek Worker/E2E ve hosted kapıları hâlâ NOT RUN.
+
+CI'da setup-node sonrası, `npm ci` öncesi `npm install --global npm@11.19.1`
+eklendi. Böylece Node dağıtımındaki npm sürümüne güvenmek yerine packageManager
+ve engine-strict koşulu açıkça sağlanır. Değişiklik yalnız CI araç kurulumudur;
+ürün kodu veya sürüm sabitleri değiştirilmedi. Yerel diff/biçim kontrolü hosted
+kurulumun başarı kanıtı değildir.

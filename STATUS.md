@@ -65,6 +65,12 @@ hedefini kanıtlamaz. Orijinal sekiz planlama belgesi değiştirilmedi.
 
 ## Kalan çıkış adımları
 
+26 Ekim devam kontrolünde npm registry ve GitHub erişimi yeniden denendi:
+`curl` exit 6 ve `git ls-remote origin HEAD` exit 128 (DNS çözümleme hatası).
+Yerelde Node 24.22.1 hâlâ yok. CI, `npm ci` öncesinde npm 11.19.1'i açıkça
+kuracak şekilde düzeltildi; setup-node'un beraberinde gelen npm sürümüne bağımlı
+değil. Bu değişiklik hosted CI çalıştırıldığı anlamına gelmez.
+
 1. Ağ erişimli ortamda Node 24.22.1/npm 11.19.1 ile normal `npm ci`.
 2. Typecheck/lint/format/test/build/secret scan; Chromium kurulumu ve 8787/8788
    portlarında Playwright; gerçek Worker/browser hash vektörü ve health smoke.
