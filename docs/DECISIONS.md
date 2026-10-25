@@ -1,12 +1,15 @@
 # Açık kararlar, tutarsızlıklar ve riskler
 
-**22 Ekim 2026 — Açık:** Bu kayıt sorunları görünür kılar; önerileri onaylamaz, ürün gereksinimlerini değiştirmez. Ürün sahibi ürün/politika kararlarını verir; uygulayıcı teknik seçenek/kanıt hazırlar. Onay kaydı en az karar, karar veren, tarih, etkilenen belge/görev ve doğrulama planını içerir. Açık karar yalnızca bağımlı işi bekletir; WB-001A için aşağıdaki ürün kararları blokör değildir.
+**26 Ekim 2026:** D-01/D-02/D-04'ün Faz 1 varsayılanları kullanıcı onayıyla
+kesinleşti; D-15 teknik ayrıntıları ADR-014 ile uygulandı. Aşağıdaki tablo ilk açılış
+gerekçelerini korur; güncel onay kaydı bu belgenin sonunda bulunur. D-03/D-11 ve
+sonraki faz ürün politikaları açık kalır. Açık karar yalnızca bağımlı işi bekletir.
 
 ## Korunan kesin kararlar
 
 PRD §2 ve AC'ler aynen korunur: ERP arayüz/TR-EN; dört node; manuel approval simülasyonu; tipli kullanıcı alanları; anonim browser/JSON; üye owner-private D1; Firebase email/password; AI create/edit için diff ve açık onay; stable ID/hash/revision; anonim tek hak hedefi + Turnstile/kota/global koruma; tek seferlik 5 USD bütçe ve 4,50 USD stop. Architecture ADR-001–011 bu belgede yeniden tanımlanmaz. Yeni auth/AI/UI/infra seçimi yapılmadı.
 
-## Karar kuyruğu
+## Karar kayıtları ve takip
 
 | ID   | Kaynak ve eksik/tutarsız nokta                                                                                                                                                                                                                                  | Çözüm için gerekli karar/kanıt                                                                                                                                                                                                            | Bağımlı iş / sahibi                                        |
 | ---- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ---------------------------------------------------------- |
@@ -37,10 +40,11 @@ PRD §2 ve AC'ler aynen korunur: ERP arayüz/TR-EN; dört node; manuel approval 
 
 22 Ekim 2026 kullanıcı depoyu oluşturduğunu bildirdi. Doğrulanan gerçek hedef [OguzSoykan/Workflow-Builder](https://github.com/OguzSoykan/Workflow-Builder), görünürlük **public**, varsayılan dal `main`. Önceki `proje-v1/private` varsayımı bu bilgiyle değiştirildi; depo yeniden oluşturulmaz veya görünürlüğü değiştirilmez. GitHub oturumu ve remote eşleşiyor; `main` koruması kontrol anında kapalı. Remote/PR kanıtı [STATUS](../STATUS.md) içinde tutulur; secret/token yazılmaz.
 
-## 23 Ekim 2026 — Faz 1 için sunulan karar önerisi (henüz onaylanmadı)
+## 23 Ekim 2026 — D-01/D-02/D-04 Faz 1 kararı (onaylandı)
 
-Kullanıcıya bu oturumda D-01/D-02/D-04 için aşağıdaki somut öneri sunuldu. Henüz
-yanıt gelmedi; bu bölüm onay kaydı veya kesin ürün sözleşmesi değildir.
+Ürün sahibi bu oturumda aşağıdaki varsayılanlara “bunlarla devam” diyerek onay verdi.
+Karar tarihi 23 Ekim 2026; etkilenen işler WB-002A/B/C ve WB-003A/B/C.
+Doğrulama: tip/default/operator matrisi, UTF-8 eşik testleri, hash değişim vektörleri.
 
 - D-02: en fazla 30 input; workflow JSON'u UTF-8 olarak en fazla 262144 byte
   (256 KiB). HTTP envelope limiti sonraki API görevinde ayrıca belirlenir.
@@ -53,5 +57,6 @@ yanıt gelmedi; bu bölüm onay kaydı veya kesin ürün sözleşmesi değildir.
 - D-03/D-11: taslak saklama, AI payload/patch/idempotency politikaları sonraki
   fazların kararlarıdır; OpenAPI taslağında TBD olarak görünür.
 
-Öneriler netleşmeden WB-002/003 uygulanmadı. D-15 ID/unknown-key/issue-code teknik
-kararları şema uygulamasıyla kaydedilecek; yeni auth/AI/hosting politikası yoktur.
+Önceki bekleme kalktı. D-15 teknik biçim/unknown-key/issue-code kararı
+[ADR-014](adr/ADR-014-workflow-v1.md) ile kaydedilir. D-03/D-11 ve diğer sonraki
+faz ürün politikaları açık kalır; auth/AI/hosting kapsamı değişmez.

@@ -65,7 +65,11 @@ test('only health is implemented and member routes require bearer authentication
       }
     }
   }
-  assert.ok(spec.components.schemas.WorkflowDraft['x-decisions'].includes('D-04'));
+  assert.equal(spec.components.schemas.Workflow.properties.schemaVersion.const, 1);
+  assert.equal(spec.components.schemas.Workflow.properties.nodes.maxItems, 50);
+  assert.equal(spec.components.schemas.Workflow.properties.edges.maxItems, 100);
+  assert.equal(spec.components.schemas.Workflow.properties.inputs.maxItems, 30);
+  assert.equal(spec.components.schemas.Workflow.additionalProperties, false);
   assert.ok(spec.paths['/api/v1/ai/workflows/edit'].post['x-decisions'].includes('D-11'));
 });
 
