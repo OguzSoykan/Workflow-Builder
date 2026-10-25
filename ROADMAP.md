@@ -1,8 +1,9 @@
 # Fazlara göre yol haritası
 
-**Durum:** WB-001A/B main'de; Faz 1 test/CI/API dokümanları devam dalında hazırlandı.
-Şema/validator kararları ve tam doğrulama kapıları açık; Faz 1 henüz kapanmadı.
-Güncel kanıt [STATUS](STATUS.md), kapsam [TASKS](TASKS.md) içindedir. Faz 2 başlamadı.
+**Durum:** Faz 1'in yerel şema/hash/validator/test/CI/API dokümanları uygulandı;
+D-01/02/04 varsayılanları onaylandı. Sabit kurulum/gerçek Worker-E2E/hosted CI
+çıkış kanıtları açık; Faz 1 resmen kapanmadı. [STATUS](STATUS.md) ve [TASKS](TASKS.md).
+Faz 2 başlamadı.
 
 | Faz / milestone        | Amaç ve kapsam                                                                                                 | Bağımlılık                                         | Çıkış kapısı                                                                                                                                                                                                            |
 | ---------------------- | -------------------------------------------------------------------------------------------------------------- | -------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |

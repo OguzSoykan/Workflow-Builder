@@ -24,6 +24,9 @@ ADR-001–011 mevcut Architecture tablosunda kalır; kopya karar kaynağı oluş
 - [ADR-013](adr/ADR-013-phase1-quality.md): test, CI ve secret kapısı kararları.
 - [Ortamlar](ENVIRONMENTS.md): local/CI/staging/production ve public/secret ayrımı.
 - [OpenAPI taslağı](openapi.json): yalnız health uygulanmış; diğer rotalar ve
-  çözümlenmemiş workflow/AI payload'ları açıkça işaretli.
+  ortak Workflow şeması ve çözümlenmemiş AI payload'ları açıkça işaretli.
 - [Faz 1 doğrulaması](verification/PHASE-1.md): gerçek komutlar, araç sürümü
   farklılıkları ve kapanmayan kapılar.
+
+- [ADR-014](adr/ADR-014-workflow-v1.md): onaylı şema/hash varsayılanları, saf validator,
+  alan/limit/metadata/migration ve issue-code sözleşmesi.

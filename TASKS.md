@@ -1,9 +1,10 @@
 # Görevler ve Faz 1 kabul planı
 
-**23 Ekim 2026:** WB-001A/B main'de. `feat/WB-001C-phase1-completion` dalında
-WB-001C, WB-004A ve WB-004B hazırlığı uygulandı; tam araç zinciri/Worker/hosted CI
-kanıtı ve şema ürün kararları eksik olduğundan Faz 1 kapanmadı. [STATUS](STATUS.md)
-gerçek sonuçları gösterir. WB-001–004 kabul koşulları korunur.
+**26 Ekim 2026:** WB-001A/B main'de. Faz 1'in kalan yerel kodu, fixture/testleri ve
+API/ortam dokümanları `feat/WB-002A-workflow-contract` dalında uygulandı. D-01/02/04
+varsayılanları kullanıcı tarafından “bunlarla devam” talimatıyla onaylandı; D-15 teknik
+ayrıntıları ADR-014'te. Sabit araç zinciri/Worker/E2E/hosted CI kanıtları eksik;
+Faz 1 çıkış kapısı kapanmadı. [STATUS](STATUS.md) gerçek sonuçları gösterir.
 
 ## Hazır ve tamamlanmış iş tanımı
 
@@ -33,13 +34,13 @@ WB-001A'da henüz uygulama/test runner yoktur: Q-TEST yerine workspace/config do
 | WB-001B | WB-001 | S     | React/Worker health iskeleti             | 001A                          | Done    |
 | WB-001C | WB-001 | S     | Vitest ve Playwright smoke altyapısı     | 001B                          | Blocked |
 | WB-004A | WB-004 | S     | PR CI ve secret kalite kapısı            | 001C, GitHub erişimi          | Blocked |
-| WB-002A | WB-002 | S     | Şema v1 ve tipli alanlar                 | 001C; D-02/D-04/D-15          | Blocked |
-| WB-002B | WB-002 | S     | Canonical serialization ve hash          | 002A; D-01                    | Backlog |
-| WB-002C | WB-002 | S     | Fixture, round-trip ve limit matrisi     | 002A/002B; D-02/D-15          | Backlog |
-| WB-003A | WB-003 | S     | Yapısal graph validator                  | 002C                          | Backlog |
-| WB-003B | WB-003 | S     | Condition/input semantik validator       | 003A; D-04                    | Backlog |
-| WB-003C | WB-003 | S     | Determinizm ve kötü girdi sertleştirmesi | 003B                          | Backlog |
-| WB-004B | WB-004 | S     | OpenAPI, env ve ADR dokümantasyonu       | 001B/002C; D-03/D-11/D-15     | Blocked |
+| WB-002A | WB-002 | S     | Şema v1 ve tipli alanlar                 | 001C; D-02/D-04/D-15          | Review  |
+| WB-002B | WB-002 | S     | Canonical serialization ve hash          | 002A; D-01                    | Review  |
+| WB-002C | WB-002 | S     | Fixture, round-trip ve limit matrisi     | 002A/002B; D-02/D-15          | Review  |
+| WB-003A | WB-003 | S     | Yapısal graph validator                  | 002C                          | Review  |
+| WB-003B | WB-003 | S     | Condition/input semantik validator       | 003A; D-04                    | Review  |
+| WB-003C | WB-003 | S     | Determinizm ve kötü girdi sertleştirmesi | 003B                          | Review  |
+| WB-004B | WB-004 | S     | OpenAPI, env ve ADR dokümantasyonu       | 001B/002C; D-03/D-11/D-15     | Review  |
 | WB-004C | WB-004 | S     | Faz 1 çıkış kanıtı ve inceleme           | Diğer tüm Faz 1 alt görevleri | Blocked |
 
 Önerilen yürütme sırası tablodaki sıradır. `004A` erkene alınarak sonraki kod PR'ları CI ile korunur. Tek aktif uygulama kartı; daha sonraki bir karar yalnızca ona bağlı kartları bekletir. D-03/D-11'in sonraki faz politikaları OpenAPI'de açık `TBD` olabilir; Faz 1 şemasını etkileyen payload kısmı çözülmeden ilgili schema kesinleştirilmez.
@@ -133,15 +134,18 @@ WB-001A'da henüz uygulama/test runner yoktur: Q-TEST yerine workspace/config do
 
 WB-005–027 bu teslimde uygulama kartlarına bölünmedi. Kapsam/bağımlılıkları [ROADMAP](ROADMAP.md) ve [BACKLOG](docs/BACKLOG.md) içinde korunur; ilgili faz onayından önce aynı küçük kart formatına ayrılır. Böylece henüz ihtiyaç olmayan altyapı tasarlanmaz.
 
-## 23 Ekim devam kaydı
+## 26 Ekim devam kaydı
 
-- WB-001C: 7 Worker testi izole önbellek araç zincirinde geçti; 6 Playwright senaryosu
-  eklendi. Gerçek Wrangler/Chromium smoke çalıştırılamadığı için Done değildir.
-- WB-004A: CI, secret scanner ve negatif kapı deneyleri hazır. 2 scanner testi ve
-  kasıtlı bozuk tip/assertion deneyleri geçti. GitHub erişimi yok; hosted kanıt eksik.
-- WB-004B: 15 operasyonlu OpenAPI taslağı, env örnekleri, ADR-013 ve 3 API doküman
-  testi hazır. Workflow şeması ve onaysız politikalar açık TBD; kart kapanmadı.
-- WB-002A/B/C ve WB-003A/B/C: D-01/02/04 karar önerisi kullanıcıya sunuldu; yanıt
-  kaydedilmedi. Şema/hash/validator uygulaması başlamadı; bunlara bağlı kartlar bekler.
-- WB-004C: yukarıdaki kararlar, tam sabit sürümlü kurulum, Worker build/E2E, kaynak +
-  Worker artifact secret taraması ve hosted CI/PR kanıtı olmadan kapanamaz.
+- WB-002A/B/C: ortak şema, güvenli JSON sınırı, serialize/parse, SHA-256, sabit UTF-8
+  vektörü, 50/51 node, 100/101 edge, 30/31 alan ve 256 KiB exact/+1 sınırları uygulandı.
+- WB-003A/B/C: topology/handle/reference, SCC cycle, tüm yolların sonlanması,
+  field/operator/literal, deterministik issue sırası ve frozen/malformed input testleri geçti.
+- WB-004B: gerçek Workflow JSON Schema OpenAPI'ye bağlandı; eşleşme testi, env belgeleri,
+  ADR-014 ve hata kodu tablosu hazır. D-03/D-11 sonraki faz politikaları açık TBD.
+- WB-001C/WB-004A: health + contract browser/Worker smoke senaryoları, CI ve negatif
+  gate/secret testleri hazır; Wrangler/Chromium ve hosted çalıştırma hâlâ doğrulanamadı.
+- WB-004C: uygulama/doküman öz incelemesi yapıldı; sabit sürümlü temiz kurulum,
+  Worker build/E2E/tam build secret scan ve hosted CI/PR/merge kanıtı olmadan Done olmaz.
+
+`Review`, kodun yerel kontrollerden geçtiğini ve eksik ortak kapıları beklediğini
+belirtir; bağımsız insan review veya remote merge iddiası değildir. Faz 2 başlamadı.

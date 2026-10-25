@@ -3,10 +3,11 @@
 Görsel veya doğal dil ile workflow tasarlama ve manuel onay/ret ile simülasyon ürünü.
 Ürün gereksinimleri [PRD v1.1](docs/PRD.md) içinde korunur.
 
-**23 Ekim 2026:** Workspace ve React/Worker health iskeleti main'de. Devam dalında
-Vitest/Playwright testleri, CI/secret kontrolleri, OpenAPI taslağı ve ortam belgeleri
-hazırlandı. **Faz 1 henüz tamamlanmadı:** workflow şeması/hash/validator açık ürün
-kararlarını; tam kurulum, Wrangler smoke ve hosted CI ağ erişimini bekliyor.
+**26 Ekim 2026:** Faz 1'in şema, canonical SHA-256 hash, saf graph/condition validator,
+test/CI ve API/ortam dokümanları yerel devam dalında uygulandı. Kullanıcının onayladığı
+30 alan / 256 KiB / case-sensitive / hash varsayılanları geçerlidir.
+**Faz 1 çıkış kapısı henüz kapanmadı:** sabit araç zinciriyle temiz kurulum, gerçek
+Wrangler/Chromium ve hosted CI/PR kanıtları bu ortamın erişim kısıtları nedeniyle açık.
 Gerçek sonuçlar [STATUS](STATUS.md) ve [Faz 1 kanıtında](docs/verification/PHASE-1.md).
 
 ## Kurulum ve çalıştırma
@@ -43,14 +44,14 @@ npm run test:e2e
 ```
 
 - `npm test`: Vitest Worker testleri, bağımsız Node secret scanner ve API doküman testleri.
-- `test:coverage`: Vitest V8 kapsam raporu; henüz uygulanmamış contract/core için
-  coverage iddiası yoktur.
+- `test:coverage`: contract/core/Worker Vitest V8 kapsam raporu.
 - `test:negative-gates`: geçici tip/assertion hatalarının beklenen şekilde reddini
   kontrol eder, probe dosyalarını temizler; temiz typecheck/test sonrasında çalıştırın.
 - `build`: web asset'leri + Worker `deploy --dry-run`; cloud'a yayın yapmaz.
 - `secret:scan`: kaynakları ve iki build çıktısını tarar. Önce build gerekir; eksik
   build başarılı sonuç sayılmaz. Her secret veya PII türünü tespit garantisi yoktur.
-- Playwright gerçek Wrangler local sunucusunu açar; 8787 portu boş olmalıdır.
+- Playwright gerçek uygulamayı 8787, yalnız test amaçlı contract Worker fixture'ını
+  8788 portunda açar. İki port da boş olmalıdır. Test bundle'ı production asset'lerine eklenmez.
   CI'da Chromium sistem bağımlılıkları `--with-deps` ile kurulur.
 - CI tanımı [.github/workflows/ci.yml](.github/workflows/ci.yml) içindedir; bu oturumda
   GitHub üzerinde çalıştırılmadı ve branch protection etkinleştirilmedi.
@@ -61,9 +62,9 @@ npm run test:e2e
 apps/web/                   React/Vite health ekranı
 apps/worker/                Hono health ve JSON hata envelope'u
 apps/worker/test/           Binding gerektirmeyen HTTP birim testleri
-packages/workflow-contract/ Şema için public entry point; henüz boş
-packages/workflow-core/     Saf validator için public entry point; henüz boş
-tests/e2e/                  Playwright health/hata/yeniden deneme/timeout
+packages/workflow-contract/ Zod şeması, güvenli parser, serializer ve SHA-256 hash
+packages/workflow-core/     Saf graph ve condition validator
+tests/e2e/                  Health/hata/timeout ve browser/Worker hash eşitliği
 scripts/                    Secret, API taslağı ve negatif kapı kontrolleri
 infra/wrangler.jsonc        Tek Worker + statik asset; local ve ortam adları
 docs/openapi.json           Health + planlanan API rotaları; açık TBD alanları
@@ -82,3 +83,34 @@ Durable Object ve AI uygulaması sonraki fazlardadır.
 
 [GitHub deposu](https://github.com/OguzSoykan/Workflow-Builder).
 5 USD toplam AI bütçesi / 4,50 USD stop kararı korunur; Faz 1 canlı model çağrısı yapmaz.
+
+## Ortak paketleri kullanma
+
+```ts
+import {
+  parseWorkflowJSON,
+  computeContentHash,
+  serializeWorkflow,
+} from '@workflow-builder/workflow-contract';
+import { validateWorkflow } from '@workflow-builder/workflow-core';
+
+const parsed = parseWorkflowJSON(jsonText);
+if (parsed.success) {
+  const result = validateWorkflow(parsed.data);
+  if (result.valid) {
+    const hash = computeContentHash(parsed.data);
+    const snapshot = serializeWorkflow(parsed.data);
+    // Caller decides what to do with hash/snapshot; these functions perform no I/O.
+  }
+}
+```
+
+Parser yalnız yapıyı doğrular; çalıştırılabilir graph için validator gerekir.
+`canonicalizeWorkflow` layout'u dışlar ve export formatı değildir; export için
+`serializeWorkflow` kullanılır. `contentHash` türetilmiş veridir, kimlik doğrulama
+veya yetkilendirme sağlamaz. Tip/operator/ID/unknown-key/metadata/migration ayrıntıları
+ve issue kodları [ADR-014](docs/adr/ADR-014-workflow-v1.md) içindedir.
+
+OpenAPI bileşenini yenilemek: `npm run docs:sync-api`. TypeScript şemasından üretilen
+bileşenin dokümanla eşleşmesi test edilir. Saf validator ölçümü:
+`npm run benchmark:validator`; bu yerel ölçüm Cloudflare CPU veya simulator kanıtı değildir.

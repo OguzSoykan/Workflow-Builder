@@ -103,3 +103,92 @@ Yerel uygulama commit'i: `09f8326`. Son diff/öz inceleme kapsamında paket pinl
 ES-only core/contract sınırı, CI'da deploy/secret gerekmemesi, TBD alanları ve
 test/kanıt ayrımı kontrol edildi. GitHub eklentisi keşfedildi ancak bağlı değil;
 yakın zamanda önerilmiş bağlantı için tekrar kurulum önerisi açılmadı.
+
+## 26 Ekim 2026 — Onaylı şema/hash/validator teslimi
+
+Kullanıcı 23 Ekim'de sunulan varsayılanları “bunlarla devam” ile onayladı. D-01/02/04
+beklemesi kalktı; D-15 teknik detayları [ADR-014](../adr/ADR-014-workflow-v1.md) ile
+kaydedildi. Dal `feat/WB-002A-workflow-contract`; önceki devam commit'leri korunur.
+Araya giren hemenyanit clone isteği GitHub DNS engeli nedeniyle gerçekleştirilemedi;
+kullanıcının son tamamla talimatıyla yarım kalan bu uygulama doğrulanıp teslim edildi.
+
+### Uygulama ve gerçek test kapsamı
+
+- WB-002A: dört node, beş input, strict config/validation/ID/unknown-key;
+  shape-only parse ve semantic validator ayrımı. Unsafe JSON/cycle/accessor/
+  sparse array/prototype/derinlik/değer/boyut ön kontrolü.
+- WB-002B: SHA-256/UTF-8 canonical business graph; object/key/ID/set sıralaması,
+  position/layout/hash dışlama, metadata envelope, case-sensitive Unicode içeriği.
+  Tam serializer array sırasını/layout'u korur, hash'i yeniler ve son boyutu kontrol eder.
+- WB-002C: bağımsız 50/51 node, 100/101 edge, 30/31 field ve 262144/262145 byte
+  testleri; raw JSON whitespace/Türkçe/emoji ve hash eklenmiş export sınırı dahil.
+- WB-003A/B/C: topology/handle/dangling/start/end/reachability; SCC cycle üyeleri,
+  tüm dalların sonlanması; beş tip/operator/literal/date/enum/default; hata sırası
+  ve frozen input; time/random/fetch'e bağımlılık olmadığını doğrulayan test.
+- WB-004B: `getWorkflowJsonSchema` → OpenAPI bileşeni; birebir eşleşme testi,
+  örnek/negatif JSON Schema kontrolü; D-03/D-11 sonraki faz politikaları TBD.
+
+### Doğrulama ortamı
+
+Önceki tablodaki izole araç zinciri kullanıldı: Node 24.18.0/npm 11.16.0 ve
+`/private/tmp/workflow-builder-review`. Repo pinleri değiştirilmedi. Contract için
+Zod **4.3.6** ve `@noble/hashes` **2.0.1** hem manifest hem çalıştırma sürümüdür.
+Zod 4.6.5 denemesi ambient URL hatası verdi; ES-only sınırını bozmayan 4.3.6 seçildi.
+DOM/Node tipleri core/contract'a eklenmedi; skipLibCheck kullanılmadı.
+
+Normal pinned `npm ci`, gerçek Worker ve hosted CI hâlâ kanıtlanmadı. 26 Ekim'deki
+kontrolde Node 24.22.1 ve Wrangler/workerd npm önbelleğinde bulunmadı. API/CLI
+scripts Node 24 type stripping ile çalışır; typecheck erasableSyntaxOnly uygular.
+
+### Komut ve sonuçlar
+
+| Kontrol                                           | Gerçek sonuç                                                                     |
+| ------------------------------------------------- | -------------------------------------------------------------------------------- |
+| `npm run typecheck`                               | PASS, dört workspace + tools/test                                                |
+| `npm run lint` / `npm run format:check`           | PASS, izole sürümler                                                             |
+| `npm test`                                        | 178 Vitest + 2 security + 3 OpenAPI = **183 PASS**                               |
+| `npm run test:coverage`                           | Satır %98,78, statement %96,55, branch %94,01, fonksiyon %98,41                  |
+| Core coverage                                     | Satır/fonksiyon %100; branch %94; keyfi kota eklenmedi                           |
+| Contract coverage                                 | Satır %98,47; branch %94,02                                                      |
+| `npm run test:negative-gates`                     | Temiz typecheck sonrası beklenen TS2322/assertion nonzero; geçici dosyalar temiz |
+| `npm run build --workspace=@workflow-builder/web` | PASS; Vite 8.3.4                                                                 |
+| `node scripts/build-contract-probe.mjs`           | PASS; 91 modül, 81,64 kB IIFE test bundle                                        |
+| `npm run test:e2e`                                | **NOT RUN**: Wrangler yok; webServer exit 127, 8 test yürütülemedi               |
+| Worker build / tam secret scan                    | **NOT RUN**; gerçek Worker artifact oluşmadı                                     |
+| Hosted CI/PR/merge                                | **NOT RUN**; ağ/bağlantı engeli sürüyor                                          |
+
+Kontrol sırasında bulunan hatalar düzeltildi: test fixture'ında erişilemeyen End,
+Node strip-only uyumsuz constructor parameter property ve test assertion'ın fazla
+argümanları. Browser probe bundle'ı Playwright'ın temizlediği test-results yerine
+Git-ignore kapsamındaki tests/platform/dist'e taşındı. Tam yeniden kontroller geçti;
+E2E hazırlık hatası ayrı ve açık bırakıldı.
+
+### Hash ve performans kanıtı
+
+Sabit bağımsız canonical JSON vektörü `tests/fixtures/hash-vector.json` içindedir.
+Unicode/Türkçe/emoji içeren beklenen SHA-256:
+`23e172fe039c02c0fe0cbcf75e6b6218640d3de25ee248b0df837f4ce10f0761`.
+Node crypto ve Node Web Crypto aynı sonucu verdi. Chromium ve gerçek Worker'da aynı
+vektörü çalışan test eklendi; ortam nedeniyle **NOT RUN**. Public validation
+endpoint'i eklenmedi; yalnız localhost:8788 test fixture'ı vardır.
+
+`node scripts/benchmark-validator.mjs`: macOS arm64, Apple M1 Pro, Node 24.18.0;
+50 node / 97 edge, 100 warm-up + 1000 örnek, median **0,604209 ms**, p95
+**0,909375 ms**, max **1,795 ms**. Şema parsing dahil yerel validator ölçümüdür;
+simülatörün 1 saniyelik hedefi veya Workers CPU sınırı doğrulaması değildir.
+
+### Teslim sınırı
+
+Yerel kod/fixture/test/doküman hazırlığı tamam; WB-002/003/004B Review'da.
+Q-CI, gerçek Worker/browser ve sabit kurulum kapıları eksik kaldığından WB-004C ve
+Faz 1 Done değildir. Kaynak belgeler byte-for-byte korunur; diff/secret/link öz
+incelemesi bağımsız insan review veya GitHub check başarısı olarak sunulmaz.
+
+Yerel teslim commit'leri: `c035cce` (WB-002) ve `294fc2f` (WB-003).
+Son kaynak/artifact ön taraması: **85 kaynak + 4 web/test artifact, 0 eşleşme**;
+Worker artifact yokluğu nedeniyle tam secret kapısı hâlâ NOT RUN.
+**75** yerel Markdown bağlantısı sağlam; sekiz orijinal planlama belgesi main
+baseline'ıyla byte-for-byte aynı. Contract/core compiler probe'ları URL, fetch ve
+process'i her iki pakette de reddetti; geçici dosyalar temizlendi.
+`playwright test --list` 8 senaryoyu buldu; listeleme test yürütme kanıtı değildir.
+Diff ve modül/maliyet/secret öz incelemesi yapıldı; remote PR oluşturulmadı.

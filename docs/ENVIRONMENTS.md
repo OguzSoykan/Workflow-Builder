@@ -36,7 +36,13 @@ Staging/prod config'i bu aşamada deploy için hazır sayılmaz.
 
 [openapi.json](openapi.json) OpenAPI 3.1 taslağıdır. Yalnızca `/api/health`
 uygulanmıştır; `/api/v1` rotaları `x-status: planned` olarak işaretlidir.
-`WorkflowDraft`, AI payload'ları ve ürün politikaları açık `TBD` alanlarıdır;
-runtime doğrulama şeması olarak kullanılamaz. `npm run test:docs` yerel referansları,
+`Workflow` bileşeni ortak Zod şemasından üretilir; runtime byte/unique/default/
+takvim kontrolleri ayrıca gereklidir. AI payload'ları ve taslak saklama politikası
+açık `TBD` kalır. Bu taslak planlanan endpoint'lerin uygulandığı anlamına gelmez. `npm run test:docs` yerel referansları,
 rota durumlarını, bearer/204 kurallarını, JSON Schema derlemesini ve mevcut
 health/error örneklerini kontrol eder; kapsamlı bir harici OpenAPI linter'ı değildir.
+
+Playwright contract uyumluluk testi için `tests/platform/wrangler.jsonc` yalnızca
+localhost:8788 üzerinde ikinci bir test Worker'ı başlatır. Production config'ine
+route/binding eklenmedi; bu fixture deploy hedefi değildir. `tests/platform/dist`
+altındaki browser test bundle'ı Git ve production build dışında kalır.
