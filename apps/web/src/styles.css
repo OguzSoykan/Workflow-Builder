@@ -517,3 +517,31 @@ select {
   margin-top: 12px;
   overflow-wrap: anywhere;
 }
+.validation-panel {
+  border-top: 1px solid #e3eaf2;
+  padding: 14px 18px;
+  max-height: 220px;
+  overflow-y: auto;
+  overflow-wrap: anywhere;
+}
+.validation-panel ul {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+.validation-panel .list-button {
+  color: #8a3b12;
+}
+.validation-ok {
+  color: #2f7a55;
+}
+.workflow-card.has-issues:not(.is-selected) {
+  box-shadow: 0 0 0 2px #e2a33a;
+}
+.node-issues {
+  display: block;
+  margin-top: 6px;
+  color: #8a5a12;
+  font-size: 11px;
+  font-weight: 600;
+}

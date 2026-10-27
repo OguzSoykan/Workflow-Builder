@@ -2,13 +2,18 @@ import { Handle, Position, type Node, type NodeProps } from '@xyflow/react';
 import { NODE_HANDLES, type WorkflowNode } from '@workflow-builder/workflow-contract';
 import { HANDLE_LABELS, NODE_LABELS } from './model';
 
-export type CanvasNode = Node<{ node: WorkflowNode; summary: string | null }, 'workflow'>;
+export type CanvasNode = Node<
+  { node: WorkflowNode; summary: string | null; issueCount: number },
+  'workflow'
+>;
 
 export function WorkflowCard({ data, selected, isConnectable }: NodeProps<CanvasNode>) {
-  const { node, summary } = data;
+  const { node, summary, issueCount } = data;
   const handles = NODE_HANDLES[node.type];
   return (
-    <div className={`workflow-card kind-${node.type}${selected ? ' is-selected' : ''}`}>
+    <div
+      className={`workflow-card kind-${node.type}${selected ? ' is-selected' : ''}${issueCount ? ' has-issues' : ''}`}
+    >
       {node.type !== 'start' && (
         <Handle type="target" position={Position.Left} id="input" isConnectable={isConnectable} />
       )}
@@ -25,6 +30,7 @@ export function WorkflowCard({ data, selected, isConnectable }: NodeProps<Canvas
                 : 'Akış tamamlanır'
               : 'Akış burada başlar'}
       </span>
+      {issueCount > 0 && <span className="node-issues">⚠ {issueCount} sorun</span>}
       {handles.map((handle, index) => (
         <div key={handle}>
           <span
