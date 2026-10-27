@@ -77,8 +77,8 @@ export function TransferPanel({
       {pending && (
         <div className="import-confirm" role="group" aria-label="İçe aktarma onayı">
           <p>
-            <strong>{pending.fileName}</strong> mevcut taslağın yerine geçecek. Mevcut taslak geri
-            alınamaz; gerekiyorsa önce dışa aktarın.
+            <strong>{pending.fileName}</strong> mevcut taslağın yerine geçecek. Bu oturumda “Geri
+            al” ile dönebilirsiniz; kalıcı yedek için önce dışa aktarın.
           </p>
           {pending.issueCount > 0 && (
             <p className="muted">

@@ -16,6 +16,7 @@ export default defineConfig({
         'apps/web/src/editor/draft-storage.ts',
         'apps/web/src/editor/transfer.ts',
         'apps/web/src/editor/validation-messages.ts',
+        'apps/web/src/editor/history.ts',
       ],
       reporter: ['text', 'json-summary', 'html'],
     },

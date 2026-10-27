@@ -6,7 +6,7 @@
 27 Ekim'de squash merge edildi: `e5ad0ea`. PR check ve merge sonrası main `quality`
 check'i geçti. Main run: [40495104283](https://github.com/OguzSoykan/Workflow-Builder/actions/runs/40495104283).
 
-Faz 2 kullanıcı onayıyla başladı; aktif görev WB-008A graph validation UX. Cloud deploy ve canlı model çağrısı başlatılmadı. Zod advisory'si aşağıda
+Faz 2 kullanıcı onayıyla başladı; son kart WB-008B undo/redo ve Faz 2 çıkışı. Cloud deploy ve canlı model çağrısı başlatılmadı. Zod advisory'si aşağıda
 açık takip riski olarak kayıtlıdır; Faz 1 kabul testleri/CI'ı engellemedi.
 
 ## Aktif çalışma
@@ -14,7 +14,7 @@ açık takip riski olarak kayıtlıdır; Faz 1 kabul testleri/CI'ı engellemedi.
 [Faz 2 planı](docs/PHASE-2.md) ve [adım günlüğü](docs/worklogs/PHASE-2.md).
 WB-005A temeli PR #8, mobil tuval/mini harita düzeltmesi [PR #9](https://github.com/OguzSoykan/Workflow-Builder/pull/9) ile main'e alındı (`9ddbc8a`). PR #9 güncel main ile yenilendi; [quality 40546965579](https://github.com/OguzSoykan/Workflow-Builder/actions/runs/40546965579) PASS sonrası kullanıcı talimatıyla birleştirildi.
 
-WB-005B [PR #10](https://github.com/OguzSoykan/Workflow-Builder/pull/10) (`d47d1bd`), WB-006A [PR #11](https://github.com/OguzSoykan/Workflow-Builder/pull/11) (`30699d8`) ve WB-006B koşul/onay dalı deneyimi [PR #12](https://github.com/OguzSoykan/Workflow-Builder/pull/12) (`431e24a`, kullanıcı merge izniyle) main'de. Codex oturumu kota nedeniyle durdu, Claude Code devraldı (P2-026). D-03/D-08 kullanıcı onayıyla karara bağlandı (DECISIONS). WB-007A yerel taslak kaydı [PR #13](https://github.com/OguzSoykan/Workflow-Builder/pull/13) (`9960e7a`) main'de; kullanıcı kalan Faz 2 PR'larının CI sonrası agent merge'üne izin verdi. WB-007B import/export [PR #14](https://github.com/OguzSoykan/Workflow-Builder/pull/14) (`9f0e8b1`) main'de. WB-008A uygulandı: validator sorunları Türkçe açıklanır, adım sırasıyla listelenir, tıklanınca ilgili adım/bağlantı seçilir; sorunlu kartlar işaretlenir. Yerel typecheck/lint/format, 287 Vitest + 2 scanner + 3 OpenAPI, coverage, 27/27 E2E, build ve Gitleaks PASS; PR ve hosted CI bekleniyor. Sonraki kart WB-008B undo/redo ve Faz 2 çıkışı.
+WB-005B [PR #10](https://github.com/OguzSoykan/Workflow-Builder/pull/10) (`d47d1bd`), WB-006A [PR #11](https://github.com/OguzSoykan/Workflow-Builder/pull/11) (`30699d8`) ve WB-006B koşul/onay dalı deneyimi [PR #12](https://github.com/OguzSoykan/Workflow-Builder/pull/12) (`431e24a`, kullanıcı merge izniyle) main'de. Codex oturumu kota nedeniyle durdu, Claude Code devraldı (P2-026). D-03/D-08 kullanıcı onayıyla karara bağlandı (DECISIONS). WB-007A yerel taslak kaydı [PR #13](https://github.com/OguzSoykan/Workflow-Builder/pull/13) (`9960e7a`) main'de; kullanıcı kalan Faz 2 PR'larının CI sonrası agent merge'üne izin verdi. WB-007B import/export [PR #14](https://github.com/OguzSoykan/Workflow-Builder/pull/14) (`9f0e8b1`) main'de. WB-008A validation UX [PR #15](https://github.com/OguzSoykan/Workflow-Builder/pull/15) (`66cf83d`) main'de. WB-008B uygulandı: bellekte 50 adımlık undo/redo (sürükleme tek adım, import geri alınabilir, kısayollar form alanı dışında) ve Faz 2 uçtan uca çıkış senaryosu. Yerel typecheck/lint/format, 292 Vitest + 2 scanner + 3 OpenAPI, coverage, 29/29 E2E (yeni spec'ler 5 tekrar 55/55), build ve Gitleaks PASS. Bu PR merge edilince WB-005–008 tamamlanır; Faz 3 ayrı kullanıcı onayı gerektirir.
 
 ## Yapılanların özeti
 
@@ -35,8 +35,8 @@ Görev dalında `/` görsel editör, `/health` servis ekranıdır. Dört adım t
    Güncel paket/advisory durumu yeniden doğrulanmalı; çözümden sonra npm audit, tip kontrolü,
    şema/validator ve browser/Worker uyumluluğu kanıtlanmalı. Mevcut girdi limitleri açığın
    giderildiği anlamına gelmez.
-2. **WB-008A review:** Validation UX PR/CI teslimi; adımlar ve kanıtlar çalışma günlüğünde.
-3. **Faz 2 devamı:** Undo/redo ve Faz 2 çıkış kanıtı.
+2. **Faz 2 kapanışı:** WB-008B PR/CI teslimi; adımlar ve kanıtlar çalışma günlüğünde.
+3. **Faz 3 onayı:** Simülasyon fazı kullanıcı onayı olmadan başlamaz.
 4. **Sonraki fazlar:** Simülasyon → auth/bulut kayıt → bütçe kontrollü AI → yayın kalitesi.
    Ayrıntılı kapsam ve bağımlılıklar [ROADMAP](ROADMAP.md), yakın işler [TASKS](TASKS.md) içinde.
 
@@ -44,17 +44,17 @@ Görev dalında `/` görsel editör, `/health` servis ekranıdır. Dört adım t
 
 ## Mevcut durum
 
-| İş          | Durum       | Kanıt / kalan                                                                     |
-| ----------- | ----------- | --------------------------------------------------------------------------------- |
-| WB-001A/B   | Done        | Main'de; PR #1/#2 birleşti                                                        |
-| WB-001C     | Done        | PR #3/#5; gerçek Worker/Chromium health + contract smoke: 10/10                   |
-| WB-002A/B/C | Done        | PR #5; şema, hash, round-trip, limit matrisi ve browser/Worker hash vektörü geçti |
-| WB-003A/B/C | Done        | PR #5; validator, hostile input, deterministik issue ve coverage geçti            |
-| WB-004A     | Done        | PR #4/#5; main quality workflow, pozitif ve beklenen negatif CI kanıtları         |
-| WB-004B     | Done        | PR #5; OpenAPI, env, ADR, issue-code ve eşleşme testleri geçti                    |
-| WB-004C     | Done        | PR #5 merge; PR ve merge sonrası main quality check geçti                         |
-| Faz 2       | In Progress | WB-008A Review; WB-005–007 main’de                                                |
-| Faz 3–6     | Başlamadı   | Ayrı faz onayı gerekir                                                            |
+| İş          | Durum     | Kanıt / kalan                                                                     |
+| ----------- | --------- | --------------------------------------------------------------------------------- |
+| WB-001A/B   | Done      | Main'de; PR #1/#2 birleşti                                                        |
+| WB-001C     | Done      | PR #3/#5; gerçek Worker/Chromium health + contract smoke: 10/10                   |
+| WB-002A/B/C | Done      | PR #5; şema, hash, round-trip, limit matrisi ve browser/Worker hash vektörü geçti |
+| WB-003A/B/C | Done      | PR #5; validator, hostile input, deterministik issue ve coverage geçti            |
+| WB-004A     | Done      | PR #4/#5; main quality workflow, pozitif ve beklenen negatif CI kanıtları         |
+| WB-004B     | Done      | PR #5; OpenAPI, env, ADR, issue-code ve eşleşme testleri geçti                    |
+| WB-004C     | Done      | PR #5 merge; PR ve merge sonrası main quality check geçti                         |
+| Faz 2       | Review    | WB-008B Review; WB-005–008A main’de                                               |
+| Faz 3–6     | Başlamadı | Ayrı faz onayı gerekir                                                            |
 
 Kod öz incelemesi bağımsız insan review olarak gösterilmedi. Main branch protection required `quality` check uygular; approving review sayısı 0 olarak ayarlıdır.
 
