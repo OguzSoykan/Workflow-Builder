@@ -6,7 +6,7 @@
 27 Ekim'de squash merge edildi: `e5ad0ea`. PR check ve merge sonrası main `quality`
 check'i geçti. Main run: [40495104283](https://github.com/OguzSoykan/Workflow-Builder/actions/runs/40495104283).
 
-**Faz 3 başladı (28 Ekim, kullanıcı onayı):** WB-009 saf simülatör [PR #18](https://github.com/OguzSoykan/Workflow-Builder/pull/18) (`1f148c1`) ile main'de ([ADR-017](docs/adr/ADR-017-simulator.md)). WB-010 simülasyon paneli uygulandı: girdi formu, onay/ret, Türkçe adım kaydı, tuvalde yol vurgusu, değişen akışta eski run uyarısı; yerel kapılar PASS, PR ve hosted CI bekleniyor. Plan [Faz 3](docs/PHASE-3.md), günlük [PHASE-3 worklog](docs/worklogs/PHASE-3.md). **Faz 2 tamamlandı:** WB-005–008 PR #8–#16 ile main'de (`e7e3e0e`), merge sonrası main quality PASS ([40563748969](https://github.com/OguzSoykan/Workflow-Builder/actions/runs/40563748969)). Cloud deploy ve canlı model çağrısı başlatılmadı. Zod advisory'si Zod 4.6.7 ile kapatıldı ([ADR-016](docs/adr/ADR-016-zod-declarations.md)); `npm audit` 0 bulgu.
+**Faz 3 başladı (28 Ekim, kullanıcı onayı):** WB-009 saf simülatör [PR #18](https://github.com/OguzSoykan/Workflow-Builder/pull/18) (`1f148c1`) ile main'de ([ADR-017](docs/adr/ADR-017-simulator.md)). WB-010 simülasyon paneli [PR #19](https://github.com/OguzSoykan/Workflow-Builder/pull/19) (`e7b18f9`) ile main'de. WB-011 uygulandı: satın alma/izin/masraf örnekleri “Örnekten başla” ile yüklenir ve her biri E2E simüle edilir. Yerel kapılar PASS (340 Vitest, 35 E2E); PR ve hosted CI bekleniyor. Merge sonrası Faz 3 tamamlanır; Faz 4 (auth/D1) ayrı onay ister. Plan [Faz 3](docs/PHASE-3.md), günlük [PHASE-3 worklog](docs/worklogs/PHASE-3.md). **Faz 2 tamamlandı:** WB-005–008 PR #8–#16 ile main'de (`e7e3e0e`), merge sonrası main quality PASS ([40563748969](https://github.com/OguzSoykan/Workflow-Builder/actions/runs/40563748969)). Cloud deploy ve canlı model çağrısı başlatılmadı. Zod advisory'si Zod 4.6.7 ile kapatıldı ([ADR-016](docs/adr/ADR-016-zod-declarations.md)); `npm audit` 0 bulgu.
 
 ## Aktif çalışma
 
@@ -30,7 +30,7 @@ Görev dalında `/` görsel editör, `/health` servis ekranıdır. Dört adım t
 
 ## Sıradaki işler
 
-1. **Faz 3:** WB-010 review → WB-011 örnek akışlar ve E2E.
+1. **Faz 3 kapanışı:** WB-011 PR/CI teslimi. **Faz 4** (Firebase auth, Worker doğrulama, D1) kullanıcı onayı ve D-05/D-06/D-09/D-10/D-12 kararları olmadan başlamaz.
 2. **Açık takip:** React Flow declaration yaması upstream [#6038](https://github.com/xyflow/xyflow/issues/6038) düzeltmesi yayınlanınca kaldırılacak (ADR-015); düzeltme PR'ları #6039/#6045/#6060 27 Ekim'de açık. Bağımsız insan review yok.
 3. **Tamamlanan güvenlik takibi:** Zod 4.6.7 + saf paketlerde `skipLibCheck` (ADR-016); ES-only sınırı probe ile doğrulandı.
 4. **Sonraki fazlar:** Simülasyon → auth/bulut kayıt → bütçe kontrollü AI → yayın kalitesi.

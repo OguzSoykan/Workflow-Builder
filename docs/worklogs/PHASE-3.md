@@ -24,3 +24,11 @@
 - `simulation-view.ts` (form → girdi, girdi hata metni, Türkçe adım açıklaması, izlenen yol) ve `SimulationPanel`; Editor'da run durumu, içerik hash'iyle eski run tespiti, kart/bağlantı vurgusu (`sim-current`, `sim-visited`, `sim-edge`).
 - İlk E2E denemesi başlamadı: 8787'de kullanıcıya ait (Node v22) `wrangler dev` çalışıyordu. Kullanıcıya soruldu; “Durdur, testleri çalıştır” cevabıyla süreç durduruldu, yeniden başlatılmadı. Sonra 2 yeni senaryo PASS: AC-03/04 (5000 → tamamlandı; 15000 → onay bekler, onay/ret, vurgu sayıları, temizle) ve eksik/sınır dışı girdi, rol değişince eski run, adım silinince doğrulama uyarısı.
 - Testteki FormData tuple dizisi typecheck'te `TS2769` verdi; açık tiple düzeltildi. Kapılar: typecheck/lint/format PASS; 327 Vitest (4 yeni) + 2 + 3 PASS; coverage satır %99,57; build, secret:scan, Gitleaks PASS; E2E 31/31 PASS. 390px ekran görüntüsü incelendi; durum satırına üst boşluk eklendi.
+
+## P3-005 — WB-010 merge, WB-011 uygulama ve Faz 3 devir notu (2026-10-28)
+
+- [PR #19](https://github.com/OguzSoykan/Workflow-Builder/pull/19) [quality 40587436184](https://github.com/OguzSoykan/Workflow-Builder/actions/runs/40587436184) PASS; kullanıcı “mergeleyip devam” dedi, agent squash merge etti: main `e7b18f9`. `feat/WB-011-examples` açıldı.
+- `examples.ts` (satın alma/izin/masraf), `ExamplesPanel` (onaylı, geri alınabilir yükleme, yeni workflowId). 13 unit test: üç örnek geçerli, 9 simülasyon senaryosu, eksik girdi.
+- İlk E2E'de izin ve masraf testleri zaman aşımına uğradı: `label` içine sarılı `select`'in erişilebilir adı seçenek metinlerini içeriyordu, “İzin türü …” adıyla bulunamadı. Simülasyon girdilerinde `select` etikete `htmlFor` ile bağlandı; 6/6 PASS.
+- Kapılar: typecheck/lint/format, 340 Vitest + 2 + 3, coverage satır %99,58, negatif kapılar, build, secret:scan, Gitleaks PASS; E2E 35/35; yeni spec'ler `--repeat-each=5` 30/30.
+- Sonraki: WB-011 PR'ı kullanıcı birleştirince Faz 3 tamamlanır. Faz 4 (WB-012–015) kullanıcı onayı ve D-05/D-06/D-09/D-10/D-12 kararları ister; ücretsiz Firebase/Cloudflare hesap kurulumu gerektirebilir.
