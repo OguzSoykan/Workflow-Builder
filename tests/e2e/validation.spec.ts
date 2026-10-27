@@ -34,6 +34,12 @@ test('explains graph problems, selects the related step and clears when executab
     '“Koşul” koşulu tanımlı bir giriş alanına bağlı değil.',
     '“Koşul” adımına başlangıçtan ulaşılamıyor.',
   ]);
+  // The file panel and the validation panel report the same number of issues.
+  const count = await issues(page).count();
+  await expect(panel(page)).toContainText(`${count} sorun ·`);
+  await expect(page.getByRole('region', { name: 'Dosya işlemleri', exact: true })).toContainText(
+    `Akışta ${count} doğrulama sorunu var`,
+  );
   const approvalCard = page.locator('.react-flow__node').nth(1);
   await expect(approvalCard).toContainText('⚠');
   await expect(approvalCard.locator('.workflow-card')).toHaveClass(/has-issues/);
