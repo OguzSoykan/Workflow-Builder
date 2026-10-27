@@ -197,3 +197,18 @@ ham uygulama içeriği kaydedilmez. Saat dilimi Europe/Istanbul; girişler geçm
 - Mobil ekran görüntüsü incelendi: form/kartlar viewport içinde, unsafe etiket düz metin, kontroller kullanılabilir. Sonraki metin açıklamaları davranışı değiştirmedi; hosted CI son snapshot'ı tekrar doğrulayacak.
 - Diff öz incelemesi tamamlandı. Sekiz orijinal planlama belgesi değişmedi; contract/core uygulaması ve bağımlılıklar değişmedi. STATUS/TASKS/Faz planı WB-005B Done, WB-006A Review olarak güncellendi.
 - Sonraki adım: commit/push, PR ve required quality. Bağımsız insan review uydurulmayacak; yeni kart WB-006B.
+
+## P2-025 — WB-006A teslimi ve devam notu (2026-10-27)
+
+- Dal `feat/WB-006A-input-fields`, uygulama commit'i `b3076d2`, push başarılı. [PR #11](https://github.com/OguzSoykan/Workflow-Builder/pull/11) açıldı; WB-006A Review, henüz birleştirilmedi.
+- Tamamlanan: beş tipli input editörü, default/options/validation, benzersiz anahtar/30 alan limiti, referanslı key rename, kullanılan alanın silinmesini ve uyumsuz tür/seçenek değişimini önleme; 256 KiB son aday kontrolü.
+- Kanıt: typecheck/lint/format, 239 Vitest + 2 scanner + 3 OpenAPI, 18/18 E2E, web/Worker dry-run build ve Gitleaks PASS. Mobil görsel ve diff incelendi. Son metin açıklamaları ve ek sınır testi hosted CI tarafından yeniden doğrulanacak.
+- Bu not yazılırken hosted CI henüz sonuçlanmadı; nihai head için GitHub quality kaydı esas alınmalı. Son doküman commit/push ardından yalnız CI izlenecek, bu oturumda yeni uygulama kartı başlatılmayacak.
+- Bilinen açık işler: WB-006B Condition alan/operatör/değer formu ve onay dalı UX; WB-007 için D-03/D-08; validation UX/undo-redo. Zod advisory ve React Flow declaration yaması sürüyor; yeni bağımlılık/deploy yok.
+- Son proje yazma işlemi bu devir notu ve PR bağlantıları; biçim/diff kontrolü, commit/push yapılacak. Hesap kotasının kalan miktarı görünmüyor; yeni karta geçmeden güvenli durma payı bırakıldı.
+
+### Sonraki somut adım
+
+1. `cd /Users/oguzsoykan/Workflow-Builder`; `git status --short --branch`; `git fetch origin`.
+2. PR #11'in güncel head required quality, review ve merge durumunu doğrula; gerekirse güncel main ile güncelle. Başarıyı önceki SHA'dan varsayma.
+3. Teslim sonuçlandıktan sonra WB-006B için güncel main tabanlı ayrı dal aç; mevcut `OPERATORS`, `isFieldValue` ve saf validator sözleşmesini oku. Condition alan seçimi/tipli operatör/değer, true/false ve approved/rejected bağlantı deneyimini uygula. Adımları P2-026'dan itibaren kaydet.

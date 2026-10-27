@@ -14,7 +14,7 @@ açık takip riski olarak kayıtlıdır; Faz 1 kabul testleri/CI'ı engellemedi.
 [Faz 2 planı](docs/PHASE-2.md) ve [adım günlüğü](docs/worklogs/PHASE-2.md).
 WB-005A temeli PR #8, mobil tuval/mini harita düzeltmesi [PR #9](https://github.com/OguzSoykan/Workflow-Builder/pull/9) ile main'e alındı (`9ddbc8a`). PR #9 güncel main ile yenilendi; [quality 40546965579](https://github.com/OguzSoykan/Workflow-Builder/actions/runs/40546965579) PASS sonrası kullanıcı talimatıyla birleştirildi.
 
-WB-005B [PR #10](https://github.com/OguzSoykan/Workflow-Builder/pull/10) ile main'e alındı (`d47d1bd`); merge sonrası quality PASS. WB-006A tipli giriş alanları uygulandı: beş tür, benzersiz key, default/options/validation, koşul referanslarını koruyan atomik değişiklikler. Yerel typecheck/lint/format, 239 Vitest + 2 scanner + 3 OpenAPI, 18/18 E2E, build ve Gitleaks PASS. PR/hosted CI teslimi hazırlanıyor; WB-006A Review. Sonraki kart WB-006B koşul/onay dalı deneyimi. Aşağıdaki Faz 1 sonuçları tarihsel teslim kanıtıdır.
+WB-005B [PR #10](https://github.com/OguzSoykan/Workflow-Builder/pull/10) ile main'e alındı (`d47d1bd`); merge sonrası quality PASS. WB-006A tipli giriş alanları uygulandı: beş tür, benzersiz key, default/options/validation, koşul referanslarını koruyan atomik değişiklikler. Yerel typecheck/lint/format, 239 Vitest + 2 scanner + 3 OpenAPI, 18/18 E2E, build ve Gitleaks PASS. [PR #11](https://github.com/OguzSoykan/Workflow-Builder/pull/11) açıldı; hosted CI ve review bekleniyor; WB-006A Review. Sonraki kart WB-006B koşul/onay dalı deneyimi. Aşağıdaki Faz 1 sonuçları tarihsel teslim kanıtıdır.
 
 ## Yapılanların özeti
 
