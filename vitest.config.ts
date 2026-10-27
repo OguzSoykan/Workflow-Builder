@@ -13,6 +13,7 @@ export default defineConfig({
         'apps/web/src/editor/input-model.ts',
         'apps/web/src/editor/input-draft.ts',
         'apps/web/src/editor/condition-model.ts',
+        'apps/web/src/editor/draft-storage.ts',
       ],
       reporter: ['text', 'json-summary', 'html'],
     },

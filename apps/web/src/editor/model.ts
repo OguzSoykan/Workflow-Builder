@@ -194,8 +194,14 @@ export type EditorState = {
   error: string | null;
 };
 export type EditorAction =
-  Edit | { type: 'select-node'; id: string | null } | { type: 'select-edge'; id: string | null };
+  | Edit
+  | { type: 'select-node'; id: string | null }
+  | { type: 'select-edge'; id: string | null }
+  | { type: 'replace-workflow'; workflow: Workflow };
 export function editorReducer(state: EditorState, action: EditorAction): EditorState {
+  // Callers pass an already parsed document, e.g. another tab's saved draft.
+  if (action.type === 'replace-workflow')
+    return { workflow: action.workflow, nodeId: null, edgeId: null, error: null };
   if (action.type === 'select-node')
     return { ...state, nodeId: action.id, edgeId: null, error: null };
   if (action.type === 'select-edge')

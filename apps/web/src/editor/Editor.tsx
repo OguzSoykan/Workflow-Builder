@@ -14,6 +14,8 @@ import { NodePropertiesForm } from './NodePropertiesForm';
 import { ConnectionForm } from './ConnectionForm';
 import { WorkflowCard, type CanvasNode } from './WorkflowCard';
 import { conditionSummary, invalidConditionIds } from './condition-model';
+import { browserStore, loadDraft } from './draft-storage';
+import { useDraft, type DraftStatus } from './use-draft';
 import {
   connectionError,
   editorReducer,
@@ -26,18 +28,30 @@ import '@xyflow/react/dist/style.css';
 
 const nodeTypes = { workflow: WorkflowCard };
 const kinds: NodeKind[] = ['start', 'approval', 'condition', 'end'];
+const STATUS_LABELS: Record<DraftStatus, string> = {
+  idle: 'Kaydedilecek değişiklik yok',
+  saved: 'Tarayıcıda kaydedildi',
+  quota: 'Kaydedilemedi: depolama dolu',
+  unavailable: 'Tarayıcı kaydı kullanılamıyor',
+};
 
 function EditorWorkspace() {
   const [measurements, setMeasurements] = useState<
     Record<string, { width: number; height: number }>
   >({});
+  const [{ store, load }] = useState(() => {
+    const local = browserStore();
+    return { store: local, load: loadDraft(local) };
+  });
   const [state, dispatch] = useReducer(editorReducer, undefined, () => ({
-    workflow: emptyWorkflow(`workflow_${crypto.randomUUID()}`),
+    workflow:
+      load.status === 'loaded' ? load.workflow : emptyWorkflow(`workflow_${crypto.randomUUID()}`),
     nodeId: null,
     edgeId: null,
     error: null,
   }));
   const { workflow } = state;
+  const draft = useDraft(store, load, workflow, dispatch);
   const nodes = useMemo<CanvasNode[]>(() => {
     const invalid = invalidConditionIds(workflow);
     return workflow.nodes.map((node) => ({
@@ -82,14 +96,50 @@ function EditorWorkspace() {
           <h1>İş akışı tasarımı</h1>
         </div>
         <div className="header-meta">
-          <span className="draft-badge">Kaydedilmemiş taslak</span>
+          <span className="draft-badge" role="status">
+            {draft.conflict ? 'Otomatik kayıt duraklatıldı' : STATUS_LABELS[draft.status]}
+          </span>
           <a href="/health">Servis durumu</a>
         </div>
       </header>
       <div className="draft-notice">
-        Bu sürümde değişiklikler yalnızca açık oturumda tutulur. Sayfayı yenilemek çalışmanızı
-        siler.
+        Taslak bu tarayıcıda otomatik kaydedilir; eksik adımlar olsa da yenilemede geri gelir. Hesap
+        veya bulut kaydı yoktur.
       </div>
+      {load.status === 'corrupt' && (
+        <div className="draft-alert" role="alert">
+          Önceki taslak okunamadı. {load.backedUp ? 'Yedeklendi ve' : 'Yedeklenemedi;'} boş bir
+          taslakla başlandı.
+        </div>
+      )}
+      {!draft.conflict && draft.status === 'quota' && (
+        <div className="draft-alert" role="alert">
+          Tarayıcı depolaması dolu olduğu için son değişiklikler kaydedilmedi. Sayfayı yenilerseniz
+          kaybolur.
+        </div>
+      )}
+      {!draft.conflict && draft.status === 'unavailable' && (
+        <div className="draft-alert" role="alert">
+          Tarayıcı depolamasına erişilemiyor; değişiklikler yalnız bu oturumda kalır.
+        </div>
+      )}
+      {draft.conflict && (
+        <div className="draft-alert" role="alert">
+          <p>
+            Bu taslak başka bir sekmede değiştirildi. Otomatik kayıt duraklatıldı; hangi sürümle
+            devam edeceğinizi seçin.
+          </p>
+          {draft.conflictError && (
+            <p>Diğer sekmedeki kayıt okunamadı. Bu sekmedeki taslağı kaydedebilirsiniz.</p>
+          )}
+          <button type="button" className="secondary" onClick={draft.loadOther}>
+            Diğer sekmedeki sürümü yükle
+          </button>{' '}
+          <button type="button" onClick={draft.keepThis}>
+            Bu sekmedekini kaydet
+          </button>
+        </div>
+      )}
       <div className="editor-layout">
         <aside className="palette" aria-label="Adım paleti">
           <h2>Adım ekle</h2>
