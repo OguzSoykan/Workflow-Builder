@@ -1,0 +1,111 @@
+import { useState, type Dispatch } from 'react';
+import type { Workflow } from '@workflow-builder/workflow-contract';
+import { exportWorkflow, importTooLarge, readImport, semanticIssueCount } from './transfer';
+import type { EditorAction } from './model';
+
+type Pending = { fileName: string; workflow: Workflow; hashMismatch: boolean; issueCount: number };
+type Message = { kind: 'error' | 'info'; text: string };
+
+// A bad file never touches the working copy; a valid one replaces it only after confirmation.
+export function TransferPanel({
+  workflow,
+  dispatch,
+}: {
+  workflow: Workflow;
+  dispatch: Dispatch<EditorAction>;
+}) {
+  const [pending, setPending] = useState<Pending | null>(null);
+  const [message, setMessage] = useState<Message | null>(null);
+  const issues = semanticIssueCount(workflow);
+  return (
+    <section className="transfer" aria-label="Dosya işlemleri">
+      <h2 className="list-heading">Dosya</h2>
+      <button
+        type="button"
+        className="secondary"
+        onClick={() => {
+          const result = exportWorkflow(workflow);
+          if (!result.ok) {
+            setMessage({ kind: 'error', text: result.error });
+            return;
+          }
+          const url = URL.createObjectURL(new Blob([result.text], { type: 'application/json' }));
+          const link = document.createElement('a');
+          link.href = url;
+          link.download = result.fileName;
+          link.click();
+          URL.revokeObjectURL(url);
+          setMessage({ kind: 'info', text: `${result.fileName} indirildi.` });
+        }}
+      >
+        JSON dışa aktar
+      </button>
+      {issues > 0 && (
+        <p className="muted">
+          Akışta {issues} doğrulama sorunu var; taslak dışa aktarılabilir ama henüz çalıştırılamaz.
+        </p>
+      )}
+      <label className="file-label">
+        JSON içe aktar
+        <input
+          type="file"
+          accept="application/json,.json"
+          onChange={(event) => {
+            const file = event.target.files?.[0];
+            event.target.value = '';
+            setPending(null);
+            if (!file) return;
+            if (importTooLarge(file.size)) {
+              setMessage({ kind: 'error', text: 'Dosya 256 KiB sınırını aşıyor; okunmadı.' });
+              return;
+            }
+            file.text().then(
+              (text) => {
+                const result = readImport(text);
+                if (!result.ok) {
+                  setMessage({ kind: 'error', text: `İçe aktarılamadı: ${result.error}` });
+                  return;
+                }
+                setMessage(null);
+                setPending({ fileName: file.name, ...result });
+              },
+              () => setMessage({ kind: 'error', text: 'Dosya okunamadı.' }),
+            );
+          }}
+        />
+      </label>
+      {pending && (
+        <div className="import-confirm" role="group" aria-label="İçe aktarma onayı">
+          <p>
+            <strong>{pending.fileName}</strong> mevcut taslağın yerine geçecek. Mevcut taslak geri
+            alınamaz; gerekiyorsa önce dışa aktarın.
+          </p>
+          {pending.issueCount > 0 && (
+            <p className="muted">
+              Dosyada {pending.issueCount} doğrulama sorunu var; taslak olarak açılır.
+            </p>
+          )}
+          {pending.hashMismatch && (
+            <p className="muted">
+              İçerik özeti eşleşmiyor; dosya elle değiştirilmiş olabilir. Özet yeniden hesaplanacak.
+            </p>
+          )}
+          <button
+            type="button"
+            onClick={() => {
+              dispatch({ type: 'replace-workflow', workflow: pending.workflow });
+              setPending(null);
+              setMessage({ kind: 'info', text: `${pending.fileName} içe aktarıldı.` });
+            }}
+          >
+            Taslağı değiştir
+          </button>{' '}
+          <button type="button" className="secondary" onClick={() => setPending(null)}>
+            Vazgeç
+          </button>
+        </div>
+      )}
+      {message && <p role={message.kind === 'error' ? 'alert' : 'status'}>{message.text}</p>}
+    </section>
+  );
+}
