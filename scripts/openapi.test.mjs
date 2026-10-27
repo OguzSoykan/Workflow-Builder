@@ -51,11 +51,12 @@ test('OpenAPI draft has unique operations, resolvable references and explicit pa
       .reduce((current, key) => current?.[key], spec);
     assert.ok(resolved, `Unresolved reference: ${value.$ref}`);
   });
-  assert.equal(ids.size, 15);
+  assert.equal(ids.size, 16);
 });
 
 const implemented = new Set([
   'get /api/health',
+  'get /api/config',
   'get /api/v1/me',
   'get /api/v1/workflows',
   'post /api/v1/workflows',

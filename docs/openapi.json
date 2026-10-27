@@ -3,7 +3,7 @@
   "info": {
     "title": "Workflow Builder API — Phase 1 draft",
     "version": "0.1.0",
-    "description": "Health, GET /api/v1/me and workflow CRUD/revision routes are implemented; restore and AI operations remain planning specifications. Workflow v1 structure is shared with the runtime contract; draft persistence and AI payload/policy decisions remain explicit TBD. Firebase client owns registration/login/password handling. Browser owns validation and simulation. No cloud resources are provisioned."
+    "description": "Health, public config, GET /api/v1/me and workflow CRUD/revision routes are implemented; restore and AI operations remain planning specifications. Workflow v1 structure is shared with the runtime contract; draft persistence and AI payload/policy decisions remain explicit TBD. Firebase client owns registration/login/password handling. Browser owns validation and simulation. No cloud resources are provisioned."
   },
   "servers": [
     {
@@ -36,6 +36,31 @@
           },
           "500": {
             "$ref": "#/components/responses/Error500"
+          }
+        }
+      }
+    },
+    "/api/config": {
+      "get": {
+        "operationId": "getPublicConfig",
+        "summary": "Public browser configuration (Firebase web config or null)",
+        "x-status": "implemented",
+        "description": "Implemented in Phase 4 (WB-012, ADR-020). No authentication; exposes only public values from environment variables.",
+        "responses": {
+          "200": {
+            "description": "Public configuration.",
+            "headers": {
+              "X-Request-ID": {
+                "$ref": "#/components/headers/RequestId"
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PublicConfig"
+                }
+              }
+            }
           }
         }
       }
@@ -1882,6 +1907,64 @@
         },
         "required": ["data", "meta"],
         "additionalProperties": false
+      },
+      "PublicConfig": {
+        "type": "object",
+        "properties": {
+          "data": {
+            "type": "object",
+            "properties": {
+              "firebase": {
+                "oneOf": [
+                  {
+                    "type": "null"
+                  },
+                  {
+                    "type": "object",
+                    "properties": {
+                      "projectId": {
+                        "type": "string"
+                      },
+                      "apiKey": {
+                        "type": "string"
+                      },
+                      "authEmulatorUrl": {
+                        "type": "string",
+                        "pattern": "^http://(127\\.0\\.0\\.1|localhost):\\d+$"
+                      }
+                    },
+                    "required": ["projectId", "apiKey"],
+                    "additionalProperties": false
+                  }
+                ]
+              }
+            },
+            "required": ["firebase"],
+            "additionalProperties": false
+          },
+          "meta": {
+            "type": "object",
+            "properties": {
+              "requestId": {
+                "type": "string"
+              }
+            },
+            "required": ["requestId"],
+            "additionalProperties": false
+          }
+        },
+        "required": ["data", "meta"],
+        "additionalProperties": false,
+        "examples": [
+          {
+            "data": {
+              "firebase": null
+            },
+            "meta": {
+              "requestId": "synthetic-request-id"
+            }
+          }
+        ]
       }
     },
     "responses": {
