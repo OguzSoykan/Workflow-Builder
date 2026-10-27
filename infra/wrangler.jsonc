@@ -9,6 +9,15 @@
     "run_worker_first": ["/api", "/api/*"],
   },
   "dev": { "ip": "127.0.0.1", "port": 8787 },
+  // Local-only placeholder ID (D-12): no cloud database exists; staging/production need real IDs.
+  "d1_databases": [
+    {
+      "binding": "DB",
+      "database_name": "workflow-builder",
+      "database_id": "00000000-0000-0000-0000-000000000000",
+      "migrations_dir": "migrations",
+    },
+  ],
   "env": {
     "staging": { "name": "workflow-builder-staging" },
     "production": { "name": "workflow-builder-production" },
