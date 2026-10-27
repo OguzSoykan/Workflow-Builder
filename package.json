@@ -30,7 +30,9 @@
     "test:docs": "node --test scripts/openapi.test.mjs",
     "dev:contract-test": "wrangler dev --config tests/platform/wrangler.jsonc --local --show-interactive-dev-session=false",
     "docs:sync-api": "node scripts/sync-openapi.mjs && prettier --write docs/openapi.json",
-    "benchmark:validator": "node scripts/benchmark-validator.mjs"
+    "benchmark:validator": "node scripts/benchmark-validator.mjs",
+    "secrets:check": "node scripts/check-secrets.mjs",
+    "secrets:self-test": "node scripts/check-secrets.mjs --self-test"
   },
   "devDependencies": {
     "@eslint/js": "10.0.1",
@@ -51,5 +53,10 @@
   "allowScripts": {
     "esbuild@0.28.2": true,
     "workerd@1.20261019.1": true
+  },
+  "overrides": {
+    "miniflare": {
+      "undici": "7.30.1"
+    }
   }
 }

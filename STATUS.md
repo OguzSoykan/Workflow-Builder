@@ -1,30 +1,27 @@
 # Proje durumu
 
-**Son güncelleme:** 26 Ekim 2026 (Europe/Istanbul).
+**Son güncelleme:** 27 Ekim 2026 (Europe/Istanbul).
 
-**Faz 1'in yerel uygulaması tamamlandı; çıkış kapısı kapanmadı.** Şema, hash,
-saf validator, test/CI ve dokümantasyon hazır. Sabit araç zinciriyle temiz kurulum,
-gerçek Wrangler/Chromium, tam Worker artifact taraması ve hosted CI/PR/merge
-kanıtları eksik. Bu nedenle Faz 1 veya WB-004C Done olarak işaretlenmez.
+Faz 1'in yerel uygulaması ve gerçek Worker/Chromium doğrulaması tamamlandı.
+Çıkış kapısı, bu dalın PR'ı için hosted CI ve merge kanıtı gelene kadar açık.
 
-Dal: `feat/WB-002A-workflow-contract`. Son main commit'i `1fae401` (WB-001B).
-GitHub'a push/PR/merge, cloud kaynağı, deploy veya canlı model çağrısı yapılmadı.
-Kullanıcı onayları korunur; Faz 1 için yeniden ürün kararı beklenmiyor.
+Dal: `feat/WB-002A-workflow-contract`; `origin/main` güncel ve korumalı.
+Faz 2, cloud deploy ve canlı model çağrısı başlatılmadı.
 
 ## Mevcut durum
 
-| İş          | Durum     | Kanıt / kalan                                                                                         |
-| ----------- | --------- | ----------------------------------------------------------------------------------------------------- |
-| WB-001A/B   | Main'de   | `18a9018` / `1fae401`; önceki doğrulama kayıtları korunur                                             |
-| WB-001C     | Blocked   | Health + contract platform testleri hazır; gerçek Wrangler/Chromium smoke çalışamadı                  |
-| WB-002A/B/C | Review    | Zod şeması, güvenli parser, SHA-256, round-trip, fixture/limit/hash vektörleri; yerel testler geçti   |
-| WB-003A/B/C | Review    | Yapısal/semantik validator, deterministik issues, hostile/frozen girdi, coverage/50-node ölçümü geçti |
-| WB-004A     | Blocked   | CI, scanner ve negatif gate deneyi hazır; hosted CI ve tam Worker build taraması eksik                |
-| WB-004B     | Review    | OpenAPI gerçek Workflow şemasıyla eşleşiyor; env, ADR-014, issue-code ve migration belgeleri hazır    |
-| WB-004C     | Blocked   | Aşağıdaki ortam/hosted kapıları tamamlanmadan çıkış yok                                               |
-| Faz 2–6     | Başlamadı | Editor, simulator, auth, D1/DO veya AI uygulaması yok                                                 |
+| İş          | Durum     | Kanıt / kalan                                                                            |
+| ----------- | --------- | ---------------------------------------------------------------------------------------- |
+| WB-001A/B   | Main'de   | Önceki PR'larla birleşti                                                                 |
+| WB-001C     | Review    | Yerel gerçek Worker/Chromium health + contract smoke: 10/10                              |
+| WB-002A/B/C | Review    | Şema, hash, round-trip ve sınır matrisi; testler/Browser Worker hash vektörü geçti       |
+| WB-003A/B/C | Review    | Validator, hostile input, deterministik issue; testler ve coverage geçti                 |
+| WB-004A     | Review    | Hosted önceki pozitif/negatif run kanıtları var; bu güncel workflow yerel kapıları geçti |
+| WB-004B     | Review    | OpenAPI, env, ADR ve issue-code belgeleri hazır; eşleşme testleri geçti                  |
+| WB-004C     | Blocked   | Güncel dal için hosted PR check ve merge bekleniyor                                      |
+| Faz 2–6     | Başlamadı | Ayrı faz onayı gerekir                                                                   |
 
-Review yerel kod/öz inceleme durumudur; bağımsız insan onayı veya remote merge değildir.
+Review yerel inceleme/doğrulamadır; bağımsız insan onayı veya remote merge değildir.
 
 ## Onay ve teknik kararlar
 
@@ -36,49 +33,44 @@ D-03 taslak saklama ve D-11 AI payload/patch politikaları sonraki fazda açık 
 
 ## Gerçek doğrulama
 
-Kaynaklar `/private/tmp/workflow-builder-review` altındaki izole kopyada, yerel npm
-önbelleğinden kurulan araçlarla doğrulandı. Node 24.18.0/npm 11.16.0 kullanıldı;
-repo hâlâ Node 24.22.1/npm 11.19.1 ister. Vite/ESLint/Hono gibi bazı doğrulama
-sürümleri farklıdır; ayrıntılı tablo [Faz 1 kanıtında](docs/verification/PHASE-1.md).
-Yeni contract bağımlılıkları Zod 4.3.6 ve noble/hashes 2.0.1 sabit sürümleriyle
-çalıştırıldı. Global Node ayarı ve repo engine-strict kuralı değiştirilmedi.
+Repo kökünde sabit Node 24.22.1/npm 11.19.1 ile `npm ci` temiz kuruldu.
+Build'ler Wrangler 4.151.3, Vite 8.3.5; test ve tarayıcı aynı sabit lockfile
+bağımlılıklarıyla çalıştı. Global Node ayarı değişmedi.
 
-| Kontrol                                | Sonuç                                                                                        |
-| -------------------------------------- | -------------------------------------------------------------------------------------------- |
-| `npm run typecheck`                    | PASS; dört workspace + tools/test, ES-only contract/core, skipLibCheck yok                   |
-| `npm run lint`, `npm run format:check` | PASS, izole araç zinciri                                                                     |
-| `npm test`                             | PASS: 178 Vitest + 2 scanner + 3 API doküman testi, toplam 183                               |
-| `npm run test:coverage`                | PASS; toplam satır %98,78 / branch %94,01, core satır %100                                   |
-| `npm run test:negative-gates`          | PASS; temiz typecheck sonrası gerçek TS2322/assertion nonzero, probe'lar silindi             |
-| Web build                              | PASS, Vite 8.3.4; mevcut health davranışı korunur                                            |
-| Browser contract test bundle           | PASS; 91 modül, yalnız tests/platform/dist; gerçek browser çalışması değildir                |
-| `npm run benchmark:validator`          | PASS; Apple M1 Pro/Node 24.18.0, 50 node/97 edge, 1000 örnek: median 0,604 ms / p95 0,909 ms |
-| `npm run test:e2e`                     | NOT RUN; Wrangler bulunamadı, sunucu hazırlığı exit 127; 8 senaryo çalışmadı                 |
-| Worker build / tam secret scan         | NOT RUN; kaynak ve web/test browser bundle ön taraması yapıldı, Worker artifact yok          |
-| Sabit sürümlü temiz kurulum            | NOT RUN; araç sürümü ve offline paket eksiği; önceki npm ci ENOTCACHED                       |
-| Hosted CI / PR / merge                 | NOT RUN; GitHub DNS erişimi yok, GitHub eklentisi bağlı değil                                |
+| Kontrol                                                     | Sonuç                                                                                |
+| ----------------------------------------------------------- | ------------------------------------------------------------------------------------ |
+| `npm ci`                                                    | PASS; lockfile ile temiz kurulum                                                     |
+| `npm run typecheck`, `npm run lint`, `npm run format:check` | PASS                                                                                 |
+| `npm test`                                                  | PASS: 179 Vitest + 2 scanner + 3 API doküman testi                                   |
+| `npm run test:coverage`                                     | PASS; satır %99,09 / branch %94,01; core satır %100                                  |
+| `npm run test:negative-gates`                               | PASS; tip ve assertion gate'leri beklenen şekilde reddetti                           |
+| `npm run build`                                             | PASS; Vite build + Wrangler Worker dry-run, deploy yok                               |
+| `npm run secret:scan`                                       | PASS; 90 kaynak/build dosyasında bulgu yok                                           |
+| `npm run secrets:check`                                     | PASS; Git geçmişi, kaynak ve web/Worker artifact tarandı                             |
+| `npm run secrets:self-test`                                 | PASS; sentetik token yakalandı, gerçek credential kullanılmadı                       |
+| `npm run test:e2e`                                          | PASS; 10 Chromium testi, gerçek local Worker health ve hash vektörü dahil            |
+| `npm run benchmark:validator`                               | PASS; M1 Pro/Node 24.22.1, 50 node/97 edge/1000 örnek: median 0,589 ms, p95 0,886 ms |
+| `npm audit`                                                 | 1 yüksek Zod bulgusu; ayrıntısı aşağıda                                              |
+| GitHub hosted PR check                                      | Bu son dalda henüz çalışmadı                                                         |
 
-Hash sabit UTF-8 vektörü Node SHA-256 ve Node Web Crypto ile karşılaştırıldı.
-Gerçek Chromium + Worker eşitlik testi eklendi fakat çalıştırılamadı; Node kanıtı
-onun yerine sunulmaz. Benchmark yerel validator içindir, simulator/Cloudflare CPU
-hedefini kanıtlamaz. Orijinal sekiz planlama belgesi değiştirilmedi.
+Güncel dalda GitHub Actions workflow'u checksum ile sabitlenmiş action sürümleri,
+Node/npm pinleri, tam Gitleaks taraması ve Faz 1 kalite kapılarını içerir. Önceki
+hosted negatif denemeler API'den doğrulandı: tip hatası Typecheck adımında,
+bozuk assertion Unit tests adımında başarısız oldu. Main'de `quality` zorunlu
+check'i ve PR kuralı mevcut; required approving review sayısı sıfır.
 
-## Kalan çıkış adımları
+Zod 4.3.6, bağımlılık taramasında `GHSA-mrhx-c7xc-m3w5` yüksek bulgusunu taşıyor.
+Önerilen Zod 4.6.7'ye geçiş saf contract/core TypeScript derlemesinde DOM `URL`
+tiplerini zorunlu kılıyor; deneme bu nedenle reddedildi ve mimaride onaysız
+ortam tipi eklenmedi. Zod öncesi JSON-tree parser 12 derinlik, 20.000 değer,
+256 KiB sınırları koyuyor; ancak bu, advisory'yi ortadan kaldırmaz. Bu Faz 1
+çıkışında açık güvenlik riski olarak kalır ve şema sürüm yükseltmesi/uyumluluk
+çözümü gerektirir.
 
-26 Ekim devam kontrolünde npm registry ve GitHub erişimi yeniden denendi:
-`curl` exit 6 ve `git ls-remote origin HEAD` exit 128 (DNS çözümleme hatası).
-Yerelde Node 24.22.1 hâlâ yok. CI, `npm ci` öncesinde npm 11.19.1'i açıkça
-kuracak şekilde düzeltildi; setup-node'un beraberinde gelen npm sürümüne bağımlı
-değil. Bu değişiklik hosted CI çalıştırıldığı anlamına gelmez.
-
-1. Ağ erişimli ortamda Node 24.22.1/npm 11.19.1 ile normal `npm ci`.
-2. Typecheck/lint/format/test/build/secret scan; Chromium kurulumu ve 8787/8788
-   portlarında Playwright; gerçek Worker/browser hash vektörü ve health smoke.
-3. GitHub PR/hosted CI pozitif ve ayrı bozuk PR check kanıtları, yetki dahilinde
-   review/merge; sonra WB-004C çıkış kaydı. Branch protection doğrulanmış değildir.
-
-Sonraki ürün işi WB-005 (ERP canvas temeli); **Faz 2 başlatılmadı** ve ayrıca faz
-onayı gerekir. Mevcut Faz 1 uygulama onayı tekrar istenmez.
+`npm ci` install-script izin uyarısı iki platforma özel `fsevents` kopyası içindi;
+repo allowScripts kuralları değişmedi. `npm audit fix --force` çalıştırılmadı.
+Hosted PR check ve merge sonrası WB-004C kapanabilir; WB-005/Faz 2 ayrıca
+onaylanmadan başlamaz.
 
 ## Önceki teslimler
 

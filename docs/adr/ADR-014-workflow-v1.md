@@ -142,3 +142,13 @@ Test-only browser bundle ve 8788'deki Worker fixture production asset/Worker'a
 eklenmez. Production hedefi hâlâ `infra/wrangler.jsonc` içindeki tek Worker'dır.
 Gerçek Chromium/Worker testleri ortamda çalışmadığında sonuç NOT RUN olarak
 kaydedilir; Node Web Crypto karşılaştırması bunların yerine sunulmaz.
+
+### 27 Ekim 2026 — açık Zod güvenlik advisory'si
+
+`npm audit` Zod 4.3.6 için GHSA-mrhx-c7xc-m3w5 yüksek önem seviyeli advisory
+bildiriyor (sınırlı koleksiyonlarda aşırı bellek kullanımı). 4.6.7 denemesi saf
+ES-only contract/core typecheck'inde ambient DOM `URL` tipi istediğinden kabul
+edilmedi. Parser Zod'dan önce derinlik/değer/byte limitleri uygular; bu ek sınır
+advisory'yi kapatmış sayılmaz. Zod sürüm yükseltmesi, DOM bağımlılığı getirmeyen
+uyumlu bir upstream sürüm veya onaylı dar type çözümüyle ayrı olarak kapatılmalıdır.
+Bu risk npm audit çıktısında ve proje durumunda açık tutulur.

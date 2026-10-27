@@ -41,3 +41,21 @@ test('times out a stalled request and allows retry', async ({ page }) => {
   await expect(page.getByRole('alert')).toContainText('Servise ulaşılamadı');
   await expect(page.getByRole('button', { name: 'Yeniden kontrol et' })).toBeEnabled();
 });
+
+test('connection failure can be retried with the keyboard', async ({ page }) => {
+  await page.route('**/api/health', (route) => route.abort());
+  await page.goto('/');
+  await expect(page.getByRole('alert')).toContainText('Servise ulaşılamadı');
+  await page.unroute('**/api/health');
+  const retry = page.getByRole('button', { name: 'Yeniden kontrol et' });
+  await retry.focus();
+  await page.keyboard.press('Enter');
+  await expect(page.getByRole('status')).toHaveText('Servis hazır');
+});
+
+test('API navigation bypasses SPA fallback', async ({ page }) => {
+  const response = await page.goto('/api/missing');
+  expect(response?.status()).toBe(404);
+  expect(response?.headers()['content-type']).toContain('application/json');
+  expect(await response?.json()).toMatchObject({ error: { code: 'ROUTE_NOT_FOUND' } });
+});

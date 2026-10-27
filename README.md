@@ -3,12 +3,11 @@
 Görsel veya doğal dil ile workflow tasarlama ve manuel onay/ret ile simülasyon ürünü.
 Ürün gereksinimleri [PRD v1.1](docs/PRD.md) içinde korunur.
 
-**26 Ekim 2026:** Faz 1'in şema, canonical SHA-256 hash, saf graph/condition validator,
-test/CI ve API/ortam dokümanları yerel devam dalında uygulandı. Kullanıcının onayladığı
-30 alan / 256 KiB / case-sensitive / hash varsayılanları geçerlidir.
-**Faz 1 çıkış kapısı henüz kapanmadı:** sabit araç zinciriyle temiz kurulum, gerçek
-Wrangler/Chromium ve hosted CI/PR kanıtları bu ortamın erişim kısıtları nedeniyle açık.
-Gerçek sonuçlar [STATUS](STATUS.md) ve [Faz 1 kanıtında](docs/verification/PHASE-1.md).
+**27 Ekim 2026:** Faz 1 uygulaması ve yerel çıkış kontrolleri tamamlandı;
+10 Chromium smoke testi, Worker build ve tam secret taraması geçti. Güncel dalın
+hosted CI/PR birleştirme kanıtı bekleniyor. `npm audit` Zod için bir yüksek
+önemli advisory bildiriyor; uyumlu ES-only sürüm çözümü Faz 1 çıkış kaydında açık.
+Ayrıntılar [STATUS](STATUS.md) ve [Faz 1 kanıtında](docs/verification/PHASE-1.md).
 
 ## Kurulum ve çalıştırma
 

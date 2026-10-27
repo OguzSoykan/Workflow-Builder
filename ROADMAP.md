@@ -2,7 +2,7 @@
 
 **Durum:** Faz 1'in yerel şema/hash/validator/test/CI/API dokümanları uygulandı;
 D-01/02/04 varsayılanları onaylandı. Sabit kurulum/gerçek Worker-E2E/hosted CI
-çıkış kanıtları açık; Faz 1 resmen kapanmadı. [STATUS](STATUS.md) ve [TASKS](TASKS.md).
+yerel kalite kapıları geçti; güncel dalın hosted CI/PR kanıtı ve Zod advisory çözümü açık, Faz 1 resmen kapanmadı. [STATUS](STATUS.md) ve [TASKS](TASKS.md).
 Faz 2 başlamadı.
 
 | Faz / milestone        | Amaç ve kapsam                                                                                                 | Bağımlılık                                         | Çıkış kapısı                                                                                                                                                                                                            |

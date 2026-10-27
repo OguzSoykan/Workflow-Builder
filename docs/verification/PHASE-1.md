@@ -205,3 +205,30 @@ eklendi. Böylece Node dağıtımındaki npm sürümüne güvenmek yerine packag
 ve engine-strict koşulu açıkça sağlanır. Değişiklik yalnız CI araç kurulumudur;
 ürün kodu veya sürüm sabitleri değiştirilmedi. Yerel diff/biçim kontrolü hosted
 kurulumun başarı kanıtı değildir.
+
+## 27 Ekim 2026 — Güncel ortamda kalan kapılar
+
+Sabit sürümlü normal `npm ci` başarılı. Node 24.22.1/npm 11.19.1 ile typecheck,
+lint, format, 179 Vitest + scanner/OpenAPI testleri, coverage, negative gates,
+web ve Wrangler dry-run Worker build geçti. Coverage satır %99,09, branch %94,01;
+core satır %100. 10 gerçek Chromium E2E testi geçti; local Worker health, JSON 404,
+retry/timeout ve Chromium/Web Crypto/Worker SHA-256 vektörü dahil.
+
+`npm run secret:scan` 90 kaynak/build dosyasını temiz buldu. Checksum doğrulanmış
+Gitleaks 8.30.1 Git geçmişi/kaynak/build taramasını geçti; geçici sentetik token
+self-test'te yakalandı. `npm run benchmark:validator`: Apple M1 Pro, Node 24.22.1,
+50 node/97 edge, 1000 örnek; median 0,589 ms, p95 0,886 ms. Bu yalnız yerel
+validator ölçümüdür.
+
+Önceki GitHub hosted negatif denemeleri doğrulandı: run
+[39842997729](https://github.com/OguzSoykan/Workflow-Builder/actions/runs/39842997729)
+tip hatasında Typecheck'te; run
+[39843201908](https://github.com/OguzSoykan/Workflow-Builder/actions/runs/39843201908)
+assertion hatasında unit test adımında başarısız oldu. Güncel birleştirilmiş dalın
+PR CI sonucu henüz alınmadı. Main `quality` check'i koruma kuralında zorunlu;
+PR inceleme kuralı açık ancak onay sayısı sıfır.
+
+`npm audit` Zod 4.3.6 için bir yüksek bulgu (`GHSA-mrhx-c7xc-m3w5`) bildiriyor.
+4.6.7 derleme denemesi ES-only paketlerde DOM `URL` ambient tipini gerektirdi ve
+reddedildi. Parser'ın Zod öncesi derinlik 12, 20.000 değer ve 256 KiB sınırları
+var; bu durum advisory'yi kapatmaz. Ayrıntı/sonraki çözüm ADR-014 ve STATUS'ta.

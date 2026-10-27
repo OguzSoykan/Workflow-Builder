@@ -1,7 +1,18 @@
 import { describe, expect, it } from 'vitest';
 import { app } from '../src/index';
 
+app.get('/test-only-failure', () => {
+  throw new Error('sensitive details');
+});
+
 describe('health API', () => {
+  it('does not leak error messages or stacks', async () => {
+    const response = await app.request('/test-only-failure');
+    expect(response.status).toBe(500);
+    const body = await response.text();
+    expect(body).toContain('INTERNAL_ERROR');
+    expect(body).not.toContain('sensitive details');
+  });
   it('returns health without bindings, with a correlated request ID and safe headers', async () => {
     const response = await app.request('/api/health');
     expect(response.status).toBe(200);
