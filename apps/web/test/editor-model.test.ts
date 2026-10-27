@@ -2,6 +2,7 @@ import { describe, expect, it } from 'vitest';
 import {
   computeContentHash,
   parseWorkflow,
+  WORKFLOW_LIMITS,
   type Workflow,
 } from '@workflow-builder/workflow-contract';
 import {
@@ -217,4 +218,105 @@ describe('editor canonical model', () => {
     expect(rejected.workflow).toBe(state.workflow);
     expect(rejected.error).toBeTruthy();
   });
+});
+
+describe('node properties', () => {
+  it('updates name and config atomically, preserves graph identity and invalidates the hash', () => {
+    let workflow = edit(fixture(), {
+      type: 'connect',
+      id: 'edge',
+      source: 'start',
+      handle: 'next',
+      target: 'end',
+    });
+    workflow = { ...workflow, contentHash: computeContentHash(workflow) };
+    const original = structuredClone(workflow);
+    for (const properties of [
+      { type: 'start', config: { description: 'Başvuru açıklaması' } },
+      { type: 'approval', config: { roleLabel: 'Finans yöneticisi' } },
+      { type: 'end', config: { outcome: 'rejected' } },
+    ] as const) {
+      const next = edit(workflow, {
+        type: 'update-properties',
+        id: properties.type,
+        label: 'Güncel ad',
+        properties,
+      });
+      const node = next.nodes.find((item) => item.id === properties.type);
+      expect(node?.config).toEqual(properties.config);
+      expect(node?.label).toBe('Güncel ad');
+      expect(node?.position).toEqual({ x: 10, y: 20 });
+      expect(next.nodes.map((item) => item.id)).toEqual(workflow.nodes.map((item) => item.id));
+      expect(next.edges).toEqual(workflow.edges);
+      expect(next.contentHash).toBeUndefined();
+      expect(computeContentHash(next)).not.toBe(workflow.contentHash);
+      expect(workflow).toEqual(original);
+    }
+  });
+  it('accepts exact text limits and can remove an optional description', () => {
+    let workflow = edit(fixture(), {
+      type: 'update-properties',
+      id: 'start',
+      label: 'x'.repeat(120),
+      properties: { type: 'start', config: { description: 'x'.repeat(WORKFLOW_LIMITS.text) } },
+    });
+    workflow = edit(workflow, {
+      type: 'update-properties',
+      id: 'start',
+      label: 'Başlangıç',
+      properties: { type: 'start', config: {} },
+    });
+    expect(workflow.nodes[0]?.config).toEqual({});
+    workflow = edit(workflow, {
+      type: 'update-properties',
+      id: 'approval',
+      label: 'Onay',
+      properties: { type: 'approval', config: { roleLabel: 'x'.repeat(120) } },
+    });
+    expect(parseWorkflow(workflow).success).toBe(true);
+  });
+  it.each([
+    {
+      id: 'start',
+      label: 'Yeni',
+      properties: { type: 'start', config: { description: 'x'.repeat(WORKFLOW_LIMITS.text + 1) } },
+    },
+    {
+      id: 'approval',
+      label: 'Yeni',
+      properties: { type: 'approval', config: { roleLabel: '   ' } },
+    },
+    {
+      id: 'approval',
+      label: 'Yeni',
+      properties: { type: 'approval', config: { roleLabel: 'x'.repeat(121) } },
+    },
+    {
+      id: 'approval',
+      label: ' ',
+      properties: { type: 'approval', config: { roleLabel: 'Yönetici' } },
+    },
+    {
+      id: 'end',
+      label: 'x'.repeat(121),
+      properties: { type: 'end', config: { outcome: 'rejected' } },
+    },
+    { id: 'missing', label: 'Yeni', properties: { type: 'start', config: {} } },
+    { id: 'end', label: 'Yeni', properties: { type: 'start', config: {} } },
+    { id: 'condition', label: 'Yeni', properties: { type: 'start', config: {} } },
+  ] satisfies Omit<Extract<Edit, { type: 'update-properties' }>, 'type'>[])(
+    'rejects invalid properties without partial changes: %j',
+    (action) => {
+      const workflow = fixture();
+      const snapshot = structuredClone(workflow);
+      const next = editorReducer(
+        { workflow, nodeId: action.id, edgeId: null, error: null },
+        { type: 'update-properties', ...action },
+      );
+      expect(next.error).toBeTruthy();
+      expect(next.workflow).toBe(workflow);
+      expect(next.nodeId).toBe(action.id);
+      expect(workflow).toEqual(snapshot);
+    },
+  );
 });

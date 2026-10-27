@@ -111,3 +111,60 @@ ham uygulama içeriği kaydedilmez. Saat dilimi Europe/Istanbul; girişler geçm
 3. Sıradaki küçük kart WB-005B: Start açıklaması, Approval rolü, End sonucu; şema uyumlu atomik config değişiklikleri ve anlamlı unit/E2E senaryoları. Condition/input yapılandırması WB-006 bağımlılığıdır. Yeni kart için güncel main tabanlı ayrı görev dalı aç.
 4. WB-007 öncesi D-03/D-08 saklama kararları açık. Taslak yenilemede kaybolur; Zod yüksek advisory ve checksum kontrollü React Flow declaration yaması devam ediyor.
 5. Her anlamlı adımı bu günlüğe ekle. Limit yaklaşınca yeni iş açma; son işlem olarak aynı biçimde devam notu bırak. Kalan hesap kotası doğrudan görünmüyor.
+
+## P2-014 — WB-005B başlangıcı (2026-10-27)
+
+- Temiz çalışma ağacı, AGENTS/STATUS/geliştirme kuralları ve şema incelendi; `git fetch origin` başarılı.
+- PR #9 açık; `859ddcb` quality henüz sonuçlanmadı. Önceki P2-012/013 devir kayıtları bu PR'ın dalında; güncel main henüz bunları içermiyor.
+- `git switch -c feat/WB-005B-node-properties origin/main`: bağımsız kart dalı açıldı. PR #9'un mobil/mini harita düzeltmesi bu dala taşınmadı.
+- Kapsam: ad + Start açıklaması / Approval rolü / End sonucu tek atomik işlem; yanlış tür ve olmayan node reddi, kimlik/edge/hash korunumu, form seçimi ve hata E2E. Condition config WB-006'da kalır.
+- Şema: ad/rol 1–120, yalnız boşluk reddi; açıklama WORKFLOW_LIMITS.text, isteğe bağlı; outcome completed/rejected. Sözleşme değişmez.
+
+## P2-015 — Özellik paneli ve PR #9 güncellemesi (2026-10-27)
+
+- NodePropertiesForm eklendi; ad + config tek şema doğrulamasından geçer. Yanlış tür/olmayan hedef reddedilir, boş açıklama kaldırılır; End sonucu tuvalde gösterilir. İlk typecheck PASS.
+- Kullanıcının PR kapatma mesajı önce kendisinin yapacağı işlem olarak yorumlandı. Ekran görüntüsü ve sonraki talimat sonrası PR #9'u güncelleyip kontrollerden sonra birleştirme işi üstlenildi.
+- API: PR #9 `open`, `mergeable_state=behind`; quality Chromium kurulumundaydı, başarısız test yok. `PUT pulls/9/update-branch` kabul edildi; required CI atlanmadan yeni head beklenecek.
+
+## P2-016 — Test sonuçları ve takip (2026-10-27)
+
+- Typecheck ve 205 Vitest + 2 scanner + 3 OpenAPI testi PASS. Yeni 10 model senaryosu atomiklik, kimlik/referans/hash, sınır değerleri ve yanlış tür/olmayan hedefi doğruladı.
+- İlk E2E 14/15 PASS; yeni senaryo iç içe select/option metni nedeniyle exact getByLabel sorgusunda zaman aşımına uğradı. Rol/ad sorgusu ve açık id/htmlFor eşlemesi uygulandı; yeniden çalıştırılacak.
+- PR #9 update-branch başarılı: yeni head `c30e7a6`; eski CI yeni commit nedeniyle cancelled, yeni run 40546965579 Chromium kurulumunda. Typecheck/lint/format/unit/build başarılı.
+- CI sorgusunda tırnaksız `?per_page=3` zsh glob hatası verdi; API isteği gitmedi, tırnaklı sorgu ile düzeltildi.
+
+## P2-017 — PR #9 birleşti; WB-005B doğrulaması (2026-10-27)
+
+- PR #9 head `c30e7a6` required quality [40546965579](https://github.com/OguzSoykan/Workflow-Builder/actions/runs/40546965579) PASS; kullanıcı talimatıyla squash merge başarılı: `9ddbc8a973939925aa76d1edd8926caa308c6427`.
+- Bağımsız insan review verilmiş gibi gösterilmedi; kullanıcı oturum talimatı ve agent öz incelemesi esas alındı. Required check atlanmadı.
+- WB-005B lint, 205 test coverage (satır %99,01 / branch %93,69), build PASS. Rol/ad sorgusu düzeltmesi sonrası 15/15 E2E PASS.
+- Şimdi WB-005B snapshot commit'i ardından güncel main birleştirilecek; PR #9 mobil/mini harita kontrolleriyle birlikte yeniden doğrulanacak.
+
+## P2-018 — Main entegrasyonu (2026-10-27)
+
+- Uygulama snapshot commit: `5d865a3`. `git merge origin/main` kod/test/CSS dosyalarını otomatik birleştirdi; yalnız çalışma günlüğünün sonuna eklenen kayıtlar çakıştı.
+- Günlükte iki tarafın tüm kayıtları P2-012–017 sırasıyla korundu. Mobil tuval/mini harita ve limit-devir kuralı artık bu dalda da mevcut.
+- Main tabanı `9ddbc8a`; entegrasyon sonrası tip/lint/E2E ve kaynak/build taraması yeniden çalıştırılacak.
+
+## P2-019 — Entegrasyon kabulü ve PR hazırlığı (2026-10-27)
+
+- Entegrasyon commit'i `72ab791`; typecheck/lint/format, 15/15 E2E ve web + Worker dry-run build PASS. Gitleaks 34 commit, kaynak ve artifact taramasında bulgu yok.
+- Desktop ekran görüntüsünde özellik paneli ve mini harita kontrol edildi. Mobil test tuval yüksekliği/node/mini harita görünürlüğüyle geçti.
+- Diff öz incelemesi: public contract kullanımı, atomik hata yolu, koşulun kapsam dışında kalması, seçimde form değerleri ve eski test davranışları doğrulandı. Sekiz orijinal planlama belgesi değişmedi; yeni bağımlılık yok.
+- STATUS/TASKS/Faz planı WB-005A Done, WB-005B Review, sonraki WB-006A olarak güncellendi. PR #9 main CI 40547334504 henüz çalışıyor.
+- Sonraki adım WB-005B dalını push edip PR açmak ve required hosted quality sonucunu doğrulamak.
+
+## P2-020 — Teslim ve devam notu (2026-10-27)
+
+- Dal: `feat/WB-005B-node-properties`. Uygulama `5d865a3`, main entegrasyonu `72ab791`, doğrulama belgeleri `3c7294a`; push başarılı.
+- [PR #10](https://github.com/OguzSoykan/Workflow-Builder/pull/10) açıldı. WB-005B Review; PR #9 kullanıcı talimatıyla birleşti (`9ddbc8a`). Bu yeni PR henüz birleştirilmedi.
+- Yerel sonuçlar: typecheck/lint/format, 205 Vitest + 2 scanner + 3 OpenAPI, coverage, 15/15 E2E, build, kaynak/geçmiş/artifact Gitleaks PASS. Mobil/mini harita düzeltmesiyle entegrasyon tekrar doğrulandı.
+- Bu kaydın yazıldığı anda PR #10 hosted CI ve PR #9 sonrası main CI henüz tamamlanmadı. Sonuç için GitHub check kaydı esas alınmalı; önceki commit'in başarısı yeni head'e atfedilmez. Son doküman push'undan sonra yalnız bu kontroller takip edilecek; yeni uygulama kartı başlatılmayacak.
+- Açık konular: Zod advisory, checksum kontrollü React Flow declaration yaması; D-03/D-08 yerel kayıt kararları. Condition config/input, persistence, import/export, validation UX ve undo/redo hâlâ sırada.
+- Son proje yazma işlemi bu devir kaydı ve STATUS/plan bağlantıları; biçim/diff kontrolü ardından commit/push. Hesap kotasının kalan miktarı doğrudan görünmüyor.
+
+### Sonraki somut adım
+
+1. `cd /Users/oguzsoykan/Workflow-Builder`; `git status --short --branch`; `git fetch origin`.
+2. PR #10 güncel head için required `quality` sonucunu ve review/merge durumunu kontrol et. API yardımcı dosyası `/private/tmp/wb-github.py`; kalıcı credential veya token kaydetme.
+3. PR #10 teslimini sonuçlandırdıktan sonra WB-006A için güncel main tabanından ayrı dal: number/string/boolean/date/enum input editörü, benzersiz key, default/options/validation ve mevcut referans etkileri. Önce ilgili contract ve kartı oku; değişiklikleri P2-021 ile günlüğe kaydet.

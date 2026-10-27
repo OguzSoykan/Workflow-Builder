@@ -13,6 +13,7 @@ body {
 }
 button,
 input,
+textarea,
 select {
   font: inherit;
 }
@@ -35,6 +36,7 @@ button:disabled {
 button:focus-visible,
 a:focus-visible,
 input:focus-visible,
+textarea:focus-visible,
 select:focus-visible {
   outline: 3px solid #5b9dde;
   outline-offset: 3px;
@@ -68,6 +70,7 @@ label {
   margin: 14px 0;
 }
 input,
+textarea,
 select {
   width: 100%;
   min-width: 0;
@@ -429,4 +432,9 @@ select {
   .connection-form {
     margin-top: 24px;
   }
+}
+
+.inspector textarea {
+  resize: vertical;
+  min-height: 100px;
 }

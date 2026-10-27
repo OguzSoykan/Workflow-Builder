@@ -20,7 +20,9 @@ export function WorkflowCard({ data, selected, isConnectable }: NodeProps<Canvas
           : node.type === 'approval'
             ? node.config.roleLabel
             : node.type === 'end'
-              ? 'Akış tamamlanır'
+              ? node.config.outcome === 'rejected'
+                ? 'Akış reddedilir'
+                : 'Akış tamamlanır'
               : 'Akış burada başlar'}
       </span>
       {handles.map((handle, index) => (

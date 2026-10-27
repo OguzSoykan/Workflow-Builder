@@ -15,7 +15,7 @@ test('opens an empty editor, adds all node kinds and preserves IDs on rename and
   const end = page.locator('.react-flow__node').last();
   const id = await end.getAttribute('data-id');
   await page.getByLabel('Adım adı', { exact: true }).fill('Bitiş güncellendi');
-  await page.getByRole('button', { name: 'Adı güncelle', exact: true }).click();
+  await page.getByRole('button', { name: 'Değişiklikleri uygula', exact: true }).click();
   await expect(end).toContainText('Bitiş güncellendi');
   const before = await end.getAttribute('style');
   const box = await end.boundingBox();
@@ -89,7 +89,7 @@ test('renders labels as text and keeps the narrow layout within the viewport', a
   await page.getByRole('button', { name: 'Başlangıç ekle', exact: true }).click();
   const label = '<img src=x onerror=alert(1)>';
   await page.getByLabel('Adım adı', { exact: true }).fill(label);
-  await page.getByRole('button', { name: 'Adı güncelle', exact: true }).click();
+  await page.getByRole('button', { name: 'Değişiklikleri uygula', exact: true }).click();
   await expect(page.locator('.react-flow__node')).toContainText(label);
   await expect(page.locator('.react-flow__node img')).toHaveCount(0);
   const canvas = page.locator('.react-flow');
@@ -101,4 +101,62 @@ test('renders labels as text and keeps the narrow layout within the viewport', a
     true,
   );
   await page.screenshot({ path: test.info().outputPath('editor-mobile.png'), fullPage: true });
+});
+
+test('edits properties atomically and restores saved values when switching nodes', async ({
+  page,
+}) => {
+  await page.goto('/');
+  const save = page.getByRole('button', { name: 'Değişiklikleri uygula', exact: true });
+  const list = page.getByRole('list', { name: 'Akıştaki adımlar', exact: true });
+  await page.getByRole('button', { name: 'Başlangıç ekle', exact: true }).click();
+  const description = page.getByRole('textbox', {
+    name: 'Başlangıç açıklaması (isteğe bağlı)',
+    exact: true,
+  });
+  await description.fill('Başvuru bilgilerini hazırlayın.');
+  await save.click();
+  await page.getByRole('button', { name: 'Onay ekle', exact: true }).click();
+  const approval = page.locator('.react-flow__node').last();
+  const id = await approval.getAttribute('data-id');
+  await page.getByLabel('Adım adı', { exact: true }).fill('Finans onayı');
+  await page.getByLabel('Onaylayan rolü', { exact: true }).fill('   ');
+  await save.click();
+  await expect(page.getByRole('alert')).toContainText('Değişiklik uygulanmadı');
+  await expect(approval).toContainText('Onaylayan');
+  await expect(approval).not.toContainText('Finans onayı');
+  await page.getByLabel('Onaylayan rolü', { exact: true }).fill('Finans yöneticisi');
+  await save.click();
+  await expect(page.getByRole('alert')).toHaveCount(0);
+  await expect(approval).toContainText('Finans onayı');
+  await expect(approval).toContainText('Finans yöneticisi');
+  await expect(approval).toHaveAttribute('data-id', id ?? '');
+  await page.getByRole('button', { name: 'Bitiş ekle', exact: true }).click();
+  await page.getByRole('combobox', { name: 'Bitiş sonucu', exact: true }).selectOption('rejected');
+  await save.click();
+  await expect(page.locator('.react-flow__node').last()).toContainText('Akış reddedilir');
+  await list.getByRole('button', { name: 'Başlangıç', exact: false }).click();
+  await expect(description).toHaveValue('Başvuru bilgilerini hazırlayın.');
+  await description.fill('Uygulanmamış değişiklik');
+  await list.getByRole('button', { name: 'Finans onayı', exact: false }).click();
+  await expect(page.getByLabel('Onaylayan rolü', { exact: true })).toHaveValue('Finans yöneticisi');
+  await list.getByRole('button', { name: 'Başlangıç', exact: false }).click();
+  await expect(description).toHaveValue('Başvuru bilgilerini hazırlayın.');
+  await description.fill('');
+  await save.click();
+  await list.getByRole('button', { name: 'Bitiş', exact: false }).click();
+  await expect(page.getByRole('combobox', { name: 'Bitiş sonucu', exact: true })).toHaveValue(
+    'rejected',
+  );
+  await page.getByRole('combobox', { name: 'Bitiş sonucu', exact: true }).selectOption('completed');
+  await save.click();
+  await expect(page.locator('.react-flow__node').last()).toContainText('Akış tamamlanır');
+  await list.getByRole('button', { name: 'Başlangıç', exact: false }).click();
+  await expect(description).toHaveValue('');
+  await page.getByRole('button', { name: 'Koşul ekle', exact: true }).click();
+  await expect(page.getByText('Koşul henüz yapılandırılmadı.', { exact: false })).toBeVisible();
+  await expect(page.getByLabel('Onaylayan rolü', { exact: true })).toHaveCount(0);
+  await page.getByLabel('Adım adı', { exact: true }).fill('Tutar kontrolü');
+  await save.click();
+  await expect(page.locator('.react-flow__node').last()).toContainText('Tutar kontrolü');
 });
