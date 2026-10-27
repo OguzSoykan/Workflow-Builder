@@ -7,7 +7,7 @@ Görsel veya doğal dil ile workflow tasarlama ve manuel onay/ret ile simülasyo
 Dört adım türü, tuval, etiket/konum düzenleme ve kurallı bağlantılar hazır.
 Taslak yalnız oturum belleğinde: sayfa yenilenince silinir.
 [Faz 2 planı](docs/PHASE-2.md), [adım günlüğü](docs/worklogs/PHASE-2.md) ve
-[gerçek doğrulama / açık Zod riski](STATUS.md).
+[gerçek doğrulama ve açık riskler](STATUS.md).
 
 ## Kurulum ve çalıştırma
 

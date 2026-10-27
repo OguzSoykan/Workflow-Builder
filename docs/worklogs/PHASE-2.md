@@ -289,3 +289,11 @@ ham uygulama içeriği kaydedilmez. Saat dilimi Europe/Istanbul; girişler geçm
 
 - Dallar: WB-006B–008B PR #12–#16 (#16 bu dal, `feat/WB-008B-undo-redo`). Açık riskler: Zod GHSA-mrhx-c7xc-m3w5, React Flow tip yaması, elle mobil görsel inceleme NOT RUN, bağımsız insan review yok. Yerel Gitleaks: `GITLEAKS_BIN=/private/tmp/wb-gitleaks`.
 - Sonraki: `git checkout main && git pull --ff-only`; main `quality` sonucunu kontrol et; Zod advisory takibi veya kullanıcı onayıyla Faz 3 (WB-009 simülatör) planı.
+
+## P2-037 — Açık risklerin kapatılması (2026-10-27)
+
+- PR #16 [quality 40563346940](https://github.com/OguzSoykan/Workflow-Builder/actions/runs/40563346940) PASS sonrası merge: main `e7e3e0e`; merge sonrası main [quality 40563748969](https://github.com/OguzSoykan/Workflow-Builder/actions/runs/40563748969) PASS. Faz 2 kartları tamamlandı. Kullanıcı “açık olanlardan senin yapabileceklerini yap” dedi; `fix/WB-SEC-zod-advisory` açıldı.
+- Zod: `npm audit` bulguyu hâlâ gösteriyordu (düzeltme 4.6.6+). 4.6.7 ile contract typecheck Zod `.d.ts` içindeki 4 `URL` referansında `TS2304` verdi. Yalnız contract/core tsconfig'ine `skipLibCheck` eklendi; geçici probe ile iki pakette `URL`/`fetch`/`process` hâlâ reddedildi (3/3), probe silindi. `npm audit` 0; typecheck/lint/format, 292 Vitest + 2 + 3, coverage, negatif kapılar, 29/29 E2E, build, secret taramaları PASS; `docs:sync-api` farksız; benchmark median 0,59 ms / p95 0,92 ms. Karar ADR-016.
+- React Flow yaması: @xyflow/react 12.12.0 / system 0.0.83 hâlâ en son sürüm; upstream #6038 açık, düzeltme PR'ları #6039/#6045/#6060 birleşmemiş. ADR-015 yaması korunur; buradan çözülemez.
+- Mobil görsel inceleme (390×844, geçici Playwright spec'i, sonra silindi): yatay taşma yok. Bulgu 1: Dosya bölümü 2 sütunlu palet ızgarasında yarım genişlikteydi → mobilde tam satır. Bulgu 2: Dosya paneli ham validator sayısını (11), doğrulama paneli türetilmiş yol sorunları gizlenmiş sayıyı (8) gösteriyordu → tek kaynak `describeWorkflow`, E2E eşitlik kontrolü eklendi. Kalan küçük not: mobilde mini harita tuvalin bir kısmını örtüyor (PR #9 kararı, değiştirilmedi).
+- Kalan: bağımsız insan review (agent yapamaz), React Flow upstream düzeltmesi, Faz 3 için kullanıcı onayı.

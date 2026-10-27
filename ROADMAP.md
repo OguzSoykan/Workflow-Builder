@@ -16,7 +16,7 @@ açık takip riski olarak kaydedildi. Faz 2 başlatıldı: [WB-005A tuval temeli
 
 ## Yakın dönem sırası
 
-Zod güvenlik bulgusu açık takipte. Faz 2 başladı; WB-005A tuval temeli ilk teslimdir.
+Zod güvenlik bulgusu kapatıldı (ADR-016). Faz 2 tamamlandı (WB-005–008, PR #8–#16); Faz 3 ayrı onay bekliyor.
 Sıra: node özellikleri → input ve koşul editörü → yerel kayıt/import-export → validation UX ve undo/redo.
 D-03/D-08/D-14'ün ilgili kararları bağımlı işe geçmeden netleştirilecek.
 Güncel alt kartlar [Faz 2 planında](docs/PHASE-2.md), işlemler [günlükte](docs/worklogs/PHASE-2.md).

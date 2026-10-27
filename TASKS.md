@@ -3,7 +3,7 @@
 **27 Ekim 2026:** Faz 1 alt görevleri tamamlandı. D-01/02/04 varsayılanları kullanıcı
 tarafından onaylandı; D-15 teknik ayrıntıları ADR-014'te. Sabit araç zinciri,
 Worker/Chromium, secret taraması ve hosted CI kapıları geçti; PR #5 main'e merge edildi.
-Zod advisory açık takip riskidir. [STATUS](STATUS.md) kanıtları içerir.
+Zod advisory 27 Ekim'de Zod 4.6.7 ile kapatıldı (ADR-016). [STATUS](STATUS.md) kanıtları içerir.
 
 ## Aktif Faz 2
 
@@ -139,14 +139,14 @@ WB-001A'da henüz uygulama/test runner yoktur: Q-TEST yerine workspace/config do
 
 Faz 1 tamamlandı; Faz 2 kullanıcı talimatıyla başladı. Güncel alt kartlar Faz 2 planında; güvenlik bulgusu açık.
 
-| Sıra | İş                                            | Durum      | Tamamlanma / başlangıç koşulu                                                                            |
-| ---- | --------------------------------------------- | ---------- | -------------------------------------------------------------------------------------------------------- |
-| 1    | Zod güvenlik bulgusu                          | Açık takip | GHSA-mrhx-c7xc-m3w5 çözümü; ES-only sınırı ve mevcut API davranışı korunarak audit/typecheck/test kanıtı |
-| 2    | Faz 2 görev ve karar hazırlığı                | Done       | Alt kartlar oluşturuldu; D-03/D-08 27 Ekim'de kullanıcı onayıyla çözüldü                                 |
-| 3    | WB-005: React Flow canvas ve node özellikleri | Done       | WB-005A/B PR #8/#9/#10 ile main’de                                                                       |
-| 4    | WB-006: Input ve koşul/onay dalları editörü   | Done       | WB-006A/B PR #11/#12 ile main’de                                                                         |
-| 5    | WB-007: Yerel kayıt ve güvenli import/export  | Done       | WB-007A/B PR #13/#14 ile main’de                                                                         |
-| 6    | WB-008: Validation UX ve undo/redo            | Review     | WB-008A PR #15 ile main’de; WB-008B undo/redo ve Faz 2 çıkış E2E PR/CI bekliyor                          |
+| Sıra | İş                                            | Durum  | Tamamlanma / başlangıç koşulu                                                   |
+| ---- | --------------------------------------------- | ------ | ------------------------------------------------------------------------------- |
+| 1    | Zod güvenlik bulgusu                          | Done   | Zod 4.6.7, ADR-016; audit 0, ES-only probe ve tüm kapılar PASS                  |
+| 2    | Faz 2 görev ve karar hazırlığı                | Done   | Alt kartlar oluşturuldu; D-03/D-08 27 Ekim'de kullanıcı onayıyla çözüldü        |
+| 3    | WB-005: React Flow canvas ve node özellikleri | Done   | WB-005A/B PR #8/#9/#10 ile main’de                                              |
+| 4    | WB-006: Input ve koşul/onay dalları editörü   | Done   | WB-006A/B PR #11/#12 ile main’de                                                |
+| 5    | WB-007: Yerel kayıt ve güvenli import/export  | Done   | WB-007A/B PR #13/#14 ile main’de                                                |
+| 6    | WB-008: Validation UX ve undo/redo            | Review | WB-008A PR #15 ile main’de; WB-008B undo/redo ve Faz 2 çıkış E2E PR/CI bekliyor |
 
 WB-005–027'nin üst kapsamı [ROADMAP](ROADMAP.md) ve korunmuş
 [BACKLOG](docs/BACKLOG.md) içinde bulunur. Sonraki fazlar sırasıyla simulator,
