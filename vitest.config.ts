@@ -10,6 +10,8 @@ export default defineConfig({
         'packages/*/src/**/*.ts',
         'apps/worker/src/**/*.ts',
         'apps/web/src/editor/model.ts',
+        'apps/web/src/editor/input-model.ts',
+        'apps/web/src/editor/input-draft.ts',
       ],
       reporter: ['text', 'json-summary', 'html'],
     },

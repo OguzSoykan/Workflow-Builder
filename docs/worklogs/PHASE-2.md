@@ -168,3 +168,32 @@ ham uygulama içeriği kaydedilmez. Saat dilimi Europe/Istanbul; girişler geçm
 1. `cd /Users/oguzsoykan/Workflow-Builder`; `git status --short --branch`; `git fetch origin`.
 2. PR #10 güncel head için required `quality` sonucunu ve review/merge durumunu kontrol et. API yardımcı dosyası `/private/tmp/wb-github.py`; kalıcı credential veya token kaydetme.
 3. PR #10 teslimini sonuçlandırdıktan sonra WB-006A için güncel main tabanından ayrı dal: number/string/boolean/date/enum input editörü, benzersiz key, default/options/validation ve mevcut referans etkileri. Önce ilgili contract ve kartı oku; değişiklikleri P2-021 ile günlüğe kaydet.
+
+## P2-021 — WB-006A başlangıcı (2026-10-27)
+
+- Git ağacı temiz; fetch sonrası PR #10'un birleştiği doğrulandı: main `d47d1bd`. WB-005B artık main'de.
+- `feat/WB-006A-input-fields` güncel main'den açıldı. AGENTS, STATUS, Faz planı, FR-02 ve mevcut input şeması incelendi.
+- Kapsam: beş input türü, ekle/düzenle/sil, benzersiz key, optional default, tür bazlı sınırlar ve enum seçenekleri; 30 alan limiti. Mevcut condition referansları gösterilecek, key değişimi referanslarla atomik olacak; referanslı silme engellenecek.
+- Yeni bağımlılık ve contract değişikliği yok; condition formu WB-006B'de kalır. Tüm hatalı input değişiklikleri mevcut belgeyi koruyacak.
+
+## P2-022 — Input model ve form uygulaması (2026-10-27)
+
+- Saf input edit modeli, FormData dönüşümü ve beş tür destekleyen alan paneli eklendi; canonical belge React form state'inden ayrı.
+- Ekle/düzenle/sil şema üzerinden atomik; varsayılan yok ile false/0/boş metin ayrıldı. Tür değişimi eski türün sınırlarını taşımıyor.
+- Key yeniden adlandırma bağlı condition referanslarını günceller. Kullanılan alan silinemez; tür/seçenek değişiminde mevcut public core validator bağlı koşulları denetler. İlgisiz eksik graph taslağı alan düzenlemeyi engellemez.
+- Alan listesinde bağlı koşullar ve uyumsuzluk uyarısı görünür; form hatasında giriş korunur. İlk typecheck başlatıldı, testler sırada.
+
+## P2-023 — Yerel doğrulama ve inceleme (2026-10-27)
+
+- İlk typecheck/lint, 238 Vitest + 2 scanner + 3 OpenAPI, coverage ve 18/18 Chromium/Worker testi PASS. Yeni üç E2E tüm türleri, defaults, yeniden düzenleme/silme, duplicate key/options, referanslı rename/tür reddi ve mobil metin güvenliğini doğruladı.
+- Coverage satır %99,10 / branch %94,71. Yeni model/draft dosyaları coverage listesine eklendi.
+- Öz inceleme sırasında key yeniden adlandırmanın referansları büyüterek byte limitini aşabileceği değerlendirildi; son aday tekrar parse ediliyor. Sınırda belgeyle bu yol için negatif test eklendi.
+- Form key'leri oluşturma/düzenleme önekleriyle ayrıldı; `new` adlı gerçek alanla çakışma önlendi. ASCII key kuralı ve uygulanmamış form girişlerinin seçim değişiminde silinmesi arayüzde açıklandı.
+- PR #10 merge sonrası main `d47d1bd` quality PASS doğrulandı. Sıradaki kontroller: son test/typecheck, build/format/secret scan, diff ve mobil görsel.
+
+## P2-024 — Kabul kontrolleri ve teslim hazırlığı (2026-10-27)
+
+- Son typecheck, 239 Vitest + 2 scanner + 3 OpenAPI PASS; referans büyümesinin 256 KiB sınırını aşması atomik reddedildi. Web + Worker dry-run build, format ve Gitleaks geçmiş/kaynak/artifact taraması PASS.
+- Mobil ekran görüntüsü incelendi: form/kartlar viewport içinde, unsafe etiket düz metin, kontroller kullanılabilir. Sonraki metin açıklamaları davranışı değiştirmedi; hosted CI son snapshot'ı tekrar doğrulayacak.
+- Diff öz incelemesi tamamlandı. Sekiz orijinal planlama belgesi değişmedi; contract/core uygulaması ve bağımlılıklar değişmedi. STATUS/TASKS/Faz planı WB-005B Done, WB-006A Review olarak güncellendi.
+- Sonraki adım: commit/push, PR ve required quality. Bağımsız insan review uydurulmayacak; yeni kart WB-006B.

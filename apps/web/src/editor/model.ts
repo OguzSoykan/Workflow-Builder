@@ -1,3 +1,4 @@
+import { editInput, type InputEdit } from './input-model';
 import {
   NODE_HANDLES,
   WORKFLOW_LIMITS,
@@ -29,6 +30,7 @@ export const HANDLE_LABELS: Record<WorkflowEdge['sourceHandle'], string> = {
 };
 
 export type Edit =
+  | InputEdit
   | { type: 'add-node'; id: string; kind: NodeKind; position: { x: number; y: number } }
   | { type: 'rename-node'; id: string; label: string }
   | { type: 'update-properties'; id: string; label: string; properties: EditableProperties }
@@ -101,6 +103,7 @@ export function applyEdit(
   workflow: Workflow,
   edit: Edit,
 ): { workflow: Workflow; error: string | null } {
+  if (edit.type === 'save-input' || edit.type === 'delete-input') return editInput(workflow, edit);
   const reject = (error: string) => ({ workflow, error });
   let candidate: Workflow = workflow;
   switch (edit.type) {
