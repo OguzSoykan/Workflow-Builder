@@ -10,6 +10,7 @@ import {
 } from '@xyflow/react';
 import { WORKFLOW_LIMITS } from '@workflow-builder/workflow-contract';
 import { InputFields } from './InputFields';
+import { TransferPanel } from './TransferPanel';
 import { NodePropertiesForm } from './NodePropertiesForm';
 import { ConnectionForm } from './ConnectionForm';
 import { WorkflowCard, type CanvasNode } from './WorkflowCard';
@@ -186,6 +187,7 @@ function EditorWorkspace() {
               </li>
             ))}
           </ol>
+          <TransferPanel workflow={workflow} dispatch={dispatch} />
         </aside>
         <section className="canvas-panel" aria-label="İş akışı tuvali">
           <div className="canvas-title">

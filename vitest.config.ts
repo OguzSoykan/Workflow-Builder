@@ -14,6 +14,7 @@ export default defineConfig({
         'apps/web/src/editor/input-draft.ts',
         'apps/web/src/editor/condition-model.ts',
         'apps/web/src/editor/draft-storage.ts',
+        'apps/web/src/editor/transfer.ts',
       ],
       reporter: ['text', 'json-summary', 'html'],
     },

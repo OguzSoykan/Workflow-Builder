@@ -6,7 +6,7 @@
 27 Ekim'de squash merge edildi: `e5ad0ea`. PR check ve merge sonrası main `quality`
 check'i geçti. Main run: [40495104283](https://github.com/OguzSoykan/Workflow-Builder/actions/runs/40495104283).
 
-Faz 2 kullanıcı onayıyla başladı; aktif görev WB-007A yerel taslak kaydı. Cloud deploy ve canlı model çağrısı başlatılmadı. Zod advisory'si aşağıda
+Faz 2 kullanıcı onayıyla başladı; aktif görev WB-007B güvenli import/export. Cloud deploy ve canlı model çağrısı başlatılmadı. Zod advisory'si aşağıda
 açık takip riski olarak kayıtlıdır; Faz 1 kabul testleri/CI'ı engellemedi.
 
 ## Aktif çalışma
@@ -14,7 +14,7 @@ açık takip riski olarak kayıtlıdır; Faz 1 kabul testleri/CI'ı engellemedi.
 [Faz 2 planı](docs/PHASE-2.md) ve [adım günlüğü](docs/worklogs/PHASE-2.md).
 WB-005A temeli PR #8, mobil tuval/mini harita düzeltmesi [PR #9](https://github.com/OguzSoykan/Workflow-Builder/pull/9) ile main'e alındı (`9ddbc8a`). PR #9 güncel main ile yenilendi; [quality 40546965579](https://github.com/OguzSoykan/Workflow-Builder/actions/runs/40546965579) PASS sonrası kullanıcı talimatıyla birleştirildi.
 
-WB-005B [PR #10](https://github.com/OguzSoykan/Workflow-Builder/pull/10) (`d47d1bd`), WB-006A [PR #11](https://github.com/OguzSoykan/Workflow-Builder/pull/11) (`30699d8`) ve WB-006B koşul/onay dalı deneyimi [PR #12](https://github.com/OguzSoykan/Workflow-Builder/pull/12) (`431e24a`, kullanıcı merge izniyle) main'de. Codex oturumu kota nedeniyle durdu, Claude Code devraldı (P2-026). D-03/D-08 kullanıcı onayıyla karara bağlandı (DECISIONS). WB-007A uygulandı: localStorage otomatik kayıt, yenilemede geri yükleme, bozuk kayıt yedeği, quota/erişim mesajı ve çok sekme uyarısı. Yerel typecheck/lint/format, 268 Vitest + 2 scanner + 3 OpenAPI, coverage, 24/24 E2E, build ve Gitleaks PASS; PR ve hosted CI bekleniyor. Sonraki kart WB-007B güvenli import/export.
+WB-005B [PR #10](https://github.com/OguzSoykan/Workflow-Builder/pull/10) (`d47d1bd`), WB-006A [PR #11](https://github.com/OguzSoykan/Workflow-Builder/pull/11) (`30699d8`) ve WB-006B koşul/onay dalı deneyimi [PR #12](https://github.com/OguzSoykan/Workflow-Builder/pull/12) (`431e24a`, kullanıcı merge izniyle) main'de. Codex oturumu kota nedeniyle durdu, Claude Code devraldı (P2-026). D-03/D-08 kullanıcı onayıyla karara bağlandı (DECISIONS). WB-007A yerel taslak kaydı [PR #13](https://github.com/OguzSoykan/Workflow-Builder/pull/13) (`9960e7a`) main'de; kullanıcı kalan Faz 2 PR'larının CI sonrası agent merge'üne izin verdi. WB-007B uygulandı: kanonik JSON export (hash'li, eksik taslakta uyarı), boyutu okumadan sınırlayan, hatada çalışma kopyasına dokunmayan ve onaylı değiştiren import. Yerel typecheck/lint/format, 283 Vitest + 2 scanner + 3 OpenAPI, coverage, 26/26 E2E, build ve Gitleaks PASS; PR ve hosted CI bekleniyor. Sonraki kart WB-008A validation UX.
 
 ## Yapılanların özeti
 
@@ -35,8 +35,8 @@ Görev dalında `/` görsel editör, `/health` servis ekranıdır. Dört adım t
    Güncel paket/advisory durumu yeniden doğrulanmalı; çözümden sonra npm audit, tip kontrolü,
    şema/validator ve browser/Worker uyumluluğu kanıtlanmalı. Mevcut girdi limitleri açığın
    giderildiği anlamına gelmez.
-2. **WB-007A review:** Yerel taslak kaydının PR/CI teslimi; adımlar ve kanıtlar çalışma günlüğünde.
-3. **Faz 2 devamı:** Import/export → validation UX ve undo/redo.
+2. **WB-007B review:** Import/export PR/CI teslimi; adımlar ve kanıtlar çalışma günlüğünde.
+3. **Faz 2 devamı:** Validation UX ve undo/redo.
 4. **Sonraki fazlar:** Simülasyon → auth/bulut kayıt → bütçe kontrollü AI → yayın kalitesi.
    Ayrıntılı kapsam ve bağımlılıklar [ROADMAP](ROADMAP.md), yakın işler [TASKS](TASKS.md) içinde.
 
@@ -53,7 +53,7 @@ Görev dalında `/` görsel editör, `/health` servis ekranıdır. Dört adım t
 | WB-004A     | Done        | PR #4/#5; main quality workflow, pozitif ve beklenen negatif CI kanıtları         |
 | WB-004B     | Done        | PR #5; OpenAPI, env, ADR, issue-code ve eşleşme testleri geçti                    |
 | WB-004C     | Done        | PR #5 merge; PR ve merge sonrası main quality check geçti                         |
-| Faz 2       | In Progress | WB-007A Review; WB-005A/B ve WB-006A/B main’de                                    |
+| Faz 2       | In Progress | WB-007B Review; WB-005A/B, WB-006A/B ve WB-007A main’de                           |
 | Faz 3–6     | Başlamadı   | Ayrı faz onayı gerekir                                                            |
 
 Kod öz incelemesi bağımsız insan review olarak gösterilmedi. Main branch protection required `quality` check uygular; approving review sayısı 0 olarak ayarlıdır.
