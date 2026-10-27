@@ -11,6 +11,8 @@ import {
 import { WORKFLOW_LIMITS } from '@workflow-builder/workflow-contract';
 import { InputFields } from './InputFields';
 import { TransferPanel } from './TransferPanel';
+import { ValidationPanel } from './ValidationPanel';
+import { describeWorkflow, issueCountsByNode } from './validation-messages';
 import { NodePropertiesForm } from './NodePropertiesForm';
 import { ConnectionForm } from './ConnectionForm';
 import { WorkflowCard, type CanvasNode } from './WorkflowCard';
@@ -53,18 +55,24 @@ function EditorWorkspace() {
   }));
   const { workflow } = state;
   const draft = useDraft(store, load, workflow, dispatch);
+  const issues = useMemo(() => describeWorkflow(workflow), [workflow]);
   const nodes = useMemo<CanvasNode[]>(() => {
     const invalid = invalidConditionIds(workflow);
+    const counts = issueCountsByNode(issues);
     return workflow.nodes.map((node) => ({
       id: node.id,
       type: 'workflow',
       position: node.position,
-      data: { node, summary: invalid.has(node.id) ? null : conditionSummary(workflow, node) },
+      data: {
+        node,
+        summary: invalid.has(node.id) ? null : conditionSummary(workflow, node),
+        issueCount: counts.get(node.id) ?? 0,
+      },
       selected: state.nodeId === node.id,
       ...(measurements[node.id] ? { measured: measurements[node.id] } : {}),
       ariaLabel: `${NODE_LABELS[node.type]}: ${node.label}`,
     }));
-  }, [workflow, state.nodeId, measurements]);
+  }, [workflow, issues, state.nodeId, measurements]);
   const edges = useMemo<Edge[]>(
     () =>
       workflow.edges.map((edge) => ({
@@ -260,6 +268,7 @@ function EditorWorkspace() {
               </div>
             )}
           </div>
+          <ValidationPanel issues={issues} dispatch={dispatch} />
         </section>
         <aside className="inspector" aria-label="Adım özellikleri">
           <h2>Özellikler</h2>

@@ -265,3 +265,11 @@ ham uygulama içeriği kaydedilmez. Saat dilimi Europe/Istanbul; girişler geçm
 - İlk unit koşusunda dosya adı temizleme testi şemaya aykırı ID kullandığı için FAIL; şema ID'leri zaten dosya adı güvenli olduğundan temizleme kaldırıldı. İlk E2E koşusunda `{"schemaVersion":2}` genel şema hatası gösterdi (sorunlar koda göre sıralı); bilinen kodlar öne alındı, unit vakası eklendi.
 - `npm run typecheck`/`lint`/`format:check` PASS; `npm test` 283 Vitest (15 yeni) + 2 scanner + 3 OpenAPI PASS; coverage satır %99,24 / branch %95,27 (`transfer.ts` satır %100). `build`, `secret:scan`, Gitleaks `secrets:check` PASS. `npm run test:e2e` 26/26 PASS: dışa aktar → içe aktar (vazgeç/onay/yenileme), bozuk JSON, v2, 256 KiB üstü, hash uyuşmazlığı, HTML etiketin düz metin kalması.
 - Elle mobil görsel inceleme NOT RUN. Bağımsız insan review yok.
+
+## P2-034 — WB-007B merge, WB-008A uygulama ve doğrulama (2026-10-27)
+
+- [PR #14](https://github.com/OguzSoykan/Workflow-Builder/pull/14) [quality 40561352026](https://github.com/OguzSoykan/Workflow-Builder/actions/runs/40561352026) PASS sonrası squash merge: main `9f0e8b1`. WB-007B Done. `feat/WB-008A-validation-ux` güncel main'den açıldı.
+- `validation-messages.ts`: tüm issue kodları için Türkçe metin, hedef (adım/bağlantı), sıralama ve türetilmiş yol sorunu gizleme. `ValidationPanel` tuvalin altında listeler ve seçim yapar; `WorkflowCard` sorun sayısını gösterir. Seçili kartın vurgusu sorun çerçevesiyle ezilmesin diye seçici `:not(.is-selected)` ile sınırlandı.
+- İlk E2E koşusu iki beklenti hatası verdi: genel sorunlar kod sırasıyla (END_MISSING önce) geliyor; tamamlanmamış onay nedeniyle Başlangıç için de yol sorunu doğru biçimde raporlanıyor. Davranış doğru, beklentiler güncellendi. Test yardımcısındaki birleşik node tipi typecheck'te FAIL; dönüş tipi açıkça yazılarak düzeltildi.
+- Son durum: typecheck/lint/format PASS; `npm test` 287 Vitest (4 yeni) + 2 scanner + 3 OpenAPI PASS; coverage satır %99,29 / branch %95,54; `build`, `secret:scan`, Gitleaks PASS; `npm run test:e2e` 27/27 PASS.
+- Elle mobil görsel inceleme NOT RUN. Bağımsız insan review yok.
