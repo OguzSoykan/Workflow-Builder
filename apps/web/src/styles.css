@@ -619,3 +619,42 @@ select {
     grid-column: 1 / -1;
   }
 }
+.account {
+  position: relative;
+}
+.account summary {
+  cursor: pointer;
+  font-weight: 600;
+  max-width: 220px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.account-panel {
+  position: absolute;
+  right: 0;
+  z-index: 20;
+  width: min(320px, calc(100vw - 32px));
+  background: white;
+  border: 1px solid #d5dfeb;
+  border-radius: 10px;
+  box-shadow: 0 8px 24px rgb(15 35 60 / 12%);
+  padding: 14px;
+  overflow-wrap: anywhere;
+}
+.account-status {
+  color: #61758b;
+}
+.account-ok {
+  color: #2f7a55;
+}
+.account-warning {
+  color: #8a5a12;
+}
+.link-button {
+  background: none;
+  border: 0;
+  color: #2c5578;
+  text-decoration: underline;
+  padding: 0;
+}

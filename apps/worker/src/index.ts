@@ -32,6 +32,27 @@ export function createApp(dependencies: AppDependencies = {}) {
     }),
   );
 
+  // Public browser configuration only: no secrets are exposed here (ADR-020).
+  app.get('/api/config', (context) => {
+    const { FIREBASE_PROJECT_ID: projectId, FIREBASE_WEB_API_KEY: apiKey } = context.env ?? {};
+    const emulator = context.env?.FIREBASE_AUTH_EMULATOR_URL;
+    return context.json({
+      data: {
+        firebase:
+          projectId && apiKey
+            ? {
+                projectId,
+                apiKey,
+                ...(emulator && /^http:\/\/(127\.0\.0\.1|localhost):\d+$/.test(emulator)
+                  ? { authEmulatorUrl: emulator }
+                  : {}),
+              }
+            : null,
+      },
+      meta: { requestId: context.get('requestId') },
+    });
+  });
+
   // Member routes: the owner is always the verified token subject, never a client field.
   app.use('/api/v1/*', async (context, next) => {
     const projectId = context.env?.FIREBASE_PROJECT_ID;

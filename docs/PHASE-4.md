@@ -22,3 +22,9 @@ Sıra bağımlılığa göre: önce Worker doğrulaması ve D1 API, sonra istemc
 - Ayrıntılar [ADR-019](adr/ADR-019-d1-workflow-storage.md). Rotalar: liste, oluştur, getir, güncelle (iyimser kilit), soft delete, revizyon listesi ve tek revizyon; `restore` P1.
 - `/me` D1 varsa profil satırını ilk çağrıda oluşturur ve dili oradan okur.
 - Testler gerçek yerel D1'de (`tests/platform/d1-proxy.mjs`, bellek içi); OpenAPI şemaları gerçek yanıtlarla Ajv'de doğrulanır.
+
+## WB-012 uygulama sınırı
+
+- Ayrıntılar [ADR-020](adr/ADR-020-browser-auth.md): Firebase Auth REST istemcisi, `GET /api/config`, başlıkta hesap paneli (giriş, kayıt, doğrulama e-postası, “Doğruladım, yenile”, şifre sıfırlama, çıkış).
+- Yapılandırma yoksa “Bulut hesabı yapılandırılmadı”. Çıkış yerel taslağı silmez.
+- Kanıt: 392 Vitest (Firebase istemcisi + config testleri) + 2 scanner + 3 OpenAPI; 39 Chromium (Firebase uç noktaları Playwright ile taklit edildi; şifrenin uygulama origin'ine hiç gitmediği doğrulandı).

@@ -13,6 +13,8 @@ import type { SimulationRun } from '@workflow-builder/workflow-core';
 import { InputFields } from './InputFields';
 import { TransferPanel } from './TransferPanel';
 import { ExamplesPanel } from './ExamplesPanel';
+import { AccountPanel } from '../account/AccountPanel';
+import { useAccount } from '../account/use-account';
 import { ValidationPanel } from './ValidationPanel';
 import { SimulationPanel } from './SimulationPanel';
 import { visitedPath } from './simulation-view';
@@ -54,6 +56,7 @@ function EditorWorkspace() {
     }),
   );
   const state = history.present;
+  const account = useAccount();
   const { workflow } = state;
   useEffect(() => {
     // Text controls keep their native undo; the shortcut only applies to the workflow.
@@ -161,6 +164,7 @@ function EditorWorkspace() {
           <span className="draft-badge" role="status">
             {draft.conflict ? 'Otomatik kayıt duraklatıldı' : STATUS_LABELS[draft.status]}
           </span>
+          <AccountPanel account={account} />
           <a href="/health">Servis durumu</a>
         </div>
       </header>

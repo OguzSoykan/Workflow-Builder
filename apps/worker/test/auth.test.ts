@@ -180,3 +180,43 @@ describe('/api/v1/me', () => {
     );
   });
 });
+
+describe('/api/config', () => {
+  const read = async (bindings: Record<string, string>) => {
+    const response = await createApp().request('/api/config', {}, bindings);
+    return (await response.json()) as { data: { firebase: unknown } };
+  };
+  it('exposes only the public Firebase web configuration', async () => {
+    expect((await read({})).data.firebase).toBeNull();
+    expect((await read({ FIREBASE_PROJECT_ID: PROJECT })).data.firebase).toBeNull();
+    expect(
+      (await read({ FIREBASE_PROJECT_ID: PROJECT, FIREBASE_WEB_API_KEY: 'public-key' })).data
+        .firebase,
+    ).toEqual({
+      projectId: PROJECT,
+      apiKey: 'public-key',
+    });
+    expect(
+      (
+        await read({
+          FIREBASE_PROJECT_ID: PROJECT,
+          FIREBASE_WEB_API_KEY: 'public-key',
+          FIREBASE_AUTH_EMULATOR_URL: 'http://127.0.0.1:9099',
+        })
+      ).data.firebase,
+    ).toEqual({
+      projectId: PROJECT,
+      apiKey: 'public-key',
+      authEmulatorUrl: 'http://127.0.0.1:9099',
+    });
+    expect(
+      (
+        await read({
+          FIREBASE_PROJECT_ID: PROJECT,
+          FIREBASE_WEB_API_KEY: 'public-key',
+          FIREBASE_AUTH_EMULATOR_URL: 'https://evil.example',
+        })
+      ).data.firebase,
+    ).toEqual({ projectId: PROJECT, apiKey: 'public-key' });
+  });
+});

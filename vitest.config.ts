@@ -19,6 +19,7 @@ export default defineConfig({
         'apps/web/src/editor/history.ts',
         'apps/web/src/editor/simulation-view.ts',
         'apps/web/src/editor/examples.ts',
+        'apps/web/src/account/firebase-auth.ts',
       ],
       reporter: ['text', 'json-summary', 'html'],
     },
