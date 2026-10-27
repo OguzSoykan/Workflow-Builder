@@ -153,3 +153,18 @@ ham uygulama içeriği kaydedilmez. Saat dilimi Europe/Istanbul; girişler geçm
 - Diff öz incelemesi: public contract kullanımı, atomik hata yolu, koşulun kapsam dışında kalması, seçimde form değerleri ve eski test davranışları doğrulandı. Sekiz orijinal planlama belgesi değişmedi; yeni bağımlılık yok.
 - STATUS/TASKS/Faz planı WB-005A Done, WB-005B Review, sonraki WB-006A olarak güncellendi. PR #9 main CI 40547334504 henüz çalışıyor.
 - Sonraki adım WB-005B dalını push edip PR açmak ve required hosted quality sonucunu doğrulamak.
+
+## P2-020 — Teslim ve devam notu (2026-10-27)
+
+- Dal: `feat/WB-005B-node-properties`. Uygulama `5d865a3`, main entegrasyonu `72ab791`, doğrulama belgeleri `3c7294a`; push başarılı.
+- [PR #10](https://github.com/OguzSoykan/Workflow-Builder/pull/10) açıldı. WB-005B Review; PR #9 kullanıcı talimatıyla birleşti (`9ddbc8a`). Bu yeni PR henüz birleştirilmedi.
+- Yerel sonuçlar: typecheck/lint/format, 205 Vitest + 2 scanner + 3 OpenAPI, coverage, 15/15 E2E, build, kaynak/geçmiş/artifact Gitleaks PASS. Mobil/mini harita düzeltmesiyle entegrasyon tekrar doğrulandı.
+- Bu kaydın yazıldığı anda PR #10 hosted CI ve PR #9 sonrası main CI henüz tamamlanmadı. Sonuç için GitHub check kaydı esas alınmalı; önceki commit'in başarısı yeni head'e atfedilmez. Son doküman push'undan sonra yalnız bu kontroller takip edilecek; yeni uygulama kartı başlatılmayacak.
+- Açık konular: Zod advisory, checksum kontrollü React Flow declaration yaması; D-03/D-08 yerel kayıt kararları. Condition config/input, persistence, import/export, validation UX ve undo/redo hâlâ sırada.
+- Son proje yazma işlemi bu devir kaydı ve STATUS/plan bağlantıları; biçim/diff kontrolü ardından commit/push. Hesap kotasının kalan miktarı doğrudan görünmüyor.
+
+### Sonraki somut adım
+
+1. `cd /Users/oguzsoykan/Workflow-Builder`; `git status --short --branch`; `git fetch origin`.
+2. PR #10 güncel head için required `quality` sonucunu ve review/merge durumunu kontrol et. API yardımcı dosyası `/private/tmp/wb-github.py`; kalıcı credential veya token kaydetme.
+3. PR #10 teslimini sonuçlandırdıktan sonra WB-006A için güncel main tabanından ayrı dal: number/string/boolean/date/enum input editörü, benzersiz key, default/options/validation ve mevcut referans etkileri. Önce ilgili contract ve kartı oku; değişiklikleri P2-021 ile günlüğe kaydet.

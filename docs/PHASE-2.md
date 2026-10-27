@@ -1,6 +1,6 @@
 # Faz 2 — Editör ve yerel çalışma
 
-**Durum:** WB-005A PR #8/#9 ile main’de. WB-005B özellik paneli uygulandı; PR/hosted CI teslimi hazırlanıyor. Sonraki kart WB-006A. Fazın tamamı henüz bitmedi.
+**Durum:** WB-005A PR #8/#9 ile main’de. WB-005B özellik paneli uygulandı; [PR #10](https://github.com/OguzSoykan/Workflow-Builder/pull/10) Review. Sonraki kart WB-006A. Fazın tamamı henüz bitmedi.
 İşlem kaydı: [çalışma günlüğü](worklogs/PHASE-2.md). Kaynak kapsam: PRD FR-01–03/05,
 AC-01/05/11 ve BACKLOG WB-005–008. Mevcut şema/limit/kimlik sözleşmesi korunur.
 

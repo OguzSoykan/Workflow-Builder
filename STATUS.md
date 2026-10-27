@@ -14,7 +14,7 @@ açık takip riski olarak kayıtlıdır; Faz 1 kabul testleri/CI'ı engellemedi.
 [Faz 2 planı](docs/PHASE-2.md) ve [adım günlüğü](docs/worklogs/PHASE-2.md).
 WB-005A temeli PR #8, mobil tuval/mini harita düzeltmesi [PR #9](https://github.com/OguzSoykan/Workflow-Builder/pull/9) ile main'e alındı (`9ddbc8a`). PR #9 güncel main ile yenilendi; [quality 40546965579](https://github.com/OguzSoykan/Workflow-Builder/actions/runs/40546965579) PASS sonrası kullanıcı talimatıyla birleştirildi.
 
-WB-005B özellik paneli uygulandı: Start açıklaması, Approval rolü, End sonucu ve ad tek atomik değişiklikte doğrulanır. 205 Vitest + 2 scanner + 3 OpenAPI, 15/15 E2E, typecheck/lint ve build PASS. Yeni PR/hosted CI teslimi hazırlanıyor; henüz Done değil. Sonraki kart WB-006A tipli input alanları. Aşağıdaki Faz 1 sonuçları tarihsel teslim kanıtıdır.
+WB-005B özellik paneli uygulandı: Start açıklaması, Approval rolü, End sonucu ve ad tek atomik değişiklikte doğrulanır. 205 Vitest + 2 scanner + 3 OpenAPI, 15/15 E2E, typecheck/lint ve build PASS. [PR #10](https://github.com/OguzSoykan/Workflow-Builder/pull/10) açıldı; hosted CI ve review sürecinde, henüz Done değil. Sonraki kart WB-006A tipli input alanları. Aşağıdaki Faz 1 sonuçları tarihsel teslim kanıtıdır.
 
 ## Yapılanların özeti
 
