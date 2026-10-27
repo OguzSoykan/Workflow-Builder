@@ -234,3 +234,8 @@ ham uygulama içeriği kaydedilmez. Saat dilimi Europe/Istanbul; girişler geçm
 - `npm run test:e2e`: 20/20 Chromium PASS. Yeni iki senaryo: tipli sayı/enum koşulu, operatör listesinin türe göre değişmesi, boş `in` reddinde kartın değişmemesi, yeniden açılışta değer geri yükleme, referanslı alan silme kilidi; Doğru/Yanlış ve Onaylandı/Reddedildi dal durumu, boş çıkış önerisi, dolu çıkış reddi.
 - `npm run build` (Vite + Wrangler dry-run, deploy yok) ve `npm run secret:scan` PASS. `npm run secrets:check` önce PATH'te Gitleaks olmadığı için reddetti; Codex'in yerel 8.30.1 ikilisi `GITLEAKS_BIN=/private/tmp/wb-gitleaks` ile çalıştı: 38 commit + kaynak + artifact, bulgu yok.
 - Elle mobil görsel inceleme: NOT RUN; dar görünüm E2E kontrolleri geçti, hosted CI son head'i tekrar doğrulayacak. Contract/core ve bağımlılıklar değişmedi; bağımsız insan review yapılmadı.
+
+## P2-029 — WB-006B teslimi (2026-10-27)
+
+- Commit'ler `aa0b064` (uygulama) ve `0758c03` (belgeler) push edildi. [PR #12](https://github.com/OguzSoykan/Workflow-Builder/pull/12) açıldı; [quality 40552768819](https://github.com/OguzSoykan/Workflow-Builder/actions/runs/40552768819) PASS (1m18s). Merge kullanıcıya bırakıldı; agent merge yetkisi bu oturumda reddedilmişti (PR #8 notu).
+- Sonraki kart WB-007A yerel kayıt; D-03 (taslak saklama) ve D-08 (storage/çok sekme UX) kararları olmadan başlanmaz.
