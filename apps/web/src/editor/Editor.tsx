@@ -1,4 +1,4 @@
-import { useMemo, useReducer } from 'react';
+import { useMemo, useReducer, useState } from 'react';
 import {
   Background,
   Controls,
@@ -26,6 +26,9 @@ const nodeTypes = { workflow: WorkflowCard };
 const kinds: NodeKind[] = ['start', 'approval', 'condition', 'end'];
 
 function EditorWorkspace() {
+  const [measurements, setMeasurements] = useState<
+    Record<string, { width: number; height: number }>
+  >({});
   const [state, dispatch] = useReducer(editorReducer, undefined, () => ({
     workflow: emptyWorkflow(`workflow_${crypto.randomUUID()}`),
     nodeId: null,
@@ -41,9 +44,10 @@ function EditorWorkspace() {
         position: node.position,
         data: { node },
         selected: state.nodeId === node.id,
+        ...(measurements[node.id] ? { measured: measurements[node.id] } : {}),
         ariaLabel: `${NODE_LABELS[node.type]}: ${node.label}`,
       })),
-    [workflow.nodes, state.nodeId],
+    [workflow.nodes, state.nodeId, measurements],
   );
   const edges = useMemo<Edge[]>(
     () =>
@@ -156,6 +160,15 @@ function EditorWorkspace() {
               onPaneClick={() => dispatch({ type: 'select-node', id: null })}
               onNodesChange={(changes) => {
                 for (const change of changes) {
+                  if (change.type === 'dimensions' && change.dimensions) {
+                    const dimensions = change.dimensions;
+                    setMeasurements((previous) =>
+                      previous[change.id]?.width === dimensions.width &&
+                      previous[change.id]?.height === dimensions.height
+                        ? previous
+                        : { ...previous, [change.id]: dimensions },
+                    );
+                  }
                   if (change.type === 'position' && change.position)
                     dispatch({ type: 'move-node', id: change.id, position: change.position });
                   if (change.type === 'remove') dispatch({ type: 'delete-node', id: change.id });

@@ -92,6 +92,11 @@ test('renders labels as text and keeps the narrow layout within the viewport', a
   await page.getByRole('button', { name: 'Değişiklikleri uygula', exact: true }).click();
   await expect(page.locator('.react-flow__node')).toContainText(label);
   await expect(page.locator('.react-flow__node img')).toHaveCount(0);
+  const canvas = page.locator('.react-flow');
+  await expect(canvas).toBeVisible();
+  expect((await canvas.boundingBox())?.height).toBeGreaterThanOrEqual(430);
+  await expect(page.locator('.react-flow__node')).toBeVisible();
+  await expect(page.locator('.react-flow__minimap-node')).toHaveCount(1);
   expect(await page.evaluate(() => document.documentElement.scrollWidth <= window.innerWidth)).toBe(
     true,
   );

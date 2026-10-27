@@ -86,6 +86,32 @@ ham uygulama içeriği kaydedilmez. Saat dilimi Europe/Istanbul; girişler geçm
 - `npm run test:e2e`: 14/14 PASS (4 editör, 8 health, 2 contract). P2-009'daki rol/ad sorgusu düzeltmesi doğrulandı.
 - WB-005A yerel kabul kanıtı tamam; kalan: dalın push'u, PR ve hosted `quality` CI. `gh` CLI bu makinede yok; PR web arayüzünden açılacak.
 
+## P2-012 — Claude devrinin incelenmesi ve görsel düzeltmeler (2026-10-27)
+
+- Kullanıcının devam talimatıyla temiz `feat/WB-005A-editor-canvas-continue` dalı incelendi: `169f1b3` uygulama snapshot'ı, `c8364ba` Claude doğrulama/devir notları. Önceki çalışma korundu.
+- P2-010'da önceki tekrar çalışmadı denmişti; bu oturumun araç çıktısında önceki build ve 14/14 E2E de başarılıdır. Claude ayrıca aynı kontrolleri tekrarlamış.
+- GitHub API açık PR sorgusu boş döndü; gh yokluğu PR açmayı engellemiyor, mevcut credential helper ile API kullanılabilir.
+- Görsellerde mobil tuval boştu; min-height yanında kesin height/flex boyutu verildi. Mini harita ölçüleri React UI state'inde tutuldu; canonical workflow değişmedi.
+- Mobil test artık tuval yüksekliğini, node görünürlüğünü ve mini harita node'unu doğrular. Typecheck ve 14/14 E2E PASS; yeni mobil görselde tuval/mini harita kontrol edildi.
+- README'deki eski ci.yml bağlantısı quality.yml olarak düzeltildi. WB-005A Review; sonraki kart WB-005B.
+- Limit yaklaşınca yeni işe başlamama ve son işlemde devam notu yazma talimatı AGENTS'a eklendi. Hesap kotası doğrudan görünmediği için kesin kalan kota iddiası yok.
+
+## P2-013 — GitHub teslimi ve oturum sonu devam notu (2026-10-27)
+
+- Son düzeltme: `5555295`, `feat/WB-005A-editor-canvas-continue` dalına commit/push başarılı. Typecheck/lint/format, 14/14 E2E, 101 dosya scanner ve Gitleaks geçmiş/kaynak/build taraması PASS. Diff incelemesi yapıldı.
+- `git fetch origin` ile eksik devir bilgisi ortaya çıktı: temel teslim PR #8 zaten merge edilmiş; main `fb7ae3840b57566226dc6ba37ab4ec07999ee673`. Claude'un P2-011 PR bekliyor notu bu nedenle artık güncel değil.
+- [PR #9](https://github.com/OguzSoykan/Workflow-Builder/pull/9) açıldı; ilk açıklama tüm temel teslimi anlatıyordu, gerçek tek-commit farka göre başlık/açıklama mobil tuval/mini harita düzeltmesi olarak yenilendi. PR merge edilmedi; insan review kaydı yok.
+- Kod commit'i `5555295` için [hosted quality 40545359671](https://github.com/OguzSoykan/Workflow-Builder/actions/runs/40545359671) completed/success doğrulandı. Bu son doküman kaydının oluşturacağı commit için yeni CI henüz doğrulanmadı; önceki başarı yeni commit'e atfedilmemeli.
+- Son işlem bu devir notunu ve STATUS/planı kaydetmek, biçim/diff kontrolü, commit ve push. Bundan sonra bu oturumda yeni uygulama işi başlatılmayacak.
+
+### Devam noktası
+
+1. `cd /Users/oguzsoykan/Workflow-Builder`; `git status --short --branch`, `git fetch origin`; PR #9'un güncel head SHA ve required quality check'ini doğrula. Dal: `feat/WB-005A-editor-canvas-continue`.
+2. PR #9'u review sürecinde tut; merge yetkisi/onayı olmadan otomatik birleştirme yapma. `gh` yoksa `/private/tmp/wb-github.py` mevcut credential helper ile çalışıyor; geçici dosya yoksa token yazdırmadan yeniden oluştur.
+3. Sıradaki küçük kart WB-005B: Start açıklaması, Approval rolü, End sonucu; şema uyumlu atomik config değişiklikleri ve anlamlı unit/E2E senaryoları. Condition/input yapılandırması WB-006 bağımlılığıdır. Yeni kart için güncel main tabanlı ayrı görev dalı aç.
+4. WB-007 öncesi D-03/D-08 saklama kararları açık. Taslak yenilemede kaybolur; Zod yüksek advisory ve checksum kontrollü React Flow declaration yaması devam ediyor.
+5. Her anlamlı adımı bu günlüğe ekle. Limit yaklaşınca yeni iş açma; son işlem olarak aynı biçimde devam notu bırak. Kalan hesap kotası doğrudan görünmüyor.
+
 ## P2-014 — WB-005B başlangıcı (2026-10-27)
 
 - Temiz çalışma ağacı, AGENTS/STATUS/geliştirme kuralları ve şema incelendi; `git fetch origin` başarılı.
@@ -113,3 +139,9 @@ ham uygulama içeriği kaydedilmez. Saat dilimi Europe/Istanbul; girişler geçm
 - Bağımsız insan review verilmiş gibi gösterilmedi; kullanıcı oturum talimatı ve agent öz incelemesi esas alındı. Required check atlanmadı.
 - WB-005B lint, 205 test coverage (satır %99,01 / branch %93,69), build PASS. Rol/ad sorgusu düzeltmesi sonrası 15/15 E2E PASS.
 - Şimdi WB-005B snapshot commit'i ardından güncel main birleştirilecek; PR #9 mobil/mini harita kontrolleriyle birlikte yeniden doğrulanacak.
+
+## P2-018 — Main entegrasyonu (2026-10-27)
+
+- Uygulama snapshot commit: `5d865a3`. `git merge origin/main` kod/test/CSS dosyalarını otomatik birleştirdi; yalnız çalışma günlüğünün sonuna eklenen kayıtlar çakıştı.
+- Günlükte iki tarafın tüm kayıtları P2-012–017 sırasıyla korundu. Mobil tuval/mini harita ve limit-devir kuralı artık bu dalda da mevcut.
+- Main tabanı `9ddbc8a`; entegrasyon sonrası tip/lint/E2E ve kaynak/build taraması yeniden çalıştırılacak.
