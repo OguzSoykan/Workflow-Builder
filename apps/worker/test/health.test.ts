@@ -24,7 +24,7 @@ describe('health API', () => {
     expect(await response.json()).toEqual({ data: { status: 'ok' }, meta: { requestId } });
   });
 
-  it.each(['/api', '/api/missing', '/api/v1/workflows', '/api/health/extra'])(
+  it.each(['/api', '/api/missing', '/api/v2/missing', '/api/health/extra'])(
     'returns JSON 404 for %s even for navigation requests',
     async (path) => {
       const response = await app.request(path, { headers: { Accept: 'text/html' } });

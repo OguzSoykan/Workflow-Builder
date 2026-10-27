@@ -59,3 +59,13 @@ test('API navigation bypasses SPA fallback', async ({ page }) => {
   expect(response?.headers()['content-type']).toContain('application/json');
   expect(await response?.json()).toMatchObject({ error: { code: 'ROUTE_NOT_FOUND' } });
 });
+
+test('member API fails closed without a configured Firebase project', async ({ request }) => {
+  const response = await request.get('/api/v1/me', { headers: { Authorization: 'Bearer a.b.c' } });
+  expect(response.status()).toBe(503);
+  expect(response.headers()['cache-control']).toBe('no-store');
+  expect(await response.json()).toEqual({
+    error: { code: 'AUTH_NOT_CONFIGURED', messageKey: 'errors.authNotConfigured' },
+    requestId: response.headers()['x-request-id'],
+  });
+});
