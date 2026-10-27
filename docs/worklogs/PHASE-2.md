@@ -85,3 +85,31 @@ ham uygulama içeriği kaydedilmez. Saat dilimi Europe/Istanbul; girişler geçm
 - `npm run build`: PASS (Vite + Wrangler dry-run, deploy yok). `npm run secret:scan`: 101 dosya, 0 bulgu.
 - `npm run test:e2e`: 14/14 PASS (4 editör, 8 health, 2 contract). P2-009'daki rol/ad sorgusu düzeltmesi doğrulandı.
 - WB-005A yerel kabul kanıtı tamam; kalan: dalın push'u, PR ve hosted `quality` CI. `gh` CLI bu makinede yok; PR web arayüzünden açılacak.
+
+## P2-014 — WB-005B başlangıcı (2026-10-27)
+
+- Temiz çalışma ağacı, AGENTS/STATUS/geliştirme kuralları ve şema incelendi; `git fetch origin` başarılı.
+- PR #9 açık; `859ddcb` quality henüz sonuçlanmadı. Önceki P2-012/013 devir kayıtları bu PR'ın dalında; güncel main henüz bunları içermiyor.
+- `git switch -c feat/WB-005B-node-properties origin/main`: bağımsız kart dalı açıldı. PR #9'un mobil/mini harita düzeltmesi bu dala taşınmadı.
+- Kapsam: ad + Start açıklaması / Approval rolü / End sonucu tek atomik işlem; yanlış tür ve olmayan node reddi, kimlik/edge/hash korunumu, form seçimi ve hata E2E. Condition config WB-006'da kalır.
+- Şema: ad/rol 1–120, yalnız boşluk reddi; açıklama WORKFLOW_LIMITS.text, isteğe bağlı; outcome completed/rejected. Sözleşme değişmez.
+
+## P2-015 — Özellik paneli ve PR #9 güncellemesi (2026-10-27)
+
+- NodePropertiesForm eklendi; ad + config tek şema doğrulamasından geçer. Yanlış tür/olmayan hedef reddedilir, boş açıklama kaldırılır; End sonucu tuvalde gösterilir. İlk typecheck PASS.
+- Kullanıcının PR kapatma mesajı önce kendisinin yapacağı işlem olarak yorumlandı. Ekran görüntüsü ve sonraki talimat sonrası PR #9'u güncelleyip kontrollerden sonra birleştirme işi üstlenildi.
+- API: PR #9 `open`, `mergeable_state=behind`; quality Chromium kurulumundaydı, başarısız test yok. `PUT pulls/9/update-branch` kabul edildi; required CI atlanmadan yeni head beklenecek.
+
+## P2-016 — Test sonuçları ve takip (2026-10-27)
+
+- Typecheck ve 205 Vitest + 2 scanner + 3 OpenAPI testi PASS. Yeni 10 model senaryosu atomiklik, kimlik/referans/hash, sınır değerleri ve yanlış tür/olmayan hedefi doğruladı.
+- İlk E2E 14/15 PASS; yeni senaryo iç içe select/option metni nedeniyle exact getByLabel sorgusunda zaman aşımına uğradı. Rol/ad sorgusu ve açık id/htmlFor eşlemesi uygulandı; yeniden çalıştırılacak.
+- PR #9 update-branch başarılı: yeni head `c30e7a6`; eski CI yeni commit nedeniyle cancelled, yeni run 40546965579 Chromium kurulumunda. Typecheck/lint/format/unit/build başarılı.
+- CI sorgusunda tırnaksız `?per_page=3` zsh glob hatası verdi; API isteği gitmedi, tırnaklı sorgu ile düzeltildi.
+
+## P2-017 — PR #9 birleşti; WB-005B doğrulaması (2026-10-27)
+
+- PR #9 head `c30e7a6` required quality [40546965579](https://github.com/OguzSoykan/Workflow-Builder/actions/runs/40546965579) PASS; kullanıcı talimatıyla squash merge başarılı: `9ddbc8a973939925aa76d1edd8926caa308c6427`.
+- Bağımsız insan review verilmiş gibi gösterilmedi; kullanıcı oturum talimatı ve agent öz incelemesi esas alındı. Required check atlanmadı.
+- WB-005B lint, 205 test coverage (satır %99,01 / branch %93,69), build PASS. Rol/ad sorgusu düzeltmesi sonrası 15/15 E2E PASS.
+- Şimdi WB-005B snapshot commit'i ardından güncel main birleştirilecek; PR #9 mobil/mini harita kontrolleriyle birlikte yeniden doğrulanacak.

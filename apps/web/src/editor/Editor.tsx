@@ -9,6 +9,7 @@ import {
   type Edge,
 } from '@xyflow/react';
 import { WORKFLOW_LIMITS } from '@workflow-builder/workflow-contract';
+import { NodePropertiesForm } from './NodePropertiesForm';
 import { ConnectionForm } from './ConnectionForm';
 import { WorkflowCard, type CanvasNode } from './WorkflowCard';
 import {
@@ -197,37 +198,7 @@ function EditorWorkspace() {
         <aside className="inspector" aria-label="Adım özellikleri">
           <h2>Özellikler</h2>
           {selectedNode ? (
-            <form
-              key={selectedNode.id}
-              onSubmit={(event) => {
-                event.preventDefault();
-                dispatch({
-                  type: 'rename-node',
-                  id: selectedNode.id,
-                  label: String(new FormData(event.currentTarget).get('label') ?? ''),
-                });
-              }}
-            >
-              <p className="muted">{NODE_LABELS[selectedNode.type]} adımı</p>
-              <label>
-                Adım adı
-                <input name="label" defaultValue={selectedNode.label} required maxLength={120} />
-              </label>
-              <button type="submit">Adı güncelle</button>
-              {selectedNode.type === 'condition' && (
-                <p className="muted">
-                  Koşul henüz yapılandırılmadı. Alan ve operatör düzenleme sonraki sürümde
-                  eklenecek.
-                </p>
-              )}
-              <button
-                type="button"
-                className="danger"
-                onClick={() => dispatch({ type: 'delete-node', id: selectedNode.id })}
-              >
-                Adımı sil
-              </button>
-            </form>
+            <NodePropertiesForm key={selectedNode.id} node={selectedNode} dispatch={dispatch} />
           ) : selectedEdge ? (
             <div>
               <p>{HANDLE_LABELS[selectedEdge.sourceHandle]} bağlantısı</p>

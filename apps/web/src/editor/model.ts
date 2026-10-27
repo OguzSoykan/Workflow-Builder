@@ -8,6 +8,12 @@ import {
 } from '@workflow-builder/workflow-contract';
 
 export type NodeKind = WorkflowNode['type'];
+export type EditableProperties = {
+  [K in Exclude<NodeKind, 'condition'>]: Pick<
+    Extract<WorkflowNode, { type: K }>,
+    'type' | 'config'
+  >;
+}[Exclude<NodeKind, 'condition'>];
 export const NODE_LABELS: Record<NodeKind, string> = {
   start: 'Başlangıç',
   approval: 'Onay',
@@ -25,6 +31,7 @@ export const HANDLE_LABELS: Record<WorkflowEdge['sourceHandle'], string> = {
 export type Edit =
   | { type: 'add-node'; id: string; kind: NodeKind; position: { x: number; y: number } }
   | { type: 'rename-node'; id: string; label: string }
+  | { type: 'update-properties'; id: string; label: string; properties: EditableProperties }
   | { type: 'move-node'; id: string; position: { x: number; y: number } }
   | { type: 'delete-node'; id: string }
   | { type: 'connect'; id: string; source: string; handle: string; target: string }
@@ -114,6 +121,18 @@ export function applyEdit(
         ),
       };
       break;
+    case 'update-properties': {
+      const node = workflow.nodes.find((item) => item.id === edit.id);
+      if (!node) return reject('Düzenlenecek adım bulunamadı.');
+      if (node.type !== edit.properties.type) return reject('Adım türü değiştirilemez.');
+      candidate = {
+        ...workflow,
+        nodes: workflow.nodes.map((item) =>
+          item.id === edit.id ? { ...item, ...edit.properties, label: edit.label } : item,
+        ),
+      };
+      break;
+    }
     case 'move-node':
       candidate = {
         ...workflow,
@@ -156,7 +175,9 @@ export function applyEdit(
   return parsed.success
     ? { workflow: parsed.data, error: null }
     : reject(
-        'Değişiklik geçersiz: etiket boş olamaz, en fazla 120 karakter olmalıdır; belge limitleri korunmalıdır.',
+        edit.type === 'update-properties'
+          ? `Değişiklik uygulanmadı: ad ve rol boş olamaz, en fazla 120 karakter olabilir; açıklama en fazla ${WORKFLOW_LIMITS.text} karakter olmalı, bitiş sonucu geçerli olmalıdır.`
+          : 'Değişiklik geçersiz: etiket boş olamaz, en fazla 120 karakter olmalıdır; belge limitleri korunmalıdır.',
       );
 }
 
