@@ -2,10 +2,10 @@ import { Handle, Position, type Node, type NodeProps } from '@xyflow/react';
 import { NODE_HANDLES, type WorkflowNode } from '@workflow-builder/workflow-contract';
 import { HANDLE_LABELS, NODE_LABELS } from './model';
 
-export type CanvasNode = Node<{ node: WorkflowNode }, 'workflow'>;
+export type CanvasNode = Node<{ node: WorkflowNode; summary: string | null }, 'workflow'>;
 
 export function WorkflowCard({ data, selected, isConnectable }: NodeProps<CanvasNode>) {
-  const { node } = data;
+  const { node, summary } = data;
   const handles = NODE_HANDLES[node.type];
   return (
     <div className={`workflow-card kind-${node.type}${selected ? ' is-selected' : ''}`}>
@@ -16,7 +16,7 @@ export function WorkflowCard({ data, selected, isConnectable }: NodeProps<Canvas
       <strong>{node.label}</strong>
       <span className="node-detail">
         {node.type === 'condition'
-          ? 'Alan ve koşul ayarı bekliyor'
+          ? (summary ?? 'Alan ve koşul ayarı bekliyor')
           : node.type === 'approval'
             ? node.config.roleLabel
             : node.type === 'end'

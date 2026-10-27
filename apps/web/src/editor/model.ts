@@ -1,3 +1,4 @@
+import { editCondition, type ConditionEdit } from './condition-model';
 import { editInput, type InputEdit } from './input-model';
 import {
   NODE_HANDLES,
@@ -31,6 +32,7 @@ export const HANDLE_LABELS: Record<WorkflowEdge['sourceHandle'], string> = {
 
 export type Edit =
   | InputEdit
+  | ConditionEdit
   | { type: 'add-node'; id: string; kind: NodeKind; position: { x: number; y: number } }
   | { type: 'rename-node'; id: string; label: string }
   | { type: 'update-properties'; id: string; label: string; properties: EditableProperties }
@@ -58,7 +60,7 @@ function newNode(edit: Extract<Edit, { type: 'add-node' }>): WorkflowNode {
       return { ...base, type: 'start', config: {} };
     case 'approval':
       return { ...base, type: 'approval', config: { roleLabel: 'Onaylayan' } };
-    // A schema-valid draft, not an executable condition. WB-006 supplies the field editor.
+    // A schema-valid draft, not an executable condition, until a field is chosen in the panel.
     case 'condition':
       return {
         ...base,
@@ -104,6 +106,7 @@ export function applyEdit(
   edit: Edit,
 ): { workflow: Workflow; error: string | null } {
   if (edit.type === 'save-input' || edit.type === 'delete-input') return editInput(workflow, edit);
+  if (edit.type === 'update-condition') return editCondition(workflow, edit);
   const reject = (error: string) => ({ workflow, error });
   let candidate: Workflow = workflow;
   switch (edit.type) {

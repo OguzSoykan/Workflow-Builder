@@ -154,7 +154,7 @@ test('edits properties atomically and restores saved values when switching nodes
   await list.getByRole('button', { name: 'Başlangıç', exact: false }).click();
   await expect(description).toHaveValue('');
   await page.getByRole('button', { name: 'Koşul ekle', exact: true }).click();
-  await expect(page.getByText('Koşul henüz yapılandırılmadı.', { exact: false })).toBeVisible();
+  await expect(page.getByText('önce aşağıdaki “Giriş alanları”', { exact: false })).toBeVisible();
   await expect(page.getByLabel('Onaylayan rolü', { exact: true })).toHaveCount(0);
   await page.getByLabel('Adım adı', { exact: true }).fill('Tutar kontrolü');
   await save.click();

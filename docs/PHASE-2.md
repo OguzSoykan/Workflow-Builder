@@ -1,6 +1,6 @@
 # Faz 2 — Editör ve yerel çalışma
 
-**Durum:** WB-005A/B main’de. WB-006A tipli input editörü uygulandı; [PR #11](https://github.com/OguzSoykan/Workflow-Builder/pull/11) açıldı; hosted CI ve review bekleniyor. Sonraki kart WB-006B. Fazın tamamı henüz bitmedi.
+**Durum:** WB-005A/B ve WB-006A main’de. WB-006B koşul/onay dalı deneyimi uygulandı; PR ve hosted CI bekleniyor. Sonraki kart WB-007A (önce D-03/D-08). Fazın tamamı henüz bitmedi.
 İşlem kaydı: [çalışma günlüğü](worklogs/PHASE-2.md). Kaynak kapsam: PRD FR-01–03/05,
 AC-01/05/11 ve BACKLOG WB-005–008. Mevcut şema/limit/kimlik sözleşmesi korunur.
 
@@ -8,8 +8,8 @@ AC-01/05/11 ve BACKLOG WB-005–008. Mevcut şema/limit/kimlik sözleşmesi koru
 | ------- | ------------------------------ | ------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | WB-005A | Tuval ve temel graph düzenleme | Done    | Dört node ekle/seç/taşı/etiketle/sil; zoom; bağlantı ekle/sil; stable ID; 50 node/100 edge sınırı; Start hedefi, geçersiz handle, duplicate çıkış ve cycle engeli |
 | WB-005B | Node config özellik paneli     | Done    | Start açıklaması, Approval rolü, End sonucu, Condition ayarlarının ilgili input görevine bağlanması; şema uyumlu değişiklikler                                    |
-| WB-006A | Tipli input alanları           | Review  | number/string/boolean/date/enum; benzersiz key, default/options/validation; mevcut alan referanslarına etkiler görünür                                            |
-| WB-006B | Koşul ve onay dalı deneyimi    | Backlog | Alan türüne uygun operatör/değer; true/false ve approved/rejected bağlantıları, açıklayıcı hatalar                                                                |
+| WB-006A | Tipli input alanları           | Done    | number/string/boolean/date/enum; benzersiz key, default/options/validation; mevcut alan referanslarına etkiler görünür                                            |
+| WB-006B | Koşul ve onay dalı deneyimi    | Review  | Alan türüne uygun operatör/değer; true/false ve approved/rejected bağlantıları, açıklayıcı hatalar                                                                |
 | WB-007A | Yerel kayıt                    | Backlog | D-03/D-08 kararları; refresh ile devam; bozuk/quota/çok sekme senaryoları                                                                                         |
 | WB-007B | Güvenli import/export          | Backlog | Boyut/şema/semantik sınırlar; bozuk import çalışma kopyasını değiştirmez; D-03 taslak politikası                                                                  |
 | WB-008A | Graph validation UX            | Backlog | Mevcut saf validator; lokalize açıklama, ilgili node/edge/alanı gösterme; AC-05                                                                                   |
@@ -52,3 +52,10 @@ Faz 2 başlatma onayı bu advisory'nin giderildiği anlamına gelmez.
 - Alan listesi bağlı koşulları ve varsa tür/değer uyumsuzluğunu gösterir. Ekleme sırasında mevcut eksik koşulun ayarı otomatik değiştirilmez; condition paneli WB-006B'dedir.
 - Hatalı form belgeyi değiştirmez; girişler düzeltilebilir. Başka alan seçimi/vazgeçme uygulanmamış girişleri bırakır. Son aday, referanslar güncellendikten sonra byte limiti için de doğrulanır.
 - Kanıt: 239 Vitest + 2 scanner + 3 OpenAPI; 18 Chromium senaryosu. Yeni bağımlılık, persistence veya cloud değişikliği yok.
+
+## WB-006B uygulama sınırı
+
+- Condition paneli tanımlı alanı, alan türüne uygun operatörü (`OPERATORS`) ve tipli değeri sunar: sayı/tarih/metin girişi, doğru-yanlış ve enum seçimi, enum `in` için çoklu seçim. Alan yoksa önce alan eklenmesi istenir.
+- Ad ve koşul ayarı tek `update-condition` işlemiyle uygulanır. Şema veya public validator (`INPUT_FIELD_MISSING`, `OPERATOR_TYPE_MISMATCH`, `CONDITION_VALUE_INVALID`) reddederse belge ve seçim değişmez; türe özgü Türkçe açıklama gösterilir. ID, konum ve bağlantılar korunur, türetilmiş hash kaldırılır.
+- Start/Approval/Condition panelinde her çıkışın hedefi veya bağlı olmadığı açıklanır. Bağlantı formu ilk boş çıkışı önerir ve bağlı çıkışları işaretler; dolu çıkış hatası korunur. Tuval kartı geçerli koşulun özetini gösterir.
+- Kanıt: 260 Vitest + 2 scanner + 3 OpenAPI; 20 Chromium senaryosu. Contract/core, bağımlılık, persistence veya cloud değişikliği yok.

@@ -212,3 +212,30 @@ ham uygulama içeriği kaydedilmez. Saat dilimi Europe/Istanbul; girişler geçm
 1. `cd /Users/oguzsoykan/Workflow-Builder`; `git status --short --branch`; `git fetch origin`.
 2. PR #11'in güncel head required quality, review ve merge durumunu doğrula; gerekirse güncel main ile güncelle. Başarıyı önceki SHA'dan varsayma.
 3. Teslim sonuçlandıktan sonra WB-006B için güncel main tabanlı ayrı dal aç; mevcut `OPERATORS`, `isFieldValue` ve saf validator sözleşmesini oku. Condition alan seçimi/tipli operatör/değer, true/false ve approved/rejected bağlantı deneyimini uygula. Adımları P2-026'dan itibaren kaydet.
+
+## P2-026 — Devir ve WB-006B başlangıcı (2026-10-27)
+
+- Codex oturumu kota nedeniyle durdu; Claude Code devraldı. `git fetch` sonrası PR #11'in birleştiği doğrulandı: main `30699d8`, merge sonrası [quality 40550705101](https://github.com/OguzSoykan/Workflow-Builder/actions/runs/40550705101) PASS. WB-006A artık main'de.
+- `feat/WB-006B-condition-branches` güncel main'den açıldı. Model, özellik paneli, bağlantı formu, contract `OPERATORS`/`isFieldValue`/`NODE_HANDLES` ve core `validateConditions` incelendi.
+- Plan: Condition paneli tanımlı alan seçimi, alan türüne uygun operatör ve tipli değer (enum `in` için çoklu seçim) sunacak; ad+ayar tek atomik işlemle uygulanacak, şema veya public validator reddederse belge değişmeyecek ve hataya özgü Türkçe açıklama gösterilecek.
+- Dal deneyimi: Start/Approval/Condition panelinde her çıkışın hedefi veya eksik olduğu açıklanacak; bağlantı formu ilk boş çıkışı önerecek; tuval kartı geçerli koşulun özetini gösterecek. Contract/core ve bağımlılık değişikliği yok.
+
+## P2-027 — Koşul paneli ve dal deneyimi uygulaması (2026-10-27)
+
+- Yeni `condition-model.ts`: form → tipli değer dönüşümü, `update-condition` atomik düzenlemesi, public validator koşul kodlarından türe özgü Türkçe hata, tuval özeti. `model.ts` yalnız bu işleme yönlendirir.
+- `ConditionFields`: alan ve operatör kontrollü; değer kontrolü alan türüne göre değişir, enum `in` için onay kutuları. Alan/operatör değişince eski değer taşınmaz; kayıtlı ayar yeniden açılışta gösterilir.
+- `BranchStatus`: Start/Approval/Condition çıkışlarının hedefini veya eksikliğini açıklar. Bağlantı formu ilk boş çıkışı önerir, bağlı çıkışları “(bağlı)” diye işaretler; dolu çıkış reddi korunur. Approval paneline dal açıklaması eklendi.
+- İlk typecheck bağlantı formundaki `never` tip daraltmasında hata verdi; çıkış kontrolü `string` parametreli yardımcıya alınarak düzeltildi. Boş enum `in` seçiminin genel şema mesajı yerine enum mesajı vermesi için ön kontrol eklendi.
+- Eski E2E'deki “Koşul henüz yapılandırılmadı” metni, alan yokken gösterilen yeni yönlendirme metniyle güncellendi.
+
+## P2-028 — WB-006B doğrulama (2026-10-27)
+
+- `npm run typecheck`, `lint`, `format:check` PASS. `npm test`: 260 Vitest (21 yeni koşul testi) + 2 scanner + 3 OpenAPI PASS. Coverage satır %99,17 / branch %95,2; `condition-model.ts` satır %100, coverage listesine eklendi.
+- `npm run test:e2e`: 20/20 Chromium PASS. Yeni iki senaryo: tipli sayı/enum koşulu, operatör listesinin türe göre değişmesi, boş `in` reddinde kartın değişmemesi, yeniden açılışta değer geri yükleme, referanslı alan silme kilidi; Doğru/Yanlış ve Onaylandı/Reddedildi dal durumu, boş çıkış önerisi, dolu çıkış reddi.
+- `npm run build` (Vite + Wrangler dry-run, deploy yok) ve `npm run secret:scan` PASS. `npm run secrets:check` önce PATH'te Gitleaks olmadığı için reddetti; Codex'in yerel 8.30.1 ikilisi `GITLEAKS_BIN=/private/tmp/wb-gitleaks` ile çalıştı: 38 commit + kaynak + artifact, bulgu yok.
+- Elle mobil görsel inceleme: NOT RUN; dar görünüm E2E kontrolleri geçti, hosted CI son head'i tekrar doğrulayacak. Contract/core ve bağımlılıklar değişmedi; bağımsız insan review yapılmadı.
+
+## P2-029 — WB-006B teslimi (2026-10-27)
+
+- Commit'ler `aa0b064` (uygulama) ve `0758c03` (belgeler) push edildi. [PR #12](https://github.com/OguzSoykan/Workflow-Builder/pull/12) açıldı; [quality 40552768819](https://github.com/OguzSoykan/Workflow-Builder/actions/runs/40552768819) PASS (1m18s). Merge kullanıcıya bırakıldı; agent merge yetkisi bu oturumda reddedilmişti (PR #8 notu).
+- Sonraki kart WB-007A yerel kayıt; D-03 (taslak saklama) ve D-08 (storage/çok sekme UX) kararları olmadan başlanmaz.
