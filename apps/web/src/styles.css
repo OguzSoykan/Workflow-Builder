@@ -609,3 +609,13 @@ select {
 .simulation-run {
   margin-top: 12px;
 }
+.example-buttons {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+@media (max-width: 600px) {
+  .palette > .examples {
+    grid-column: 1 / -1;
+  }
+}
