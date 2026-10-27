@@ -8,7 +8,7 @@ Zod advisory 27 Ekim'de Zod 4.6.7 ile kapatıldı (ADR-016). [STATUS](STATUS.md)
 ## Aktif Faz 2
 
 Kullanıcı WB-005–008 için başlama onayı verdi. Küçük kartlar ve kabul koşulları
-[Faz 2 planında](docs/PHASE-2.md); WB-005A/B ve WB-006A/B PR #8–#12 ile main’de; D-03/D-08 onaylandı; WB-007A/B PR #13/#14 ile main’de; WB-008A/B PR #15/#16 ile main’de; Faz 2 tamamlandı. Faz 3 28 Ekim'de onaylandı ([plan](docs/PHASE-3.md)): WB-009/010 PR #18/#19 ile main’de; WB-011 örnekler Review. Faz 4 ayrı onay gerektirir. Her anlamlı adım
+[Faz 2 planında](docs/PHASE-2.md); WB-005A/B ve WB-006A/B PR #8–#12 ile main’de; D-03/D-08 onaylandı; WB-007A/B PR #13/#14 ile main’de; WB-008A/B PR #15/#16 ile main’de; Faz 2 tamamlandı. Faz 3 28 Ekim'de onaylandı ([plan](docs/PHASE-3.md)): WB-009–011 PR #18–#20 ile main’de; Faz 3 tamamlandı. Faz 4 28 Ekim'de onaylandı ([plan](docs/PHASE-4.md)): WB-013 token doğrulama Review. Her anlamlı adım
 [çalışma günlüğüne](docs/worklogs/PHASE-2.md) eklenir. Aşağıdaki Faz 1 kayıtları korunur.
 
 ## Hazır ve tamamlanmış iş tanımı
@@ -147,7 +147,8 @@ Faz 1 tamamlandı; Faz 2 kullanıcı talimatıyla başladı. Güncel alt kartlar
 | 4    | WB-006: Input ve koşul/onay dalları editörü   | Done        | WB-006A/B PR #11/#12 ile main’de                                         |
 | 5    | WB-007: Yerel kayıt ve güvenli import/export  | Done        | WB-007A/B PR #13/#14 ile main’de                                         |
 | 6    | WB-008: Validation UX ve undo/redo            | Done        | WB-008A/B PR #15/#16 ile main’de                                         |
-| 7    | WB-009–011: Faz 3 simülasyon                  | In Progress | WB-009/010 main’de; WB-011 örnekler ve E2E Review                        |
+| 7    | WB-009–011: Faz 3 simülasyon                  | Done        | WB-009–011 PR #18–#20 ile main’de                                        |
+| 8    | WB-012–015: Faz 4 kimlik ve bulut kayıt       | In Progress | WB-013 Review; WB-014 D1, WB-012 arayüz, WB-015 taşıma sırada            |
 
 WB-005–027'nin üst kapsamı [ROADMAP](ROADMAP.md) ve korunmuş
 [BACKLOG](docs/BACKLOG.md) içinde bulunur. Sonraki fazlar sırasıyla simulator,

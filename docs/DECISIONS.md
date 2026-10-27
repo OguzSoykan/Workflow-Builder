@@ -86,3 +86,19 @@ WB-007A/B; cloud-save (WB-014) kuralı değişmez.
   başlamadan değer istenir; boş değerle koşul değerlendirilmez.
 - WB-011 (satın alma/izin/masraf örnekleri ve E2E) Faz 3'te P0'dır; örnekler editörde
   “Örnekten başla” ile yüklenir. FR-14 restore/history kapsam dışında kalır.
+
+## 28 Ekim 2026 — Faz 4 kararları: D-05/D-06/D-09/D-12 (onaylandı)
+
+- D-12: Gerçek Firebase projesi ve Cloudflare D1 bu fazda açılmaz. Proje kimliği ve public web
+  config env değişkeniyle bağlanır; yapılandırma yoksa bulut hesabı özellikleri devre dışı
+  görünür. Worker doğrulaması kendi üretilen anahtarlarla imzalanmış sahte token'larla, D1
+  yerel SQLite (wrangler/miniflare) ile test edilir.
+- D-05: Bulut kayıt e-posta doğrulaması ister; doğrulanmamış hesap `/me`'yi görür ama
+  workflow yazamaz (`403 EMAIL_NOT_VERIFIED`). AI kota kısmı Faz 5'te kalır.
+- D-06 (WB-015 basit hali): “Buluta kaydet” açık onayla yerel taslaktan yeni bulut kaydı
+  oluşturur; yerel taslak silinmez. Aynı taslak tekrar kaydedilince yeni revizyon eklenir.
+  Revizyon listesi salt okunurdur; restore P1 olarak kapsam dışıdır.
+- D-09: Workflow silme soft delete'tir; revizyonlar korunur. Kalıcı temizleme ve hesap
+  silme (P1) bu fazda yoktur, açık risk olarak izlenir.
+- D-10 (teknik): Atomik kayıt D1 `batch` (tek transaction) + `(workflow_id, revision_number)`
+  UNIQUE + koşullu güncelleme ile sağlanır; paralel PUT testi WB-014 kanıtıdır.

@@ -13,8 +13,11 @@ Faz 2 uygulama PR'ları review ve required CI üzerinden ilerler. Faz 3 sonraki 
 27 Ekim 2026 kullanıcı talimatı (“Faz 2 PR'larını CI geçince sen merge et”): kalan Faz 2
 PR'ları required `quality` PASS sonrası agent tarafından squash merge edilebilir; Faz 3+ için geçerli değildir.
 28 Ekim 2026 “tamam sonraki aşamaya geç” talimatı WB-009–011 (Faz 3, simülasyon) uygulama
-onayıdır; plan [Faz 3](docs/PHASE-3.md), günlük [docs/worklogs/PHASE-3.md](docs/worklogs/PHASE-3.md). Faz 4–6 kapsam dışıdır.
+onayıdır; plan [Faz 3](docs/PHASE-3.md), günlük [docs/worklogs/PHASE-3.md](docs/worklogs/PHASE-3.md). Faz 4 sonraki talimatla onaylandı.
 Faz 3 PR'ları da kullanıcı birleştirir; agent merge izni Faz 2 ile sınırlıydı.
+28 Ekim 2026 “faz 4 yap” talimatı WB-012–015 (Faz 4, auth ve D1) uygulama onayıdır; plan
+[Faz 4](docs/PHASE-4.md), günlük [docs/worklogs/PHASE-4.md](docs/worklogs/PHASE-4.md). Bulut kaynağı açma, deploy ve
+gerçek Firebase/Cloudflare hesabı kullanımı kapsam dışıdır; testler sahte token ve yerel D1 ile yapılır. Faz 5–6 kapsam dışıdır.
 
 ## Kaynakların önceliği
 
