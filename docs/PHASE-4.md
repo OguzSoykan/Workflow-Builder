@@ -1,6 +1,6 @@
 # Faz 4 — Kimlik ve bulut kayıt
 
-**Durum:** Kullanıcı onayıyla başladı (28 Ekim 2026). İşlem kaydı: [çalışma günlüğü](worklogs/PHASE-4.md).
+**Durum:** WB-012/013/014 main’de; WB-015 Review. Merge edilince Faz 4 kartları tamamlanır; Faz 5 (AI) ayrı onay ister. İşlem kaydı: [çalışma günlüğü](worklogs/PHASE-4.md).
 Kaynak: PRD FR-09/10, AC-08/12, API Contract §1–4/§8, Data Model §2–4/§7, Architecture §3/§5, DECISIONS Faz 4 kararları.
 Sıra bağımlılığa göre: önce Worker doğrulaması ve D1 API, sonra istemci arayüzü.
 
@@ -28,3 +28,10 @@ Sıra bağımlılığa göre: önce Worker doğrulaması ve D1 API, sonra istemc
 - Ayrıntılar [ADR-020](adr/ADR-020-browser-auth.md): Firebase Auth REST istemcisi, `GET /api/config`, başlıkta hesap paneli (giriş, kayıt, doğrulama e-postası, “Doğruladım, yenile”, şifre sıfırlama, çıkış).
 - Yapılandırma yoksa “Bulut hesabı yapılandırılmadı”. Çıkış yerel taslağı silmez.
 - Kanıt: 392 Vitest (Firebase istemcisi + config testleri) + 2 scanner + 3 OpenAPI; 39 Chromium (Firebase uç noktaları Playwright ile taklit edildi; şifrenin uygulama origin'ine hiç gitmediği doğrulandı).
+
+## WB-015 uygulama sınırı ve Faz 4 çıkışı
+
+- `account/cloud-api.ts` + `CloudPanel`: giriş yapılmış ve e-postası doğrulanmış kullanıcı, çalıştırılabilir taslağı açık onayla buluta kaydeder. İlk kayıt POST; sonraki kayıtlar tarayıcının bildiği revizyonla PUT. Kayıt başka cihazda varsa veya güncel değilse sessizce yazılmaz, “Yine de kaydet” sorulur ve yeni revizyon eklenir; eski sürümler silinmez.
+- Yerel taslak hiçbir durumda değişmez veya silinmez; sunucu hatasında mesaj gösterilir. Bulut sürümleri salt okunur listelenir (restore ve buluttan açma P1, kapsam dışı).
+- Faz 4 çıkış ölçütleri: token negatif testleri (25), sahiplik izolasyonu ve 404 (gerçek yerel D1), paralel PUT'ta tek kazanan + 409, immutable revizyonlar, şifrenin Worker'a gitmediği (E2E), seçilen taşıma politikasının yereli koruması (E2E). Toplam 403 Vitest + 2 scanner + 3 OpenAPI; 42 Chromium.
+- Kalan: gerçek Firebase projesi ve Cloudflare D1 bağlanmadı (D-12); staging smoke, gerçek D1 CPU/kota ölçümü ve hesap silme (P1) sonraki fazlarda. Soft-delete edilmiş ID yeniden kullanılamaz.

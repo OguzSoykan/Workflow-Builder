@@ -29,3 +29,15 @@
 - Worker `GET /api/config` (yalnız public değerler, emülatör URL'si yalnız localhost), web `account/firebase-auth.ts` (REST istemcisi, hata eşleme, oturum saklama, 5 dk yenileme penceresi), `use-account.ts`, başlıkta `AccountPanel`. OpenAPI'ye `getPublicConfig` + `PublicConfig` eklendi (16 operasyon).
 - Hatalar: `.then` dönüş tipi `TS2345` → async geri çağrı; test `Response | Promise<Response>` → açık await. İlk E2E'de giriş “Firebase hizmetine ulaşılamadı” verdi: önce eksik CORS sanıldı (sahte uca CORS/preflight eklendi, yine FAIL); hata ayıklama spec'i Firebase'e hiç istek gitmediğini gösterdi — sınıf alanındaki varsayılan `fetch` `this.fetcher()` ile çağrılınca “Illegal invocation”. Varsayılan sarmalayıcıya çevrildi; 3/3 PASS. Unit testler sahte fetch enjekte ettiği için bunu yakalamamıştı; E2E yakaladı.
 - Kapılar: typecheck/lint/format, 392 Vitest + 2 + 3, coverage satır %99,1, negatif kapılar, build, secret:scan, Gitleaks PASS; E2E 39/39. Karar ADR-020.
+
+## P4-006 — WB-012 merge ve WB-015 başlangıcı (2026-10-28)
+
+- [PR #23](https://github.com/OguzSoykan/Workflow-Builder/pull/23) [quality 40603664841](https://github.com/OguzSoykan/Workflow-Builder/actions/runs/40603664841) PASS sonrası agent squash merge: main `65729d8`. WB-012 Done.
+- `feat/WB-015-cloud-save` açıldı. Plan (D-06): saf `cloud-api.ts` (POST → 409 WORKFLOW_EXISTS ise güncel revizyonla PUT; PUT 409 REVISION_CONFLICT'te açık “yine de kaydet”), bilinen revizyon `localStorage`'da workflowId başına; `CloudPanel` açık onay, doğrulanmamış e-posta ve çalıştırılamayan akış uyarıları, salt okunur revizyon listesi. Yerel taslak hiçbir durumda değişmez.
+
+## P4-007 — WB-015 buluta kayıt ve Faz 4 devir notu (2026-10-28)
+
+- `account/cloud-api.ts` (POST/PUT, WORKFLOW_EXISTS → güncel revizyonla açık çakışma, silinmiş ID mesajı, hata eşleme, kullanıcı+workflow başına bilinen revizyon) ve `CloudPanel` (onay, çakışma, salt okunur sürüm listesi). Sahte Firebase E2E yardımcısı `tests/e2e/fake-firebase.ts`'e taşındı; bulut uçları için bellek içi sahte D1 kuralları.
+- 11 unit + 3 E2E (onaylı kopya, sürüm 2, başka cihaz çakışması → “Yine de kaydet” → sürüm 4, sunucu hatasında yerel taslak aynı, doğrulanmamış e-posta, eksik akış). İlk denemede PASS.
+- Kapılar: typecheck/lint/format, 403 Vitest + 2 + 3, coverage satır %99,04, negatif kapılar, build, secret:scan, Gitleaks PASS; E2E 42/42.
+- Faz 4 sonrası: gerçek Firebase projesi + D1 (staging) kurulumu ve Faz 5 için kullanıcı onayı gerekir. Sonraki somut adım: `git checkout main && git pull --ff-only`; main quality'yi doğrula.
