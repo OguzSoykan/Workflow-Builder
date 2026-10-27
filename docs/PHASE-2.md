@@ -1,6 +1,6 @@
 # Faz 2 — Editör ve yerel çalışma
 
-**Durum:** WB-005A/B ve WB-006A/B main’de. D-03/D-08 onaylandı; WB-007A main’de. WB-007B import/export uygulandı, PR ve hosted CI bekleniyor. Sonraki kart WB-008A. Fazın tamamı henüz bitmedi.
+**Durum:** WB-005A/B ve WB-006A/B main’de. D-03/D-08 onaylandı; WB-007A main’de. WB-007B main’de. WB-008A validation UX uygulandı, PR ve hosted CI bekleniyor. Sonraki kart WB-008B. Fazın tamamı henüz bitmedi.
 İşlem kaydı: [çalışma günlüğü](worklogs/PHASE-2.md). Kaynak kapsam: PRD FR-01–03/05,
 AC-01/05/11 ve BACKLOG WB-005–008. Mevcut şema/limit/kimlik sözleşmesi korunur.
 
@@ -11,8 +11,8 @@ AC-01/05/11 ve BACKLOG WB-005–008. Mevcut şema/limit/kimlik sözleşmesi koru
 | WB-006A | Tipli input alanları           | Done    | number/string/boolean/date/enum; benzersiz key, default/options/validation; mevcut alan referanslarına etkiler görünür                                            |
 | WB-006B | Koşul ve onay dalı deneyimi    | Done    | Alan türüne uygun operatör/değer; true/false ve approved/rejected bağlantıları, açıklayıcı hatalar                                                                |
 | WB-007A | Yerel kayıt                    | Done    | D-03/D-08 kararları; refresh ile devam; bozuk/quota/çok sekme senaryoları                                                                                         |
-| WB-007B | Güvenli import/export          | Review  | Boyut/şema/semantik sınırlar; bozuk import çalışma kopyasını değiştirmez; D-03 taslak politikası                                                                  |
-| WB-008A | Graph validation UX            | Backlog | Mevcut saf validator; lokalize açıklama, ilgili node/edge/alanı gösterme; AC-05                                                                                   |
+| WB-007B | Güvenli import/export          | Done    | Boyut/şema/semantik sınırlar; bozuk import çalışma kopyasını değiştirmez; D-03 taslak politikası                                                                  |
+| WB-008A | Graph validation UX            | Review  | Mevcut saf validator; lokalize açıklama, ilgili node/edge/alanı gösterme; AC-05                                                                                   |
 | WB-008B | Undo/redo ve Faz 2 çıkışı      | Backlog | Anlamlı işlem bazlı geri al/yeniden yap; oluştur/düzenle/kaydet/import akışının E2E kanıtı                                                                        |
 
 ## WB-005A uygulama sınırı
@@ -73,3 +73,10 @@ Faz 2 başlatma onayı bu advisory'nin giderildiği anlamına gelmez.
 - Import dosya boyutunu okumadan önce sınırlar, ardından `parseWorkflowJSON` ile byte/şema/kimlik kurallarını uygular. Hatalı dosya çalışma kopyasını değiştirmez; bilinen hata kodu genel şema hatasına tercih edilerek Türkçe açıklanır.
 - Geçerli dosya, uyarılarla birlikte açık onaydan sonra taslağın yerine geçer ve otomatik kaydedilir. Hash uyuşmazlığı ret değil bilgi notudur; editör türetilmiş hash'i saklamaz.
 - Kanıt: 283 Vitest + 2 scanner + 3 OpenAPI; 26 Chromium senaryosu. Contract/core ve bağımlılık değişikliği yok.
+
+## WB-008A uygulama sınırı
+
+- Mevcut public `validateWorkflow` çıktısı web katmanında Türkçe cümleye çevrilir; adım adı ve çıkış adı (Doğru/Yanlış, Onaylandı/Reddedildi) kullanılır. Contract/core ve issue kodları değişmez.
+- Liste önce graph geneli sorunları, sonra adımları tuval sırasıyla gösterir. Aynı adımın başka sorunu varsa türetilmiş `PATH_NOT_TERMINATING` gizlenir. Soruna tıklamak ilgili adımı veya bağlantıyı seçer.
+- Sorunlu kartlar çerçeve ve “⚠ N sorun” etiketiyle işaretlenir; geçerli akışta “çalıştırılabilir” durumu görünür. D-03 gereği sorunlu taslak kaydı engellenmez.
+- Kanıt: 287 Vitest + 2 scanner + 3 OpenAPI; 27 Chromium senaryosu. Bağımlılık değişikliği yok.
