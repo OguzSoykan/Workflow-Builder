@@ -658,3 +658,12 @@ select {
   text-decoration: underline;
   padding: 0;
 }
+.cloud-revisions {
+  padding-left: 18px;
+  font-size: 12px;
+}
+@media (max-width: 600px) {
+  .palette > .cloud {
+    grid-column: 1 / -1;
+  }
+}
