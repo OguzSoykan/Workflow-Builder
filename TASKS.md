@@ -1,10 +1,9 @@
 # Görevler ve Faz 1 kabul planı
 
-**26 Ekim 2026:** WB-001A/B main'de. Faz 1'in kalan yerel kodu, fixture/testleri ve
-API/ortam dokümanları `feat/WB-002A-workflow-contract` dalında uygulandı. D-01/02/04
-varsayılanları kullanıcı tarafından “bunlarla devam” talimatıyla onaylandı; D-15 teknik
-ayrıntıları ADR-014'te. Sabit araç zinciri/Worker/E2E/hosted CI kanıtları eksik;
-yerel Faz 1 kalite kapıları geçti; güncel dalın hosted CI/PR kanıtı ve Zod advisory çözümü açık. [STATUS](STATUS.md) gerçek sonuçları gösterir.
+**27 Ekim 2026:** Faz 1 alt görevleri tamamlandı. D-01/02/04 varsayılanları kullanıcı
+tarafından onaylandı; D-15 teknik ayrıntıları ADR-014'te. Sabit araç zinciri,
+Worker/Chromium, secret taraması ve hosted CI kapıları geçti; PR #5 main'e merge edildi.
+Zod advisory açık takip riskidir. [STATUS](STATUS.md) kanıtları içerir.
 
 ## Hazır ve tamamlanmış iş tanımı
 
@@ -28,20 +27,20 @@ WB-001A'da henüz uygulama/test runner yoktur: Q-TEST yerine workspace/config do
 
 ## Özet ve sıra
 
-| ID      | Üst iş | Boyut | Görev                                    | Bağımlılıklar                 | Durum   |
-| ------- | ------ | ----- | ---------------------------------------- | ----------------------------- | ------- |
-| WB-001A | WB-001 | S     | Workspace, sürümler, modül sınırları     | Uygulama onayı alındı         | Done    |
-| WB-001B | WB-001 | S     | React/Worker health iskeleti             | 001A                          | Done    |
-| WB-001C | WB-001 | S     | Vitest ve Playwright smoke altyapısı     | 001B                          | Blocked |
-| WB-004A | WB-004 | S     | PR CI ve secret kalite kapısı            | 001C, GitHub erişimi          | Blocked |
-| WB-002A | WB-002 | S     | Şema v1 ve tipli alanlar                 | 001C; D-02/D-04/D-15          | Review  |
-| WB-002B | WB-002 | S     | Canonical serialization ve hash          | 002A; D-01                    | Review  |
-| WB-002C | WB-002 | S     | Fixture, round-trip ve limit matrisi     | 002A/002B; D-02/D-15          | Review  |
-| WB-003A | WB-003 | S     | Yapısal graph validator                  | 002C                          | Review  |
-| WB-003B | WB-003 | S     | Condition/input semantik validator       | 003A; D-04                    | Review  |
-| WB-003C | WB-003 | S     | Determinizm ve kötü girdi sertleştirmesi | 003B                          | Review  |
-| WB-004B | WB-004 | S     | OpenAPI, env ve ADR dokümantasyonu       | 001B/002C; D-03/D-11/D-15     | Review  |
-| WB-004C | WB-004 | S     | Faz 1 çıkış kanıtı ve inceleme           | Diğer tüm Faz 1 alt görevleri | Blocked |
+| ID      | Üst iş | Boyut | Görev                                    | Bağımlılıklar                 | Durum |
+| ------- | ------ | ----- | ---------------------------------------- | ----------------------------- | ----- |
+| WB-001A | WB-001 | S     | Workspace, sürümler, modül sınırları     | Uygulama onayı alındı         | Done  |
+| WB-001B | WB-001 | S     | React/Worker health iskeleti             | 001A                          | Done  |
+| WB-001C | WB-001 | S     | Vitest ve Playwright smoke altyapısı     | 001B                          | Done  |
+| WB-004A | WB-004 | S     | PR CI ve secret kalite kapısı            | 001C, GitHub erişimi          | Done  |
+| WB-002A | WB-002 | S     | Şema v1 ve tipli alanlar                 | 001C; D-02/D-04/D-15          | Done  |
+| WB-002B | WB-002 | S     | Canonical serialization ve hash          | 002A; D-01                    | Done  |
+| WB-002C | WB-002 | S     | Fixture, round-trip ve limit matrisi     | 002A/002B; D-02/D-15          | Done  |
+| WB-003A | WB-003 | S     | Yapısal graph validator                  | 002C                          | Done  |
+| WB-003B | WB-003 | S     | Condition/input semantik validator       | 003A; D-04                    | Done  |
+| WB-003C | WB-003 | S     | Determinizm ve kötü girdi sertleştirmesi | 003B                          | Done  |
+| WB-004B | WB-004 | S     | OpenAPI, env ve ADR dokümantasyonu       | 001B/002C; D-03/D-11/D-15     | Done  |
+| WB-004C | WB-004 | S     | Faz 1 çıkış kanıtı ve inceleme           | Diğer tüm Faz 1 alt görevleri | Done  |
 
 Önerilen yürütme sırası tablodaki sıradır. `004A` erkene alınarak sonraki kod PR'ları CI ile korunur. Tek aktif uygulama kartı; daha sonraki bir karar yalnızca ona bağlı kartları bekletir. D-03/D-11'in sonraki faz politikaları OpenAPI'de açık `TBD` olabilir; Faz 1 şemasını etkileyen payload kısmı çözülmeden ilgili schema kesinleştirilmez.
 
@@ -150,11 +149,15 @@ WB-005–027 bu teslimde uygulama kartlarına bölünmedi. Kapsam/bağımlılık
 `Review`, kodun yerel kontrollerden geçtiğini ve eksik ortak kapıları beklediğini
 belirtir; bağımsız insan review veya remote merge iddiası değildir. Faz 2 başlamadı.
 
-## 27 Ekim doğrulama güncellemesi
+## 27 Ekim doğrulama ve kapanış
 
 Node 24.22.1/npm 11.19.1 temiz kurulum ve tüm yerel kalite kapıları geçti.
 Chromium/Worker E2E 10/10, artifact secret taramaları ve Gitleaks sentetik negatif
 testi geçti. GitHub'daki önceki tip/assertion negatif run'ları beklenen adımlarda
-başarısız oldu. PR #5 hosted quality CI geçti; merge sonrası main kanıtı eklenecek. Zod 4.3.6 için yüksek npm
+başarısız oldu. PR #5 squash merge edildi (`e5ad0ea`); PR hosted run 40494769664 ve main hosted run 40495104283 geçti. Zod 4.3.6 için yüksek npm
 advisory açık; 4.6.7 denemesi ES-only contract/core typecheck'ini ambient URL
 edikliğiyle bozdu ve geri alındı. Ayrıntı ve kalan etki [STATUS](STATUS.md)'ta.
+
+WB-004C tamamlandı: PR #5 başarıyla main'e merge edildi ve merge sonrası zorunlu
+`quality` check geçti. Zod advisory'si açık risk olarak STATUS/ADR'de izlenir;
+Faz 2 başlamaz ve kullanıcı onayı olmadan başka faz işi açılmaz.

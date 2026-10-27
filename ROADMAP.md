@@ -1,9 +1,8 @@
 # Fazlara göre yol haritası
 
-**Durum:** Faz 1'in yerel şema/hash/validator/test/CI/API dokümanları uygulandı;
-D-01/02/04 varsayılanları onaylandı. Sabit kurulum/gerçek Worker-E2E/hosted CI
-yerel kalite kapıları geçti; güncel dalın hosted CI/PR kanıtı ve Zod advisory çözümü açık, Faz 1 resmen kapanmadı. [STATUS](STATUS.md) ve [TASKS](TASKS.md).
-Faz 2 başlamadı.
+**Durum:** Faz 1, PR #5'in `e5ad0ea` squash merge'i, başarılı PR CI ve başarılı
+merge sonrası main CI ile tamamlandı. Zod 4.3.6 advisory'si Faz 1 doğrulamasında
+açık takip riski olarak kaydedildi. Faz 2 başlamadı. [STATUS](STATUS.md) ve [TASKS](TASKS.md).
 
 | Faz / milestone        | Amaç ve kapsam                                                                                                 | Bağımlılık                                         | Çıkış kapısı                                                                                                                                                                                                            |
 | ---------------------- | -------------------------------------------------------------------------------------------------------------- | -------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |

@@ -4,9 +4,9 @@ Görsel veya doğal dil ile workflow tasarlama ve manuel onay/ret ile simülasyo
 Ürün gereksinimleri [PRD v1.1](docs/PRD.md) içinde korunur.
 
 **27 Ekim 2026:** Faz 1 uygulaması ve yerel çıkış kontrolleri tamamlandı;
-10 Chromium smoke testi, Worker build ve tam secret taraması geçti. Güncel dalın
-PR #5 hosted CI geçti; merge sonrası kanıt kaydı sürüyor. `npm audit` Zod için bir yüksek
-önemli advisory bildiriyor; uyumlu ES-only sürüm çözümü Faz 1 çıkış kaydında açık.
+10 Chromium smoke testi, Worker build ve tam secret taraması geçti. PR #5 squash merge edildi; PR CI ve merge sonrası main CI geçti. `npm audit` Zod için
+bir yüksek önem seviyeli advisory bildiriyor; bu açık takip riski [STATUS](STATUS.md)
+ve ADR-014 içinde kayıtlıdır.
 Ayrıntılar [STATUS](STATUS.md) ve [Faz 1 kanıtında](docs/verification/PHASE-1.md).
 
 ## Kurulum ve çalıştırma
