@@ -70,3 +70,18 @@ ham uygulama içeriği kaydedilmez. Saat dilimi Europe/Istanbul; girişler geçm
 - npm ci ve tekrar postinstall PASS; typecheck, 195 test coverage, build ve 101 dosya secret scan PASS. Coverage satır %99 / branch %93,55.
 - İlk E2E 13/14 PASS. İç içe select seçenekleri nedeniyle exact getByLabel eşleşmedi; erişilebilirlik ağacında combobox adı doğru. Test rol/ad sorgusuna taşındı; form alanlarına açık id/htmlFor bağlantısı eklendi.
 - Desktop/mobile ekran görüntüleri üretildi; düzeltmeden sonra build ve E2E yeniden çalıştırılacak.
+
+## P2-010 — Devir: Codex → Claude Code (2026-10-27)
+
+- Codex kotası P2-009 sonrasında bitti; build ve E2E tekrarı yapılmamıştı.
+- Yarım iş `feat/WB-005A-editor-canvas` dalında `169f1b3` olarak commitlendi (WIP, 24 dosya; coverage/test-results/playwright-report hariç).
+- Devam dalı: `git switch -c feat/WB-005A-editor-canvas-continue` (`169f1b3` tabanlı).
+- Shell varsayılanı Node 22 idi; kontroller nvm üzerinden Node 24.22.1 / npm 11.19.1 ile çalıştırıldı.
+
+## P2-011 — WB-005A yerel doğrulama tekrarı (2026-10-27)
+
+- typecheck, lint, format:check: PASS.
+- `npm test`: 195 Vitest + 2 scanner + 3 OpenAPI testi PASS.
+- `npm run build`: PASS (Vite + Wrangler dry-run, deploy yok). `npm run secret:scan`: 101 dosya, 0 bulgu.
+- `npm run test:e2e`: 14/14 PASS (4 editör, 8 health, 2 contract). P2-009'daki rol/ad sorgusu düzeltmesi doğrulandı.
+- WB-005A yerel kabul kanıtı tamam; kalan: dalın push'u, PR ve hosted `quality` CI. `gh` CLI bu makinede yok; PR web arayüzünden açılacak.
