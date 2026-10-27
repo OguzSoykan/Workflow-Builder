@@ -10,6 +10,8 @@ Aktif plan [Faz 2](docs/PHASE-2.md), zorunlu adım kaydı
 [çalışma günlüğü](docs/worklogs/PHASE-2.md) içindedir. Her anlamlı işlemden sonra
 komut/sonuç/karar ve başarısız denemeyi günlüğe ekle. Önceki Git push tercihi sürer;
 Faz 2 uygulama PR'ları review ve required CI üzerinden ilerler. Faz 3–6 kapsam dışıdır.
+27 Ekim 2026 kullanıcı talimatı (“Faz 2 PR'larını CI geçince sen merge et”): kalan Faz 2
+PR'ları required `quality` PASS sonrası agent tarafından squash merge edilebilir; Faz 3+ için geçerli değildir.
 
 ## Kaynakların önceliği
 

@@ -1,6 +1,6 @@
 # Faz 2 — Editör ve yerel çalışma
 
-**Durum:** WB-005A/B ve WB-006A/B main’de. D-03/D-08 onaylandı; WB-007A yerel taslak kaydı uygulandı, PR ve hosted CI bekleniyor. Sonraki kart WB-007B. Fazın tamamı henüz bitmedi.
+**Durum:** WB-005A/B ve WB-006A/B main’de. D-03/D-08 onaylandı; WB-007A main’de. WB-007B import/export uygulandı, PR ve hosted CI bekleniyor. Sonraki kart WB-008A. Fazın tamamı henüz bitmedi.
 İşlem kaydı: [çalışma günlüğü](worklogs/PHASE-2.md). Kaynak kapsam: PRD FR-01–03/05,
 AC-01/05/11 ve BACKLOG WB-005–008. Mevcut şema/limit/kimlik sözleşmesi korunur.
 
@@ -10,8 +10,8 @@ AC-01/05/11 ve BACKLOG WB-005–008. Mevcut şema/limit/kimlik sözleşmesi koru
 | WB-005B | Node config özellik paneli     | Done    | Start açıklaması, Approval rolü, End sonucu, Condition ayarlarının ilgili input görevine bağlanması; şema uyumlu değişiklikler                                    |
 | WB-006A | Tipli input alanları           | Done    | number/string/boolean/date/enum; benzersiz key, default/options/validation; mevcut alan referanslarına etkiler görünür                                            |
 | WB-006B | Koşul ve onay dalı deneyimi    | Done    | Alan türüne uygun operatör/değer; true/false ve approved/rejected bağlantıları, açıklayıcı hatalar                                                                |
-| WB-007A | Yerel kayıt                    | Review  | D-03/D-08 kararları; refresh ile devam; bozuk/quota/çok sekme senaryoları                                                                                         |
-| WB-007B | Güvenli import/export          | Backlog | Boyut/şema/semantik sınırlar; bozuk import çalışma kopyasını değiştirmez; D-03 taslak politikası                                                                  |
+| WB-007A | Yerel kayıt                    | Done    | D-03/D-08 kararları; refresh ile devam; bozuk/quota/çok sekme senaryoları                                                                                         |
+| WB-007B | Güvenli import/export          | Review  | Boyut/şema/semantik sınırlar; bozuk import çalışma kopyasını değiştirmez; D-03 taslak politikası                                                                  |
 | WB-008A | Graph validation UX            | Backlog | Mevcut saf validator; lokalize açıklama, ilgili node/edge/alanı gösterme; AC-05                                                                                   |
 | WB-008B | Undo/redo ve Faz 2 çıkışı      | Backlog | Anlamlı işlem bazlı geri al/yeniden yap; oluştur/düzenle/kaydet/import akışının E2E kanıtı                                                                        |
 
@@ -66,3 +66,10 @@ Faz 2 başlatma onayı bu advisory'nin giderildiği anlamına gelmez.
 - Okunamayan, şema dışı veya 256 KiB'ı aşan kayıt `…:corrupt` anahtarına yedeklenir, editör boş taslakla açılır ve kullanıcı bilgilendirilir. Quota/erişim hatasında düzenleme sürer; kayıt yapılamadığı açıkça gösterilir.
 - Başka sekme aynı anahtarı değiştirirse `storage` olayıyla uyarı çıkar, otomatik kayıt durur. Kullanıcı diğer sekmenin sürümünü yükler veya bu sekmedekini kaydeder (son yazan kazanır). Undo geçmişi saklanmaz; sync yok.
 - Kanıt: 268 Vitest + 2 scanner + 3 OpenAPI; 24 Chromium senaryosu. Contract/core ve bağımlılık değişikliği yok.
+
+## WB-007B uygulama sınırı
+
+- Export `serializeWorkflow` ile kanonik JSON ve yeniden hesaplanmış `contentHash` üretir (ADR-014). Semantik eksikli taslak dışa aktarılabilir (D-03); sorun sayısı uyarı olarak gösterilir. Hash eklenince 256 KiB aşılırsa indirme yapılmaz.
+- Import dosya boyutunu okumadan önce sınırlar, ardından `parseWorkflowJSON` ile byte/şema/kimlik kurallarını uygular. Hatalı dosya çalışma kopyasını değiştirmez; bilinen hata kodu genel şema hatasına tercih edilerek Türkçe açıklanır.
+- Geçerli dosya, uyarılarla birlikte açık onaydan sonra taslağın yerine geçer ve otomatik kaydedilir. Hash uyuşmazlığı ret değil bilgi notudur; editör türetilmiş hash'i saklamaz.
+- Kanıt: 283 Vitest + 2 scanner + 3 OpenAPI; 26 Chromium senaryosu. Contract/core ve bağımlılık değişikliği yok.

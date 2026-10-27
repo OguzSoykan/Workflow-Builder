@@ -253,3 +253,15 @@ ham uygulama içeriği kaydedilmez. Saat dilimi Europe/Istanbul; girişler geçm
 - `npm run typecheck`/`lint`/`format:check` PASS; `npm test` 268 Vitest (8 yeni storage/reducer testi) + 2 scanner + 3 OpenAPI PASS; coverage satır %99,22 / branch %95,34, `draft-storage.ts` listeye eklendi. `npm run build`, `secret:scan`, `GITLEAKS_BIN=/private/tmp/wb-gitleaks npm run secrets:check` PASS.
 - `npm run test:e2e`: ilk koşuda eski bildirim metnini arayan 1 test FAIL (beklenen davranış değişikliği); assertion güncellendi, 24/24 PASS. Yeni senaryolar: eksik taslağın yenilemede dönmesi ve yüklemenin yeniden yazmaması, bozuk kayıt yedeği, quota hatasında düzenlemenin sürmesi, iki sekmede uyarı/duraklama/yükle/üzerine yaz.
 - Elle mobil görsel inceleme NOT RUN. Bağımsız insan review yok.
+
+## P2-032 — WB-007A merge ve WB-007B başlangıcı (2026-10-27)
+
+- [PR #13](https://github.com/OguzSoykan/Workflow-Builder/pull/13) açıldı; [quality 40557692939](https://github.com/OguzSoykan/Workflow-Builder/actions/runs/40557692939) PASS. Kullanıcı Faz 2 PR'larının CI sonrası agent tarafından merge edilmesine kalıcı izin verdi (AGENTS.md'ye kaydedildi). Squash merge: main `9960e7a`. WB-007A Done.
+- `feat/WB-007B-import-export` güncel main'den açıldı. Plan (D-03): export kanonik JSON + içerik hash'i, semantik eksik varsa uyarı; import dosya boyutunu okumadan önce sınırlar, `parseWorkflowJSON` ile doğrular, hatada çalışma kopyasına dokunmaz, geçerli dosyada değiştirme onayı ister. Hash uyuşmazlığı belge reddi değil, bilgi notudur (elle düzenlenen JSON).
+
+## P2-033 — WB-007B uygulama ve doğrulama (2026-10-27)
+
+- `transfer.ts`: export (kanonik JSON + hash, sınır aşımında hata), boyut ön kontrolü, import doğrulama/hata eşlemesi, hash uyuşmazlığı ve semantik sorun sayısı. `TransferPanel`: indirme, dosya seçimi, onay grubu, durum/hata mesajları; geçerli içe aktarma `replace-workflow` ile uygulanır ve otomatik kaydedilir.
+- İlk unit koşusunda dosya adı temizleme testi şemaya aykırı ID kullandığı için FAIL; şema ID'leri zaten dosya adı güvenli olduğundan temizleme kaldırıldı. İlk E2E koşusunda `{"schemaVersion":2}` genel şema hatası gösterdi (sorunlar koda göre sıralı); bilinen kodlar öne alındı, unit vakası eklendi.
+- `npm run typecheck`/`lint`/`format:check` PASS; `npm test` 283 Vitest (15 yeni) + 2 scanner + 3 OpenAPI PASS; coverage satır %99,24 / branch %95,27 (`transfer.ts` satır %100). `build`, `secret:scan`, Gitleaks `secrets:check` PASS. `npm run test:e2e` 26/26 PASS: dışa aktar → içe aktar (vazgeç/onay/yenileme), bozuk JSON, v2, 256 KiB üstü, hash uyuşmazlığı, HTML etiketin düz metin kalması.
+- Elle mobil görsel inceleme NOT RUN. Bağımsız insan review yok.
