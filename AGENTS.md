@@ -9,9 +9,12 @@ talimatı WB-005–008 kapsamında Faz 2 uygulama/doğrulama başlangıç onayı
 Aktif plan [Faz 2](docs/PHASE-2.md), zorunlu adım kaydı
 [çalışma günlüğü](docs/worklogs/PHASE-2.md) içindedir. Her anlamlı işlemden sonra
 komut/sonuç/karar ve başarısız denemeyi günlüğe ekle. Önceki Git push tercihi sürer;
-Faz 2 uygulama PR'ları review ve required CI üzerinden ilerler. Faz 3–6 kapsam dışıdır.
+Faz 2 uygulama PR'ları review ve required CI üzerinden ilerler. Faz 3 sonraki talimatla onaylandı.
 27 Ekim 2026 kullanıcı talimatı (“Faz 2 PR'larını CI geçince sen merge et”): kalan Faz 2
 PR'ları required `quality` PASS sonrası agent tarafından squash merge edilebilir; Faz 3+ için geçerli değildir.
+28 Ekim 2026 “tamam sonraki aşamaya geç” talimatı WB-009–011 (Faz 3, simülasyon) uygulama
+onayıdır; plan [Faz 3](docs/PHASE-3.md), günlük [docs/worklogs/PHASE-3.md](docs/worklogs/PHASE-3.md). Faz 4–6 kapsam dışıdır.
+Faz 3 PR'ları da kullanıcı birleştirir; agent merge izni Faz 2 ile sınırlıydı.
 
 ## Kaynakların önceliği
 

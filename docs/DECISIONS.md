@@ -76,3 +76,13 @@ WB-007A/B; cloud-save (WB-014) kuralı değişmez.
   `storage` olayıyla uyarı çıkar; otomatik kayıt durur ve kullanıcı diğer sekmenin
   sürümünü yüklemeyi veya bu sekmedekiyle üzerine yazmayı seçer (son yazan kazanır).
   Undo/revizyon geçmişi saklanmaz; sync altyapısı kurulmaz.
+
+## 28 Ekim 2026 — D-14 Faz 3 simülasyon kararları (onaylandı)
+
+- Koşul eşiği dinamiktir: simülatör karşılaştırmayı akıştaki koşul ayarından okur, motorda
+  sabit eşik yoktur. AC-03 örnek akışı ve testi varsayılan olarak `tutar > 10000` kullanır
+  (15000 → Doğru, 5000 → Yanlış); kullanıcı panelden değiştirebilir.
+- Eksik giriş: varsayılanı olmayan alan zorunluysa veya bir koşulda kullanılıyorsa simülasyon
+  başlamadan değer istenir; boş değerle koşul değerlendirilmez.
+- WB-011 (satın alma/izin/masraf örnekleri ve E2E) Faz 3'te P0'dır; örnekler editörde
+  “Örnekten başla” ile yüklenir. FR-14 restore/history kapsam dışında kalır.
