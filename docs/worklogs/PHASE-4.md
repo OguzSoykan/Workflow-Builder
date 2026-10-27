@@ -18,3 +18,14 @@
 - `feat/WB-014-d1-workflows`: `infra/migrations/0001_workflows.sql`, minimal D1 tipi, `WorkflowRepository`, `registerWorkflowRoutes`, `http.ts` (döngüsel import kaldırıldı). `/me` profil satırını oluşturur. Yerel D1 binding (yer tutucu ID) ve `npm run db:migrate:local` (yerel uygulandı, `.wrangler` git dışı).
 - Hatalar ve düzeltmeler: değiştirme betiği `index.ts`'te fazladan `});` bıraktı → düzeltildi; constructor parameter property `erasableSyntaxOnly` ile `TS1294` → açık alanlar; test tsconfig'i wrangler `.d.ts`'ini tam lib kontrolüyle derleyip `TS2307` verdi → proxy `tests/platform/d1-proxy.mjs` + dar `.d.mts`; `no-explicit-any` → `ApiBody` tipi. İlk tam kapı koşusu 600 sn sınırını aşıp arka plana geçti (E2E sürüyordu), sonuç PASS.
 - Kanıt: 21 D1 testi (paralel üç yazımda 1×200 + 2×409, sahiplik 404, soft delete, sayfalama, OpenAPI Ajv uyumu). typecheck/lint/format, 386 Vitest + 2 + 3, coverage satır %99,26, negatif kapılar, build, secret:scan, Gitleaks PASS; E2E 36/36. Karar ADR-019.
+
+## P4-004 — WB-014 merge ve WB-012 başlangıcı (2026-10-28)
+
+- [PR #22](https://github.com/OguzSoykan/Workflow-Builder/pull/22) [quality 40599691552](https://github.com/OguzSoykan/Workflow-Builder/actions/runs/40599691552) PASS sonrası agent squash merge: main `2cfc5c9`. WB-014 Done.
+- `feat/WB-012-auth-ui` açıldı. Teknik tercih (ADR-020): Firebase JS SDK yerine Identity Toolkit/Secure Token REST uç noktaları (yeni bağımlılık yok, küçük bundle, E2E'de yakalanabilir). Public web config Worker'dan `GET /api/config` ile env'den gelir; yoksa hesap özellikleri kapalı. Şifre yalnız Firebase'e gider.
+
+## P4-005 — WB-012 hesap arayüzü (2026-10-28)
+
+- Worker `GET /api/config` (yalnız public değerler, emülatör URL'si yalnız localhost), web `account/firebase-auth.ts` (REST istemcisi, hata eşleme, oturum saklama, 5 dk yenileme penceresi), `use-account.ts`, başlıkta `AccountPanel`. OpenAPI'ye `getPublicConfig` + `PublicConfig` eklendi (16 operasyon).
+- Hatalar: `.then` dönüş tipi `TS2345` → async geri çağrı; test `Response | Promise<Response>` → açık await. İlk E2E'de giriş “Firebase hizmetine ulaşılamadı” verdi: önce eksik CORS sanıldı (sahte uca CORS/preflight eklendi, yine FAIL); hata ayıklama spec'i Firebase'e hiç istek gitmediğini gösterdi — sınıf alanındaki varsayılan `fetch` `this.fetcher()` ile çağrılınca “Illegal invocation”. Varsayılan sarmalayıcıya çevrildi; 3/3 PASS. Unit testler sahte fetch enjekte ettiği için bunu yakalamamıştı; E2E yakaladı.
+- Kapılar: typecheck/lint/format, 392 Vitest + 2 + 3, coverage satır %99,1, negatif kapılar, build, secret:scan, Gitleaks PASS; E2E 39/39. Karar ADR-020.
