@@ -239,3 +239,17 @@ ham uygulama içeriği kaydedilmez. Saat dilimi Europe/Istanbul; girişler geçm
 
 - Commit'ler `aa0b064` (uygulama) ve `0758c03` (belgeler) push edildi. [PR #12](https://github.com/OguzSoykan/Workflow-Builder/pull/12) açıldı; [quality 40552768819](https://github.com/OguzSoykan/Workflow-Builder/actions/runs/40552768819) PASS (1m18s). Merge kullanıcıya bırakıldı; agent merge yetkisi bu oturumda reddedilmişti (PR #8 notu).
 - Sonraki kart WB-007A yerel kayıt; D-03 (taslak saklama) ve D-08 (storage/çok sekme UX) kararları olmadan başlanmaz.
+
+## P2-030 — WB-006B merge ve WB-007A başlangıcı (2026-10-27)
+
+- Kullanıcı PR #12 için merge izni verdi. İlk deneme son günlük commit'inin CI'ı sürerken branch policy tarafından reddedildi; [quality 40555163633](https://github.com/OguzSoykan/Workflow-Builder/actions/runs/40555163633) PASS sonrası squash merge: main `431e24a`. WB-006B Done.
+- Kullanıcı D-03 (şema-geçerli eksik taslak saklanır/export edilir) ve D-08 (localStorage, bozuk kayıt yedeği, quota mesajı, çok sekmede uyarı + yükle/üzerine yaz) için önerilen seçenekleri onayladı; DECISIONS'a kaydedildi.
+- `feat/WB-007A-local-draft` güncel main'den açıldı. Plan: saf storage modülü (enjekte edilen Storage), editörde ilk yükleme, değişince kaydetme, durum rozeti, bozuk/quota/çok sekme senaryoları; unit + Chromium testleri.
+
+## P2-031 — WB-007A uygulama ve doğrulama (2026-10-27)
+
+- `draft-storage.ts`: enjekte edilen Storage ile saf yükle/kaydet; `parseWorkflowJSON` ile byte/şema sınırı, bozuk kaydın yedeklenmesi, quota (`QuotaExceededError`/`NS_ERROR_DOM_QUOTA_REACHED`) ile diğer erişim hatalarının ayrımı. `use-draft.ts`: değişen belgeyi kaydeder, `storage` olayında duraklar; “diğerini yükle” `replace-workflow` reducer işlemiyle seçimi temizler, “bunu kaydet” son yazan kazanır.
+- Editör başlığı kayıt durumunu gösterir; eski “yenileme siler” notu kaldırıldı, ilgili E2E metni güncellendi. İlk lint `no-useless-assignment` buldu; yedekleme bayrağı sadeleştirildi.
+- `npm run typecheck`/`lint`/`format:check` PASS; `npm test` 268 Vitest (8 yeni storage/reducer testi) + 2 scanner + 3 OpenAPI PASS; coverage satır %99,22 / branch %95,34, `draft-storage.ts` listeye eklendi. `npm run build`, `secret:scan`, `GITLEAKS_BIN=/private/tmp/wb-gitleaks npm run secrets:check` PASS.
+- `npm run test:e2e`: ilk koşuda eski bildirim metnini arayan 1 test FAIL (beklenen davranış değişikliği); assertion güncellendi, 24/24 PASS. Yeni senaryolar: eksik taslağın yenilemede dönmesi ve yüklemenin yeniden yazmaması, bozuk kayıt yedeği, quota hatasında düzenlemenin sürmesi, iki sekmede uyarı/duraklama/yükle/üzerine yaz.
+- Elle mobil görsel inceleme NOT RUN. Bağımsız insan review yok.

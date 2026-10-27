@@ -8,7 +8,7 @@ Zod advisory açık takip riskidir. [STATUS](STATUS.md) kanıtları içerir.
 ## Aktif Faz 2
 
 Kullanıcı WB-005–008 için başlama onayı verdi. Küçük kartlar ve kabul koşulları
-[Faz 2 planında](docs/PHASE-2.md); WB-005A/B ve WB-006A PR #8–#11 ile main’de; WB-006B koşul/onay dalı deneyimi Review, sıradaki WB-007A (D-03/D-08 kararı gerekir). Her anlamlı adım
+[Faz 2 planında](docs/PHASE-2.md); WB-005A/B ve WB-006A/B PR #8–#12 ile main’de; D-03/D-08 onaylandı; WB-007A yerel taslak kaydı Review, sıradaki WB-007B import/export. Her anlamlı adım
 [çalışma günlüğüne](docs/worklogs/PHASE-2.md) eklenir. Aşağıdaki Faz 1 kayıtları korunur.
 
 ## Hazır ve tamamlanmış iş tanımı
@@ -139,14 +139,14 @@ WB-001A'da henüz uygulama/test runner yoktur: Q-TEST yerine workspace/config do
 
 Faz 1 tamamlandı; Faz 2 kullanıcı talimatıyla başladı. Güncel alt kartlar Faz 2 planında; güvenlik bulgusu açık.
 
-| Sıra | İş                                            | Durum      | Tamamlanma / başlangıç koşulu                                                                            |
-| ---- | --------------------------------------------- | ---------- | -------------------------------------------------------------------------------------------------------- |
-| 1    | Zod güvenlik bulgusu                          | Açık takip | GHSA-mrhx-c7xc-m3w5 çözümü; ES-only sınırı ve mevcut API davranışı korunarak audit/typecheck/test kanıtı |
-| 2    | Faz 2 görev ve karar hazırlığı                | Hazır      | Alt kartlar oluşturuldu; D-03/D-08 bağımlı saklama işinden önce çözülecek                                |
-| 3    | WB-005: React Flow canvas ve node özellikleri | Done       | WB-005A/B PR #8/#9/#10 ile main’de                                                                       |
-| 4    | WB-006: Input ve koşul/onay dalları editörü   | Review     | WB-006A PR #11 ile main’de; WB-006B koşul paneli ve dal durumu PR/CI bekliyor                            |
-| 5    | WB-007: Yerel kayıt ve güvenli import/export  | Backlog    | WB-005; D-03/D-08 ve ilgili taşıma kararları; bozuk import mevcut belgeyi bozmamalı                      |
-| 6    | WB-008: Validation UX ve undo/redo            | Backlog    | WB-003/005; node bazlı hata gösterimi ve geri al/yeniden yap doğrulaması                                 |
+| Sıra | İş                                            | Durum       | Tamamlanma / başlangıç koşulu                                                                            |
+| ---- | --------------------------------------------- | ----------- | -------------------------------------------------------------------------------------------------------- |
+| 1    | Zod güvenlik bulgusu                          | Açık takip  | GHSA-mrhx-c7xc-m3w5 çözümü; ES-only sınırı ve mevcut API davranışı korunarak audit/typecheck/test kanıtı |
+| 2    | Faz 2 görev ve karar hazırlığı                | Hazır       | Alt kartlar oluşturuldu; D-03/D-08 bağımlı saklama işinden önce çözülecek                                |
+| 3    | WB-005: React Flow canvas ve node özellikleri | Done        | WB-005A/B PR #8/#9/#10 ile main’de                                                                       |
+| 4    | WB-006: Input ve koşul/onay dalları editörü   | Done        | WB-006A/B PR #11/#12 ile main’de                                                                         |
+| 5    | WB-007: Yerel kayıt ve güvenli import/export  | In Progress | WB-007A yerel kayıt Review; WB-007B import/export sırada; bozuk import mevcut belgeyi bozmamalı          |
+| 6    | WB-008: Validation UX ve undo/redo            | Backlog     | WB-003/005; node bazlı hata gösterimi ve geri al/yeniden yap doğrulaması                                 |
 
 WB-005–027'nin üst kapsamı [ROADMAP](ROADMAP.md) ve korunmuş
 [BACKLOG](docs/BACKLOG.md) içinde bulunur. Sonraki fazlar sırasıyla simulator,
