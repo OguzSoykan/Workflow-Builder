@@ -12,7 +12,7 @@ açık takip riski olarak kayıtlıdır; Faz 1 kabul testleri/CI'ı engellemedi.
 ## Aktif çalışma
 
 [Faz 2 planı](docs/PHASE-2.md) ve [adım günlüğü](docs/worklogs/PHASE-2.md).
-WB-005A uygulandı ve yerel doğrulandı (E2E 14/14, 195 unit); Mobil tuval ve mini harita düzeltmesi de 14/14 E2E ile doğrulandı. Review/PR teslimi sürüyor; devir kaydı çalışma günlüğünde. Aşağıdaki Faz 1 sonuçları tarihsel teslim kanıtıdır.
+WB-005A temeli [PR #8](https://github.com/OguzSoykan/Workflow-Builder/pull/8) ile main'e alındı (`fb7ae38`). Mobil tuval/mini harita düzeltmesi [PR #9](https://github.com/OguzSoykan/Workflow-Builder/pull/9) üzerinde Review; `5555295` kod commit'inin [quality kontrolü](https://github.com/OguzSoykan/Workflow-Builder/actions/runs/40545359671) PASS. Sonraki doküman commit'inin CI durumu yeniden kontrol edilmeli. Sonraki uygulama kartı WB-005B; ayrıntılı devir günlüğün son girdisinde. Aşağıdaki Faz 1 sonuçları tarihsel teslim kanıtıdır.
 
 ## Yapılanların özeti
 

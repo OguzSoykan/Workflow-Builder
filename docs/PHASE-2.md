@@ -1,6 +1,6 @@
 # Faz 2 — Editör ve yerel çalışma
 
-**Durum:** Kullanıcı başlama onayı verdi. Aktif kart WB-005A. Fazın tamamı henüz bitmedi.
+**Durum:** WB-005A temeli PR #8 ile main’de; mobil görünürlük düzeltmesi PR #9 Review. Sonraki kart WB-005B. Fazın tamamı henüz bitmedi.
 İşlem kaydı: [çalışma günlüğü](worklogs/PHASE-2.md). Kaynak kapsam: PRD FR-01–03/05,
 AC-01/05/11 ve BACKLOG WB-005–008. Mevcut şema/limit/kimlik sözleşmesi korunur.
 
