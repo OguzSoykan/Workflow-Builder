@@ -43,4 +43,9 @@ Faz 2 uygulama PR'ları review ve required CI üzerinden ilerler. Faz 3–6 kaps
 
 ## Bitirme kuralı
 
+Kullanıcı talimatı (27 Ekim 2026): Limit yaklaşınca yeni işe başlama; güvenli durma
+payı bırak. Son işlem olarak `docs/worklogs/PHASE-2.md` içine dal/commit, tamamlanan
+işler, test sonuçları, kalan sorunlar ve bir sonraki somut komutu kaydet. Hesap
+kotasının kalan miktarı görünmüyorsa kesin bir kalan token sayısı varsayma.
+
 Görev, ilgili kabul koşulları ve kalite kapıları kanıtlandığında tamamlanabilir. Uygulanmayan kapı için gerekçeli `N/A`, çalıştırılamayan kapı için `NOT RUN` yaz. Uygulama görevi gerekli bir test eksikken Done olmaz. Dokümantasyon işi için olmayan uygulama testlerini veya cloud deployment'ı ön koşul üretme. Review/merge kuralları [DEVELOPMENT](docs/DEVELOPMENT.md) içinde tanımlıdır.
