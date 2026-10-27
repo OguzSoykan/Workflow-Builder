@@ -9,6 +9,36 @@ check'i geçti. Main run: [40495104283](https://github.com/OguzSoykan/Workflow-B
 Faz 2, cloud deploy ve canlı model çağrısı başlatılmadı. Zod advisory'si aşağıda
 açık takip riski olarak kayıtlıdır; Faz 1 kabul testleri/CI'ı engellemedi.
 
+## Yapılanların özeti
+
+- React web uygulaması ve Hono/Worker health API temeli kuruldu; aynı origin'de çalışıyor.
+- Workflow v1 şeması, güvenli JSON parse/serialize, SHA-256 içerik hash'i ve limitler uygulandı.
+- Graph bağlantıları, döngüler, erişilebilirlik ve tipli koşullar için saf validator tamamlandı.
+- OpenAPI taslağı, ortam ayrımı, ADR'ler ve hata kodları belgelendi.
+- Sabit Node/npm kurulumu, testler, gerçek Chromium/Worker kontrolleri, build ve secret taramaları geçti.
+- Kod [PR #5](https://github.com/OguzSoykan/Workflow-Builder/pull/5) ile `e5ad0ea`,
+  kapanış belgeleri [PR #6](https://github.com/OguzSoykan/Workflow-Builder/pull/6) ile `edb0941` olarak main'e alındı.
+  PR #6 sonrası [main CI 40496069027](https://github.com/OguzSoykan/Workflow-Builder/actions/runs/40496069027) başarılı.
+
+Çalışan arayüz henüz health ekranıdır. Görsel workflow editörü, simülasyon, kullanıcı
+hesabı, bulut kayıt ve AI üretimi uygulanmış değildir.
+
+## Sıradaki işler
+
+1. **Açık güvenlik takibi:** Zod advisory'sini ES-only contract/core sınırını koruyarak çözmek.
+   Güncel paket/advisory durumu yeniden doğrulanmalı; çözümden sonra npm audit, tip kontrolü,
+   şema/validator ve browser/Worker uyumluluğu kanıtlanmalı. Mevcut girdi limitleri açığın
+   giderildiği anlamına gelmez.
+2. **Faz 2 hazırlığı:** Faz onayından sonra WB-005–008'i küçük uygulama kartlarına ayırmak;
+   D-03 taslak saklama, D-08 browser storage ve D-14'ün ilgili UX/kabul maddelerini ilgili
+   göreve başlamadan netleştirmek. Ürün kararları henüz kesinleşmiş sayılmaz.
+3. **Faz 2 uygulaması:** Önce React Flow canvas/node özellikleri, ardından input/condition
+   editörü, yerel kayıt ve güvenli import/export, validation UX ve undo/redo.
+4. **Sonraki fazlar:** Simülasyon → auth/bulut kayıt → bütçe kontrollü AI → yayın kalitesi.
+   Ayrıntılı kapsam ve bağımlılıklar [ROADMAP](ROADMAP.md), yakın işler [TASKS](TASKS.md) içinde.
+
+Bu kayıt planı günceller; Faz 2 uygulaması veya deploy başlatma talimatı değildir.
+
 ## Mevcut durum
 
 | İş          | Durum     | Kanıt / kalan                                                                     |
@@ -83,9 +113,9 @@ Faz 1 çıkışı tamamlandı. WB-005/Faz 2 ayrıca onaylanmadan başlamaz.
 
 - `c035cce`: WB-002 şema/parser/hash/fixture, onay kaydı ve OpenAPI eşlemesi.
 - `294fc2f`: WB-003 validator ve browser/Worker uyumluluk test hazırlığı.
-- Tamamlayıcı doküman commit'i: bu durum/README/TASKS ve gerçek doğrulama kaydı.
+- `e5ad0ea`: PR #5 squash teslimi; `edb0941`: PR #6 Faz 1 kapanış belgeleri.
 
-Son kaynak incelemesi: 85 dosya + 4 web/test bundle artifact'inde imza eşleşmesi yok;
+Önceki offline kaynak incelemesi: 85 dosya + 4 web/test bundle artifact'inde imza eşleşmesi yok;
 75 yerel Markdown bağlantısı sağlam, 8 orijinal belge değişmedi. Core/contract'a
 eklenen geçici compiler probe'larında URL/fetch/process ayrı ayrı reddedildi;
 ES-only sınırı korunuyor. Probe'lar temizlendi.

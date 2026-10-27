@@ -14,6 +14,14 @@ açık takip riski olarak kaydedildi. Faz 2 başlamadı. [STATUS](STATUS.md) ve 
 | Faz 5 / M3             | WB-016–021: tek DO bütçe/kota ledger, Turnstile, OpenAI adapter, create/edit preview/diff/apply/undo           | M2; D-01/D-05/D-07/D-11/D-12/D-13                  | Rezervasyon ve paralellik testi; limit/ledger arızasında sıfır provider çağrısı; onaysız değişiklik yok; stale/hash/ID koruma; 20 prompt değerlendirmesi ve ≥%85 hedefi için gerçek sonuç (FR-06–08/12, AC-06/07/09–11) |
 | Faz 6 / M4             | WB-022–023: TR/EN, klavye erişimi, dar ekran, operasyon, staging/prod, E2E, rollback                           | Tüm önceki P0 işler; D-09/D-12/D-14; release onayı | Ana senaryolar iki dilde; E2E zinciri; ayrı D1/secret ortamları; Free CPU/kota ölçümü; güvenlik kontrolü; staging smoke; kontrollü deploy/rollback (FR-11, AC-13 ve tüm P0 AC)                                          |
 
+## Yakın dönem sırası
+
+Önce açık Zod güvenlik bulgusunun uyumlu çözümü takip edilecek. Faz 2 onayıyla
+WB-005–008 ayrıntılandırılacak: canvas/node özellikleri → input ve koşul editörü →
+yerel kayıt/import-export → validation UX ve undo/redo. D-03/D-08/D-14'ün ilgili
+kararları, bağımlı işe geçmeden netleştirilecek. Bu başlık planlama kaydıdır;
+Faz 2 uygulaması başlamadı. Uygulanabilir takip listesi [TASKS](TASKS.md)'ta.
+
 ## Kapsamı koruma
 
 - Faz 1'de yalnızca health amaçlı minimal UI/API vardır; canvas, simulator, auth, D1 migration/CRUD, DO ve OpenAI bağlantısı yoktur.
