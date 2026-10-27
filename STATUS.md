@@ -6,7 +6,7 @@
 27 Ekim'de squash merge edildi: `e5ad0ea`. PR check ve merge sonrası main `quality`
 check'i geçti. Main run: [40495104283](https://github.com/OguzSoykan/Workflow-Builder/actions/runs/40495104283).
 
-**Faz 4 başladı (28 Ekim, kullanıcı onayı):** [plan](docs/PHASE-4.md), [günlük](docs/worklogs/PHASE-4.md). WB-013 Worker Firebase token doğrulaması ve `GET /api/v1/me` uygulandı ([ADR-018](docs/adr/ADR-018-firebase-token-verification.md)); PR ve hosted CI bekleniyor. Gerçek Firebase projesi/D1 açılmadı (D-12). Faz 3 tamamlandı: WB-009–011 PR #18–#20 ile main'de (`c30bc4a`).
+**Faz 4 başladı (28 Ekim, kullanıcı onayı):** [plan](docs/PHASE-4.md), [günlük](docs/worklogs/PHASE-4.md). WB-013 token doğrulaması ve `/me` [PR #21](https://github.com/OguzSoykan/Workflow-Builder/pull/21) (`89f6e45`) ile main'de ([ADR-018](docs/adr/ADR-018-firebase-token-verification.md)). WB-014 D1 workflow CRUD, immutable revizyon ve iyimser kilit uygulandı ([ADR-019](docs/adr/ADR-019-d1-workflow-storage.md)); yerel D1'de 21 test, kapılar PASS. Gerçek Firebase projesi/D1 açılmadı (D-12). Faz 3 tamamlandı: WB-009–011 PR #18–#20 ile main'de (`c30bc4a`).
 
 **Faz 3 başladı (28 Ekim, kullanıcı onayı):** WB-009 saf simülatör [PR #18](https://github.com/OguzSoykan/Workflow-Builder/pull/18) (`1f148c1`) ile main'de ([ADR-017](docs/adr/ADR-017-simulator.md)). WB-010 simülasyon paneli [PR #19](https://github.com/OguzSoykan/Workflow-Builder/pull/19) (`e7b18f9`) ile main'de. WB-011 uygulandı: satın alma/izin/masraf örnekleri “Örnekten başla” ile yüklenir ve her biri E2E simüle edilir. Yerel kapılar PASS (340 Vitest, 35 E2E); PR ve hosted CI bekleniyor. Merge sonrası Faz 3 tamamlanır; Faz 4 (auth/D1) ayrı onay ister. Plan [Faz 3](docs/PHASE-3.md), günlük [PHASE-3 worklog](docs/worklogs/PHASE-3.md). **Faz 2 tamamlandı:** WB-005–008 PR #8–#16 ile main'de (`e7e3e0e`), merge sonrası main quality PASS ([40563748969](https://github.com/OguzSoykan/Workflow-Builder/actions/runs/40563748969)). Cloud deploy ve canlı model çağrısı başlatılmadı. Zod advisory'si Zod 4.6.7 ile kapatıldı ([ADR-016](docs/adr/ADR-016-zod-declarations.md)); `npm audit` 0 bulgu.
 
@@ -32,7 +32,7 @@ Görev dalında `/` görsel editör, `/health` servis ekranıdır. Dört adım t
 
 ## Sıradaki işler
 
-1. **Faz 4:** WB-013 review → WB-014 D1 CRUD/revizyon → WB-012 giriş arayüzü → WB-015 buluta kayıt. Gerçek Firebase projesi bağlanınca staging smoke gerekir.
+1. **Faz 4:** WB-014 merge → WB-012 giriş arayüzü → WB-015 buluta kayıt. Gerçek Firebase projesi bağlanınca staging smoke gerekir.
 2. **Açık takip:** React Flow declaration yaması upstream [#6038](https://github.com/xyflow/xyflow/issues/6038) düzeltmesi yayınlanınca kaldırılacak (ADR-015); düzeltme PR'ları #6039/#6045/#6060 27 Ekim'de açık. Bağımsız insan review yok.
 3. **Tamamlanan güvenlik takibi:** Zod 4.6.7 + saf paketlerde `skipLibCheck` (ADR-016); ES-only sınırı probe ile doğrulandı.
 4. **Sonraki fazlar:** Simülasyon → auth/bulut kayıt → bütçe kontrollü AI → yayın kalitesi.

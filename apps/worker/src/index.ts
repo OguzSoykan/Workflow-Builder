@@ -1,29 +1,14 @@
-import { Hono, type Context } from 'hono';
+import { Hono } from 'hono';
 import { secureHeaders } from 'hono/secure-headers';
-import {
-  googleKeySource,
-  verifyFirebaseToken,
-  type KeySource,
-  type VerifiedUser,
-} from './auth/firebase-token';
+import { googleKeySource, verifyFirebaseToken, type KeySource } from './auth/firebase-token';
+import { errorResponse, type AppEnv } from './http';
+import { WorkflowRepository } from './workflows/repository';
+import { registerWorkflowRoutes } from './workflows/routes';
 
-export type Bindings = { FIREBASE_PROJECT_ID?: string };
-export type AppEnv = {
-  Bindings: Bindings;
-  Variables: { requestId: string; user: VerifiedUser };
-};
+export type { AppEnv, Bindings } from './http';
 export interface AppDependencies {
   keys?: KeySource;
   now?: () => number;
-}
-
-export function errorResponse(
-  context: Context<AppEnv>,
-  status: 401 | 403 | 404 | 409 | 413 | 415 | 422 | 500 | 503,
-  code: string,
-  messageKey: string,
-) {
-  return context.json({ error: { code, messageKey }, requestId: context.get('requestId') }, status);
 }
 
 export function createApp(dependencies: AppDependencies = {}) {
@@ -67,18 +52,26 @@ export function createApp(dependencies: AppDependencies = {}) {
     context.set('user', result.user);
     await next();
   });
-  app.get('/api/v1/me', (context) => {
+  app.get('/api/v1/me', async (context) => {
     const user = context.get('user');
+    // The profile row is created on first sight; without storage the default locale applies.
+    const db = context.env?.DB;
+    const profile = db
+      ? await new WorkflowRepository(db, () => new Date(now() * 1000).toISOString()).ensureUser(
+          user.uid,
+        )
+      : { preferredLocale: 'tr' as const };
     return context.json({
       data: {
         uid: user.uid,
         emailVerified: user.emailVerified,
-        preferredLocale: 'tr',
+        preferredLocale: profile.preferredLocale,
         cloudSyncAllowed: user.emailVerified,
       },
       meta: { requestId: context.get('requestId') },
     });
   });
+  registerWorkflowRoutes(app, now);
 
   app.notFound((context) => errorResponse(context, 404, 'ROUTE_NOT_FOUND', 'errors.routeNotFound'));
   app.onError((_error, context) =>

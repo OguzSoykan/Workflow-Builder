@@ -54,7 +54,17 @@ test('OpenAPI draft has unique operations, resolvable references and explicit pa
   assert.equal(ids.size, 15);
 });
 
-const implemented = new Set(['get /api/health', 'get /api/v1/me']);
+const implemented = new Set([
+  'get /api/health',
+  'get /api/v1/me',
+  'get /api/v1/workflows',
+  'post /api/v1/workflows',
+  'get /api/v1/workflows/{id}',
+  'put /api/v1/workflows/{id}',
+  'delete /api/v1/workflows/{id}',
+  'get /api/v1/workflows/{id}/revisions',
+  'get /api/v1/workflows/{id}/revisions/{n}',
+]);
 
 test('only listed operations are implemented and member routes require bearer authentication', () => {
   for (const [path, item] of Object.entries(spec.paths)) {

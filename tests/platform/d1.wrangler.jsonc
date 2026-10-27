@@ -1,0 +1,13 @@
+// Test-only binding: in-memory local D1 via wrangler getPlatformProxy (no cloud database).
+{
+  "name": "workflow-builder-d1-test",
+  "compatibility_date": "2026-10-22",
+  "d1_databases": [
+    {
+      "binding": "DB",
+      "database_name": "workflow-builder-test",
+      "database_id": "local-test",
+      "migrations_dir": "../../infra/migrations",
+    },
+  ],
+}

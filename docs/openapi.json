@@ -3,7 +3,7 @@
   "info": {
     "title": "Workflow Builder API — Phase 1 draft",
     "version": "0.1.0",
-    "description": "GET /api/health and GET /api/v1/me are implemented; other /api/v1 operations are planning specifications. Workflow v1 structure is shared with the runtime contract; draft persistence and AI payload/policy decisions remain explicit TBD. Firebase client owns registration/login/password handling. Browser owns validation and simulation. No cloud resources are provisioned."
+    "description": "Health, GET /api/v1/me and workflow CRUD/revision routes are implemented; restore and AI operations remain planning specifications. Workflow v1 structure is shared with the runtime contract; draft persistence and AI payload/policy decisions remain explicit TBD. Firebase client owns registration/login/password handling. Browser owns validation and simulation. No cloud resources are provisioned."
   },
   "servers": [
     {
@@ -166,8 +166,8 @@
       "get": {
         "operationId": "listWorkflows",
         "summary": "List own workflows excluding deleted entries",
-        "x-status": "planned",
-        "description": "Specification only; not implemented in Phase 1.",
+        "x-status": "implemented",
+        "description": "Implemented in Phase 4 (WB-014): owner-scoped D1 storage, 404 for other owners, writes need a verified email (D-05).",
         "security": [
           {
             "firebaseBearer": []
@@ -175,7 +175,7 @@
         ],
         "responses": {
           "200": {
-            "description": "Planned success envelope; data shape TBD.",
+            "description": "Success envelope.",
             "headers": {
               "X-Request-ID": {
                 "$ref": "#/components/headers/RequestId"
@@ -184,7 +184,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/PlannedResponse"
+                  "$ref": "#/components/schemas/WorkflowList"
                 }
               }
             }
@@ -197,6 +197,9 @@
           },
           "404": {
             "$ref": "#/components/responses/Error404"
+          },
+          "503": {
+            "$ref": "#/components/responses/Error503"
           }
         },
         "parameters": [
@@ -221,8 +224,8 @@
       "post": {
         "operationId": "createWorkflow",
         "summary": "Atomically create owner-private workflow and revision 1",
-        "x-status": "planned",
-        "description": "Specification only; not implemented in Phase 1.",
+        "x-status": "implemented",
+        "description": "Implemented in Phase 4 (WB-014): owner-scoped D1 storage, 404 for other owners, writes need a verified email (D-05).",
         "security": [
           {
             "firebaseBearer": []
@@ -230,7 +233,7 @@
         ],
         "responses": {
           "201": {
-            "description": "Planned success envelope; data shape TBD.",
+            "description": "Success envelope.",
             "headers": {
               "X-Request-ID": {
                 "$ref": "#/components/headers/RequestId"
@@ -239,7 +242,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/PlannedResponse"
+                  "$ref": "#/components/schemas/WorkflowCreated"
                 }
               }
             }
@@ -258,6 +261,27 @@
           },
           "422": {
             "$ref": "#/components/responses/Error422"
+          },
+          "503": {
+            "$ref": "#/components/responses/Error503"
+          },
+          "409": {
+            "$ref": "#/components/responses/Error409"
+          },
+          "415": {
+            "description": "Content-Type must be application/json.",
+            "headers": {
+              "X-Request-ID": {
+                "$ref": "#/components/headers/RequestId"
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
           }
         },
         "requestBody": {
@@ -277,8 +301,8 @@
       "get": {
         "operationId": "getWorkflow",
         "summary": "Fetch own workflow and current revision",
-        "x-status": "planned",
-        "description": "Specification only; not implemented in Phase 1.",
+        "x-status": "implemented",
+        "description": "Implemented in Phase 4 (WB-014): owner-scoped D1 storage, 404 for other owners, writes need a verified email (D-05).",
         "security": [
           {
             "firebaseBearer": []
@@ -286,7 +310,7 @@
         ],
         "responses": {
           "200": {
-            "description": "Planned success envelope; data shape TBD.",
+            "description": "Success envelope.",
             "headers": {
               "X-Request-ID": {
                 "$ref": "#/components/headers/RequestId"
@@ -295,7 +319,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/PlannedResponse"
+                  "$ref": "#/components/schemas/WorkflowRecord"
                 }
               }
             }
@@ -308,14 +332,17 @@
           },
           "404": {
             "$ref": "#/components/responses/Error404"
+          },
+          "503": {
+            "$ref": "#/components/responses/Error503"
           }
         }
       },
       "put": {
         "operationId": "updateWorkflow",
         "summary": "Atomically append revision if expectedRevision and baseContentHash match",
-        "x-status": "planned",
-        "description": "Specification only; not implemented in Phase 1.",
+        "x-status": "implemented",
+        "description": "Implemented in Phase 4 (WB-014): owner-scoped D1 storage, 404 for other owners, writes need a verified email (D-05).",
         "security": [
           {
             "firebaseBearer": []
@@ -323,7 +350,7 @@
         ],
         "responses": {
           "200": {
-            "description": "Planned success envelope; data shape TBD.",
+            "description": "Success envelope.",
             "headers": {
               "X-Request-ID": {
                 "$ref": "#/components/headers/RequestId"
@@ -332,7 +359,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/PlannedResponse"
+                  "$ref": "#/components/schemas/WorkflowSaved"
                 }
               }
             }
@@ -357,6 +384,24 @@
           },
           "422": {
             "$ref": "#/components/responses/Error422"
+          },
+          "503": {
+            "$ref": "#/components/responses/Error503"
+          },
+          "415": {
+            "description": "Content-Type must be application/json.",
+            "headers": {
+              "X-Request-ID": {
+                "$ref": "#/components/headers/RequestId"
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
           }
         },
         "requestBody": {
@@ -374,8 +419,8 @@
       "delete": {
         "operationId": "deleteWorkflow",
         "summary": "Soft-delete own workflow",
-        "x-status": "planned",
-        "description": "Specification only; not implemented in Phase 1.",
+        "x-status": "implemented",
+        "description": "Implemented in Phase 4 (WB-014): owner-scoped D1 storage, 404 for other owners, writes need a verified email (D-05). Soft delete keeps revisions (D-09).",
         "security": [
           {
             "firebaseBearer": []
@@ -395,6 +440,12 @@
           },
           "404": {
             "$ref": "#/components/responses/Error404"
+          },
+          "403": {
+            "$ref": "#/components/responses/Error403"
+          },
+          "503": {
+            "$ref": "#/components/responses/Error503"
           }
         },
         "x-decisions": ["D-09"]
@@ -414,8 +465,8 @@
       "get": {
         "operationId": "listRevisions",
         "summary": "List own workflow revision metadata",
-        "x-status": "planned",
-        "description": "Specification only; not implemented in Phase 1.",
+        "x-status": "implemented",
+        "description": "Implemented in Phase 4 (WB-014): owner-scoped D1 storage, 404 for other owners, writes need a verified email (D-05).",
         "security": [
           {
             "firebaseBearer": []
@@ -423,7 +474,7 @@
         ],
         "responses": {
           "200": {
-            "description": "Planned success envelope; data shape TBD.",
+            "description": "Success envelope.",
             "headers": {
               "X-Request-ID": {
                 "$ref": "#/components/headers/RequestId"
@@ -432,7 +483,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/PlannedResponse"
+                  "$ref": "#/components/schemas/RevisionList"
                 }
               }
             }
@@ -445,6 +496,9 @@
           },
           "404": {
             "$ref": "#/components/responses/Error404"
+          },
+          "503": {
+            "$ref": "#/components/responses/Error503"
           }
         },
         "parameters": [
@@ -481,8 +535,8 @@
       "get": {
         "operationId": "getRevision",
         "summary": "Fetch immutable snapshot belonging to owner",
-        "x-status": "planned",
-        "description": "Specification only; not implemented in Phase 1.",
+        "x-status": "implemented",
+        "description": "Implemented in Phase 4 (WB-014): owner-scoped D1 storage, 404 for other owners, writes need a verified email (D-05).",
         "security": [
           {
             "firebaseBearer": []
@@ -490,7 +544,7 @@
         ],
         "responses": {
           "200": {
-            "description": "Planned success envelope; data shape TBD.",
+            "description": "Success envelope.",
             "headers": {
               "X-Request-ID": {
                 "$ref": "#/components/headers/RequestId"
@@ -499,7 +553,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/PlannedResponse"
+                  "$ref": "#/components/schemas/RevisionRecord"
                 }
               }
             }
@@ -512,6 +566,9 @@
           },
           "404": {
             "$ref": "#/components/responses/Error404"
+          },
+          "503": {
+            "$ref": "#/components/responses/Error503"
           }
         }
       },
@@ -910,10 +967,11 @@
             "$ref": "#/components/schemas/Workflow"
           },
           "source": {
-            "enum": ["manual", "ai_create", "ai_edit", "import", "restore"]
+            "enum": ["manual", "import"],
+            "default": "manual"
           }
         },
-        "required": ["workflow", "source"],
+        "required": ["workflow"],
         "additionalProperties": false
       },
       "WorkflowUpdate": {
@@ -927,13 +985,15 @@
             "minimum": 1
           },
           "baseContentHash": {
-            "type": "string"
+            "type": "string",
+            "description": "Accepted for forward compatibility; the server relies on expectedRevision."
           },
           "source": {
-            "enum": ["manual", "ai_create", "ai_edit", "import", "restore"]
+            "enum": ["manual", "import"],
+            "default": "manual"
           }
         },
-        "required": ["workflow", "expectedRevision", "baseContentHash", "source"],
+        "required": ["workflow", "expectedRevision"],
         "additionalProperties": false
       },
       "Restore": {
@@ -1538,6 +1598,290 @@
             }
           }
         ]
+      },
+      "WorkflowList": {
+        "type": "object",
+        "properties": {
+          "data": {
+            "type": "object",
+            "properties": {
+              "items": {
+                "type": "array",
+                "maxItems": 25,
+                "items": {
+                  "type": "object",
+                  "properties": {
+                    "id": {
+                      "type": "string"
+                    },
+                    "title": {
+                      "type": "string"
+                    },
+                    "revision": {
+                      "type": "integer",
+                      "minimum": 1
+                    },
+                    "updatedAt": {
+                      "type": "string",
+                      "format": "date-time"
+                    }
+                  },
+                  "required": ["id", "title", "revision", "updatedAt"],
+                  "additionalProperties": false
+                }
+              },
+              "nextCursor": {
+                "type": "string"
+              }
+            },
+            "required": ["items"],
+            "additionalProperties": false
+          },
+          "meta": {
+            "type": "object",
+            "properties": {
+              "requestId": {
+                "type": "string"
+              },
+              "revision": {
+                "type": "integer",
+                "minimum": 1
+              }
+            },
+            "required": ["requestId"],
+            "additionalProperties": false
+          }
+        },
+        "required": ["data", "meta"],
+        "additionalProperties": false
+      },
+      "WorkflowCreated": {
+        "type": "object",
+        "properties": {
+          "data": {
+            "type": "object",
+            "properties": {
+              "workflowId": {
+                "type": "string"
+              },
+              "revision": {
+                "const": 1
+              },
+              "contentHash": {
+                "type": "string",
+                "pattern": "^[a-f0-9]{64}$"
+              },
+              "updatedAt": {
+                "type": "string",
+                "format": "date-time"
+              }
+            },
+            "required": ["workflowId", "revision", "contentHash", "updatedAt"],
+            "additionalProperties": false
+          },
+          "meta": {
+            "type": "object",
+            "properties": {
+              "requestId": {
+                "type": "string"
+              },
+              "revision": {
+                "type": "integer",
+                "minimum": 1
+              }
+            },
+            "required": ["requestId"],
+            "additionalProperties": false
+          }
+        },
+        "required": ["data", "meta"],
+        "additionalProperties": false
+      },
+      "WorkflowRecord": {
+        "type": "object",
+        "properties": {
+          "data": {
+            "type": "object",
+            "properties": {
+              "workflow": {
+                "$ref": "#/components/schemas/Workflow"
+              },
+              "revision": {
+                "type": "integer",
+                "minimum": 1
+              },
+              "contentHash": {
+                "type": "string",
+                "pattern": "^[a-f0-9]{64}$"
+              },
+              "updatedAt": {
+                "type": "string",
+                "format": "date-time"
+              }
+            },
+            "required": ["workflow", "revision", "contentHash", "updatedAt"],
+            "additionalProperties": false
+          },
+          "meta": {
+            "type": "object",
+            "properties": {
+              "requestId": {
+                "type": "string"
+              },
+              "revision": {
+                "type": "integer",
+                "minimum": 1
+              }
+            },
+            "required": ["requestId"],
+            "additionalProperties": false
+          }
+        },
+        "required": ["data", "meta"],
+        "additionalProperties": false
+      },
+      "WorkflowSaved": {
+        "type": "object",
+        "properties": {
+          "data": {
+            "type": "object",
+            "properties": {
+              "revision": {
+                "type": "integer",
+                "minimum": 1
+              },
+              "contentHash": {
+                "type": "string",
+                "pattern": "^[a-f0-9]{64}$"
+              },
+              "updatedAt": {
+                "type": "string",
+                "format": "date-time"
+              }
+            },
+            "required": ["revision", "contentHash", "updatedAt"],
+            "additionalProperties": false
+          },
+          "meta": {
+            "type": "object",
+            "properties": {
+              "requestId": {
+                "type": "string"
+              },
+              "revision": {
+                "type": "integer",
+                "minimum": 1
+              }
+            },
+            "required": ["requestId"],
+            "additionalProperties": false
+          }
+        },
+        "required": ["data", "meta"],
+        "additionalProperties": false
+      },
+      "RevisionList": {
+        "type": "object",
+        "properties": {
+          "data": {
+            "type": "object",
+            "properties": {
+              "items": {
+                "type": "array",
+                "maxItems": 25,
+                "items": {
+                  "type": "object",
+                  "properties": {
+                    "revision": {
+                      "type": "integer",
+                      "minimum": 1
+                    },
+                    "contentHash": {
+                      "type": "string",
+                      "pattern": "^[a-f0-9]{64}$"
+                    },
+                    "source": {
+                      "enum": ["manual", "ai_create", "ai_edit", "import", "restore"]
+                    },
+                    "createdAt": {
+                      "type": "string",
+                      "format": "date-time"
+                    }
+                  },
+                  "required": ["revision", "contentHash", "source", "createdAt"],
+                  "additionalProperties": false
+                }
+              },
+              "nextCursor": {
+                "type": "string"
+              }
+            },
+            "required": ["items"],
+            "additionalProperties": false
+          },
+          "meta": {
+            "type": "object",
+            "properties": {
+              "requestId": {
+                "type": "string"
+              },
+              "revision": {
+                "type": "integer",
+                "minimum": 1
+              }
+            },
+            "required": ["requestId"],
+            "additionalProperties": false
+          }
+        },
+        "required": ["data", "meta"],
+        "additionalProperties": false
+      },
+      "RevisionRecord": {
+        "type": "object",
+        "properties": {
+          "data": {
+            "type": "object",
+            "properties": {
+              "workflow": {
+                "$ref": "#/components/schemas/Workflow"
+              },
+              "revision": {
+                "type": "integer",
+                "minimum": 1
+              },
+              "contentHash": {
+                "type": "string",
+                "pattern": "^[a-f0-9]{64}$"
+              },
+              "source": {
+                "enum": ["manual", "ai_create", "ai_edit", "import", "restore"]
+              },
+              "createdAt": {
+                "type": "string",
+                "format": "date-time"
+              }
+            },
+            "required": ["workflow", "revision", "contentHash", "source", "createdAt"],
+            "additionalProperties": false
+          },
+          "meta": {
+            "type": "object",
+            "properties": {
+              "requestId": {
+                "type": "string"
+              },
+              "revision": {
+                "type": "integer",
+                "minimum": 1
+              }
+            },
+            "required": ["requestId"],
+            "additionalProperties": false
+          }
+        },
+        "required": ["data", "meta"],
+        "additionalProperties": false
       }
     },
     "responses": {

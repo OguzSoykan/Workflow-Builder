@@ -18,6 +18,9 @@ Faz 3 PR'ları da kullanıcı birleştirir; agent merge izni Faz 2 ile sınırl�
 28 Ekim 2026 “faz 4 yap” talimatı WB-012–015 (Faz 4, auth ve D1) uygulama onayıdır; plan
 [Faz 4](docs/PHASE-4.md), günlük [docs/worklogs/PHASE-4.md](docs/worklogs/PHASE-4.md). Bulut kaynağı açma, deploy ve
 gerçek Firebase/Cloudflare hesabı kullanımı kapsam dışıdır; testler sahte token ve yerel D1 ile yapılır. Faz 5–6 kapsam dışıdır.
+28 Ekim 2026 kullanıcı talimatı (“pr ı sen onayla insan incelemesine gerek yok artık ve tamamladıktan sonra devam et”):
+agent, required `quality` PASS sonrası kendi PR'larını squash merge eder ve sonraki karta geçer;
+ayrı insan review kaydı gerekmez. Merge edilen her PR günlüğe yazılır.
 
 ## Kaynakların önceliği
 

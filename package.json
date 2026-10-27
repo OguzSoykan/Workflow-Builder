@@ -20,6 +20,7 @@
     "build": "npm run build --workspace=@workflow-builder/web && npm run build --workspace=@workflow-builder/worker",
     "dev": "npm run build --workspace=@workflow-builder/web && npm run dev:worker",
     "dev:worker": "npm run dev --workspace=@workflow-builder/worker",
+    "db:migrate:local": "wrangler d1 migrations apply DB --local --config infra/wrangler.jsonc",
     "dev:web": "npm run dev --workspace=@workflow-builder/web",
     "test": "vitest run && npm run test:security && npm run test:docs",
     "test:coverage": "vitest run --coverage",
