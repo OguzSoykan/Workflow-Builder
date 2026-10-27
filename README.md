@@ -52,7 +52,7 @@ npm run test:e2e
 - Playwright gerçek uygulamayı 8787, yalnız test amaçlı contract Worker fixture'ını
   8788 portunda açar. İki port da boş olmalıdır. Test bundle'ı production asset'lerine eklenmez.
   CI'da Chromium sistem bağımlılıkları `--with-deps` ile kurulur.
-- CI tanımı [.github/workflows/ci.yml](.github/workflows/ci.yml) içindedir; main için
+- CI tanımı [.github/workflows/quality.yml](.github/workflows/quality.yml) içindedir; main için
   PR ve required quality check etkin. Güncel teslim kanıtları STATUS içindedir.
 
 ## Yapı

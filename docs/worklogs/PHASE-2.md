@@ -85,3 +85,13 @@ ham uygulama içeriği kaydedilmez. Saat dilimi Europe/Istanbul; girişler geçm
 - `npm run build`: PASS (Vite + Wrangler dry-run, deploy yok). `npm run secret:scan`: 101 dosya, 0 bulgu.
 - `npm run test:e2e`: 14/14 PASS (4 editör, 8 health, 2 contract). P2-009'daki rol/ad sorgusu düzeltmesi doğrulandı.
 - WB-005A yerel kabul kanıtı tamam; kalan: dalın push'u, PR ve hosted `quality` CI. `gh` CLI bu makinede yok; PR web arayüzünden açılacak.
+
+## P2-012 — Claude devrinin incelenmesi ve görsel düzeltmeler (2026-10-27)
+
+- Kullanıcının devam talimatıyla temiz `feat/WB-005A-editor-canvas-continue` dalı incelendi: `169f1b3` uygulama snapshot'ı, `c8364ba` Claude doğrulama/devir notları. Önceki çalışma korundu.
+- P2-010'da önceki tekrar çalışmadı denmişti; bu oturumun araç çıktısında önceki build ve 14/14 E2E de başarılıdır. Claude ayrıca aynı kontrolleri tekrarlamış.
+- GitHub API açık PR sorgusu boş döndü; gh yokluğu PR açmayı engellemiyor, mevcut credential helper ile API kullanılabilir.
+- Görsellerde mobil tuval boştu; min-height yanında kesin height/flex boyutu verildi. Mini harita ölçüleri React UI state'inde tutuldu; canonical workflow değişmedi.
+- Mobil test artık tuval yüksekliğini, node görünürlüğünü ve mini harita node'unu doğrular. Typecheck ve 14/14 E2E PASS; yeni mobil görselde tuval/mini harita kontrol edildi.
+- README'deki eski ci.yml bağlantısı quality.yml olarak düzeltildi. WB-005A Review; sonraki kart WB-005B.
+- Limit yaklaşınca yeni işe başlamama ve son işlemde devam notu yazma talimatı AGENTS'a eklendi. Hesap kotası doğrudan görünmediği için kesin kalan kota iddiası yok.

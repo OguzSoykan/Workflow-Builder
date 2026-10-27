@@ -12,7 +12,7 @@ açık takip riski olarak kayıtlıdır; Faz 1 kabul testleri/CI'ı engellemedi.
 ## Aktif çalışma
 
 [Faz 2 planı](docs/PHASE-2.md) ve [adım günlüğü](docs/worklogs/PHASE-2.md).
-WB-005A uygulandı ve yerel doğrulandı (E2E 14/14, 195 unit); PR ve hosted CI bekleniyor. Codex devri P2-010 günlük girdisinde. Aşağıdaki Faz 1 sonuçları tarihsel teslim kanıtıdır.
+WB-005A uygulandı ve yerel doğrulandı (E2E 14/14, 195 unit); Mobil tuval ve mini harita düzeltmesi de 14/14 E2E ile doğrulandı. Review/PR teslimi sürüyor; devir kaydı çalışma günlüğünde. Aşağıdaki Faz 1 sonuçları tarihsel teslim kanıtıdır.
 
 ## Yapılanların özeti
 

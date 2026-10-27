@@ -229,6 +229,7 @@ select {
   position: relative;
   flex: 1;
   min-height: 620px;
+  height: 620px;
 }
 .flow-canvas > .react-flow {
   position: absolute;
@@ -419,6 +420,8 @@ select {
   }
   .flow-canvas {
     min-height: 430px;
+    height: 430px;
+    flex: none;
   }
   .inspector {
     display: block;

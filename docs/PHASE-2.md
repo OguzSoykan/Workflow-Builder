@@ -4,16 +4,16 @@
 İşlem kaydı: [çalışma günlüğü](worklogs/PHASE-2.md). Kaynak kapsam: PRD FR-01–03/05,
 AC-01/05/11 ve BACKLOG WB-005–008. Mevcut şema/limit/kimlik sözleşmesi korunur.
 
-| Kart    | İş                             | Durum       | Kabul / bağımlılık                                                                                                                                                |
-| ------- | ------------------------------ | ----------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| WB-005A | Tuval ve temel graph düzenleme | In Progress | Dört node ekle/seç/taşı/etiketle/sil; zoom; bağlantı ekle/sil; stable ID; 50 node/100 edge sınırı; Start hedefi, geçersiz handle, duplicate çıkış ve cycle engeli |
-| WB-005B | Node config özellik paneli     | Backlog     | Start açıklaması, Approval rolü, End sonucu, Condition ayarlarının ilgili input görevine bağlanması; şema uyumlu değişiklikler                                    |
-| WB-006A | Tipli input alanları           | Backlog     | number/string/boolean/date/enum; benzersiz key, default/options/validation; mevcut alan referanslarına etkiler görünür                                            |
-| WB-006B | Koşul ve onay dalı deneyimi    | Backlog     | Alan türüne uygun operatör/değer; true/false ve approved/rejected bağlantıları, açıklayıcı hatalar                                                                |
-| WB-007A | Yerel kayıt                    | Backlog     | D-03/D-08 kararları; refresh ile devam; bozuk/quota/çok sekme senaryoları                                                                                         |
-| WB-007B | Güvenli import/export          | Backlog     | Boyut/şema/semantik sınırlar; bozuk import çalışma kopyasını değiştirmez; D-03 taslak politikası                                                                  |
-| WB-008A | Graph validation UX            | Backlog     | Mevcut saf validator; lokalize açıklama, ilgili node/edge/alanı gösterme; AC-05                                                                                   |
-| WB-008B | Undo/redo ve Faz 2 çıkışı      | Backlog     | Anlamlı işlem bazlı geri al/yeniden yap; oluştur/düzenle/kaydet/import akışının E2E kanıtı                                                                        |
+| Kart    | İş                             | Durum   | Kabul / bağımlılık                                                                                                                                                |
+| ------- | ------------------------------ | ------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| WB-005A | Tuval ve temel graph düzenleme | Review  | Dört node ekle/seç/taşı/etiketle/sil; zoom; bağlantı ekle/sil; stable ID; 50 node/100 edge sınırı; Start hedefi, geçersiz handle, duplicate çıkış ve cycle engeli |
+| WB-005B | Node config özellik paneli     | Backlog | Start açıklaması, Approval rolü, End sonucu, Condition ayarlarının ilgili input görevine bağlanması; şema uyumlu değişiklikler                                    |
+| WB-006A | Tipli input alanları           | Backlog | number/string/boolean/date/enum; benzersiz key, default/options/validation; mevcut alan referanslarına etkiler görünür                                            |
+| WB-006B | Koşul ve onay dalı deneyimi    | Backlog | Alan türüne uygun operatör/değer; true/false ve approved/rejected bağlantıları, açıklayıcı hatalar                                                                |
+| WB-007A | Yerel kayıt                    | Backlog | D-03/D-08 kararları; refresh ile devam; bozuk/quota/çok sekme senaryoları                                                                                         |
+| WB-007B | Güvenli import/export          | Backlog | Boyut/şema/semantik sınırlar; bozuk import çalışma kopyasını değiştirmez; D-03 taslak politikası                                                                  |
+| WB-008A | Graph validation UX            | Backlog | Mevcut saf validator; lokalize açıklama, ilgili node/edge/alanı gösterme; AC-05                                                                                   |
+| WB-008B | Undo/redo ve Faz 2 çıkışı      | Backlog | Anlamlı işlem bazlı geri al/yeniden yap; oluştur/düzenle/kaydet/import akışının E2E kanıtı                                                                        |
 
 ## WB-005A uygulama sınırı
 
