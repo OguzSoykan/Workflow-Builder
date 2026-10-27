@@ -1,4 +1,4 @@
-import { useMemo, useReducer, useState } from 'react';
+import { useEffect, useMemo, useReducer, useState } from 'react';
 import {
   Background,
   Controls,
@@ -18,15 +18,9 @@ import { ConnectionForm } from './ConnectionForm';
 import { WorkflowCard, type CanvasNode } from './WorkflowCard';
 import { conditionSummary, invalidConditionIds } from './condition-model';
 import { browserStore, loadDraft } from './draft-storage';
+import { historyReducer, initialHistory } from './history';
 import { useDraft, type DraftStatus } from './use-draft';
-import {
-  connectionError,
-  editorReducer,
-  emptyWorkflow,
-  HANDLE_LABELS,
-  NODE_LABELS,
-  type NodeKind,
-} from './model';
+import { connectionError, emptyWorkflow, HANDLE_LABELS, NODE_LABELS, type NodeKind } from './model';
 import '@xyflow/react/dist/style.css';
 
 const nodeTypes = { workflow: WorkflowCard };
@@ -46,14 +40,31 @@ function EditorWorkspace() {
     const local = browserStore();
     return { store: local, load: loadDraft(local) };
   });
-  const [state, dispatch] = useReducer(editorReducer, undefined, () => ({
-    workflow:
-      load.status === 'loaded' ? load.workflow : emptyWorkflow(`workflow_${crypto.randomUUID()}`),
-    nodeId: null,
-    edgeId: null,
-    error: null,
-  }));
+  const [history, dispatch] = useReducer(historyReducer, undefined, () =>
+    initialHistory({
+      workflow:
+        load.status === 'loaded' ? load.workflow : emptyWorkflow(`workflow_${crypto.randomUUID()}`),
+      nodeId: null,
+      edgeId: null,
+      error: null,
+    }),
+  );
+  const state = history.present;
   const { workflow } = state;
+  useEffect(() => {
+    // Text controls keep their native undo; the shortcut only applies to the workflow.
+    const listener = (event: KeyboardEvent) => {
+      const target = event.target as HTMLElement | null;
+      if (target?.closest('input, textarea, select, [contenteditable="true"]')) return;
+      if (!(event.metaKey || event.ctrlKey) || event.altKey) return;
+      const key = event.key.toLowerCase();
+      if (key !== 'z' && key !== 'y') return;
+      event.preventDefault();
+      dispatch({ type: key === 'y' || event.shiftKey ? 'redo' : 'undo' });
+    };
+    window.addEventListener('keydown', listener);
+    return () => window.removeEventListener('keydown', listener);
+  }, []);
   const draft = useDraft(store, load, workflow, dispatch);
   const issues = useMemo(() => describeWorkflow(workflow), [workflow]);
   const nodes = useMemo<CanvasNode[]>(() => {
@@ -105,6 +116,26 @@ function EditorWorkspace() {
           <h1>İş akışı tasarımı</h1>
         </div>
         <div className="header-meta">
+          <div className="history-buttons" role="group" aria-label="Geçmiş">
+            <button
+              type="button"
+              className="secondary"
+              disabled={!history.past.length}
+              title="Ctrl/Cmd+Z"
+              onClick={() => dispatch({ type: 'undo' })}
+            >
+              Geri al
+            </button>
+            <button
+              type="button"
+              className="secondary"
+              disabled={!history.future.length}
+              title="Ctrl/Cmd+Shift+Z veya Ctrl+Y"
+              onClick={() => dispatch({ type: 'redo' })}
+            >
+              Yinele
+            </button>
+          </div>
           <span className="draft-badge" role="status">
             {draft.conflict ? 'Otomatik kayıt duraklatıldı' : STATUS_LABELS[draft.status]}
           </span>
@@ -217,6 +248,7 @@ function EditorWorkspace() {
                 )
               }
               onNodeClick={(_, node) => dispatch({ type: 'select-node', id: node.id })}
+              onNodeDragStart={() => dispatch({ type: 'checkpoint' })}
               onEdgeClick={(_, edge) => dispatch({ type: 'select-edge', id: edge.id })}
               onPaneClick={() => dispatch({ type: 'select-node', id: null })}
               onNodesChange={(changes) => {
