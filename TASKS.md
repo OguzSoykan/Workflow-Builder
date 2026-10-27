@@ -129,11 +129,28 @@ WB-001A'da henüz uygulama/test runner yoktur: Q-TEST yerine workspace/config do
 - **Doğrulama:** Gerçek komutlar, sonuçlar, commit/PR/run referansları ve WB üst iş eşlemesi STATUS'a yazılır; çalıştırılmayan kontrol başarı sayılmaz. Orijinal PRD değişiklikleri varsa onayları izlenebilir. Tamamlanmayan bağımlılıkta faz kapanmaz.
 - **Kapılar:** Q-DOC, Q-STATIC, Q-TEST, Q-BUILD, Q-SEC, Q-CI, Q-REVIEW. Kullanıcıya Faz 2 önerisi sunulur; faz onayı gelmeden başlanmaz.
 
-## Sonraki fazların işleri
+## Yakın takip ve sonraki işler
 
-WB-005–027 bu teslimde uygulama kartlarına bölünmedi. Kapsam/bağımlılıkları [ROADMAP](ROADMAP.md) ve [BACKLOG](docs/BACKLOG.md) içinde korunur; ilgili faz onayından önce aynı küçük kart formatına ayrılır. Böylece henüz ihtiyaç olmayan altyapı tasarlanmaz.
+Faz 1 kartları tamamlandı; aşağıdaki işler henüz uygulanmadı. Güvenlik bulgusu
+kapanmış sayılmaz. Bu liste yeni ürün kararı veya Faz 2 uygulama onayı değildir.
 
-## 26 Ekim devam kaydı
+| Sıra | İş                                            | Durum      | Tamamlanma / başlangıç koşulu                                                                            |
+| ---- | --------------------------------------------- | ---------- | -------------------------------------------------------------------------------------------------------- |
+| 1    | Zod güvenlik bulgusu                          | Açık takip | GHSA-mrhx-c7xc-m3w5 çözümü; ES-only sınırı ve mevcut API davranışı korunarak audit/typecheck/test kanıtı |
+| 2    | Faz 2 görev ve karar hazırlığı                | Planlandı  | Faz onayı; WB-005–008 için küçük kartlar, ilgili D-03/D-08/D-14 kararları                                |
+| 3    | WB-005: React Flow canvas ve node özellikleri | Backlog    | Faz 2 onayı; dört node türü, bağlantı yönetimi, zoom/selection                                           |
+| 4    | WB-006: Input ve koşul/onay dalları editörü   | Backlog    | WB-005; tipli alanlar, handle UX, hata açıklamaları                                                      |
+| 5    | WB-007: Yerel kayıt ve güvenli import/export  | Backlog    | WB-005; D-03/D-08 ve ilgili taşıma kararları; bozuk import mevcut belgeyi bozmamalı                      |
+| 6    | WB-008: Validation UX ve undo/redo            | Backlog    | WB-003/005; node bazlı hata gösterimi ve geri al/yeniden yap doğrulaması                                 |
+
+WB-005–027'nin üst kapsamı [ROADMAP](ROADMAP.md) ve korunmuş
+[BACKLOG](docs/BACKLOG.md) içinde bulunur. Sonraki fazlar sırasıyla simulator,
+auth/bulut kayıt, bütçe kontrollü AI ve yayın kalitesidir. Karar eksikliği yalnızca
+ilgili işi bekletir; sonraki faz özellikleri mevcut kabul edilmiş uygulama gibi sunulmaz.
+
+## 26 Ekim devam kaydı — tarihsel
+
+Aşağıdaki eksikler o oturuma aittir; güncel tamamlanma durumu üst tablodadır.
 
 - WB-002A/B/C: ortak şema, güvenli JSON sınırı, serialize/parse, SHA-256, sabit UTF-8
   vektörü, 50/51 node, 100/101 edge, 30/31 alan ve 256 KiB exact/+1 sınırları uygulandı.
@@ -156,8 +173,12 @@ Chromium/Worker E2E 10/10, artifact secret taramaları ve Gitleaks sentetik nega
 testi geçti. GitHub'daki önceki tip/assertion negatif run'ları beklenen adımlarda
 başarısız oldu. PR #5 squash merge edildi (`e5ad0ea`); PR hosted run 40494769664 ve main hosted run 40495104283 geçti. Zod 4.3.6 için yüksek npm
 advisory açık; 4.6.7 denemesi ES-only contract/core typecheck'ini ambient URL
-edikliğiyle bozdu ve geri alındı. Ayrıntı ve kalan etki [STATUS](STATUS.md)'ta.
+eksikliğiyle bozdu ve geri alındı. Ayrıntı ve kalan etki [STATUS](STATUS.md)'ta.
 
 WB-004C tamamlandı: PR #5 başarıyla main'e merge edildi ve merge sonrası zorunlu
 `quality` check geçti. Zod advisory'si açık risk olarak STATUS/ADR'de izlenir;
 Faz 2 başlamaz ve kullanıcı onayı olmadan başka faz işi açılmaz.
+
+Kapanış belgeleri [PR #6](https://github.com/OguzSoykan/Workflow-Builder/pull/6)
+ile `edb0941` olarak main'e alındı; [main run 40496069027](https://github.com/OguzSoykan/Workflow-Builder/actions/runs/40496069027)
+başarılı. Bu devir güncellemesi yalnız dokümanları ve takip sırasını düzenler.

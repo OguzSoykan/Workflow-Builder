@@ -26,7 +26,7 @@ ADR-001–011 mevcut Architecture tablosunda kalır; kopya karar kaynağı oluş
 - [OpenAPI taslağı](openapi.json): yalnız health uygulanmış; diğer rotalar ve
   ortak Workflow şeması ve çözümlenmemiş AI payload'ları açıkça işaretli.
 - [Faz 1 doğrulaması](verification/PHASE-1.md): gerçek komutlar, araç sürümü
-  farklılıkları ve kapanmayan kapılar.
+  farklılıklarının tarihçesi, başarılı hosted CI/merge kanıtları ve açık güvenlik riski.
 
 - [ADR-014](adr/ADR-014-workflow-v1.md): onaylı şema/hash varsayılanları, saf validator,
   alan/limit/metadata/migration ve issue-code sözleşmesi.

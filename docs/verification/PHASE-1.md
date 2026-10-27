@@ -238,3 +238,15 @@ sonrası main check başarılıdır: [main run 40495104283](https://github.com/O
 `quality` check'ini uygular. Required approving review sayısı repository kuralında
 sıfırdır; agent öz incelemesi bağımsız insan onayı olarak gösterilmez. Faz 1
 kapanışında Zod advisory'si çözülmemiş takip riski olarak kaldı (ADR-014/STATUS).
+
+## Kapanış belgelerinin teslimi ve devir
+
+[PR #6](https://github.com/OguzSoykan/Workflow-Builder/pull/6) `edb0941` olarak
+main'e squash merge edildi. PR [quality run 40495765392](https://github.com/OguzSoykan/Workflow-Builder/actions/runs/40495765392)
+ve merge sonrası [main run 40496069027](https://github.com/OguzSoykan/Workflow-Builder/actions/runs/40496069027)
+başarılıdır. Bunlar önceki teslimde doğrulanmış sonuçlardır.
+
+27 Ekim devir güncellemesi yapılan işleri, Zod güvenlik takibini ve WB-005–008
+planını STATUS/TASKS/ROADMAP içinde toplar. Yeni uygulama kodu, ürün kararı veya
+Faz 2 uygulaması içermez. Doküman değişikliği için biçim, diff ve yerel bağlantı
+kontrolü yapılır; geçmiş runtime sonuçları yeni test çalışması diye sunulmaz.
