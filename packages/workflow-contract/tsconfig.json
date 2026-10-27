@@ -1,4 +1,7 @@
 {
   "extends": "../../tsconfig.base.json",
+  // Zod 4.6 declarations name the DOM URL type; library .d.ts checks are skipped so the
+  // package sources stay ES-only (URL/fetch/process remain undeclared for src).
+  "compilerOptions": { "skipLibCheck": true },
   "include": ["src/**/*.ts"]
 }
