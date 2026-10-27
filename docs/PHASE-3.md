@@ -13,3 +13,10 @@ Kaynak: PRD FR-04/13, AC-02–04, Workflow Contract §5, BACKLOG WB-009–011, D
 
 - Saf API ve semantik [ADR-017](adr/ADR-017-simulator.md) içinde. UI yok; WB-010 bu API'yi kullanacak.
 - Kanıt: 323 Vitest (31 yeni) + 2 scanner + 3 OpenAPI; 29 Chromium; simülatör benchmark median 57 ms (50 node + 48 karar).
+
+## WB-010 uygulama sınırı
+
+- Tuvalin altındaki Simülasyon paneli: “yalnız simülasyon” etiketi, tipli girdi formu (boş kontrol gönderilmez; varsayılan ve D-14 zorunluluk kuralı core'da), başlat/yeniden başlat/temizle.
+- Onay adımında rol ile birlikte Onayla/Reddet; adım kaydı Türkçe (koşul özeti ve gerçek değer dahil); tuvalde mevcut adım, izlenen adımlar ve bağlantılar vurgulanır.
+- İş mantığı değişirse (içerik hash'i) run “eski” olur, karar düğmeleri kapanır ve vurgu kalkar; yalnız konum değişimi run'ı bozmaz. Geçersiz akışta panel önce doğrulamayı ister. Run yalnız bellekte.
+- Kanıt: 327 Vitest + 2 scanner + 3 OpenAPI; 31 Chromium; 390px mobil görünüm incelendi.

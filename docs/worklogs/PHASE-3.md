@@ -13,3 +13,14 @@
 - `npm run benchmark:simulator` eklendi: M1 Pro/Node 24.22.1, 50 node + 48 karar median 57,3 ms, p95 59,8 ms, max 65,4 ms.
 - Kapılar: typecheck/lint PASS; format ilk koşuda `docs/PHASE-3.md` biçimi nedeniyle FAIL, prettier sonrası PASS. 323 Vitest + 2 + 3, coverage satır %99,55 (simulator %100 satır), negatif kapılar, build, secret:scan, Gitleaks, 29/29 E2E PASS; audit 0. Karar ADR-017.
 - Faz 3 PR'larını kullanıcı birleştirir. Sonraki: WB-010 simülasyon UX.
+
+## P3-003 — WB-009 merge ve WB-010 başlangıcı (2026-10-28)
+
+- [PR #18](https://github.com/OguzSoykan/Workflow-Builder/pull/18) [quality 40584063197](https://github.com/OguzSoykan/Workflow-Builder/actions/runs/40584063197) PASS; kullanıcı “mergeleyip devam” talimatıyla agent squash merge etti: main `1f148c1`. WB-009 Done.
+- `feat/WB-010-simulation-ux` açıldı. Plan: web'de saf görünüm yardımcıları (form → tipli girdi, Türkçe adım/girdi hata metni, izlenen düğüm/bağlantı kümesi) ve `SimulationPanel`; “yalnız simülasyon” etiketi; onay/ret düğmeleri; tuvalde mevcut/izlenen adım ve bağlantı vurgusu; akış hash'i değişince run eski sayılır ve karar düğmeleri kapanır. Run yalnız bellekte (FR-14 kapsam dışı).
+
+## P3-004 — WB-010 uygulama ve doğrulama (2026-10-28)
+
+- `simulation-view.ts` (form → girdi, girdi hata metni, Türkçe adım açıklaması, izlenen yol) ve `SimulationPanel`; Editor'da run durumu, içerik hash'iyle eski run tespiti, kart/bağlantı vurgusu (`sim-current`, `sim-visited`, `sim-edge`).
+- İlk E2E denemesi başlamadı: 8787'de kullanıcıya ait (Node v22) `wrangler dev` çalışıyordu. Kullanıcıya soruldu; “Durdur, testleri çalıştır” cevabıyla süreç durduruldu, yeniden başlatılmadı. Sonra 2 yeni senaryo PASS: AC-03/04 (5000 → tamamlandı; 15000 → onay bekler, onay/ret, vurgu sayıları, temizle) ve eksik/sınır dışı girdi, rol değişince eski run, adım silinince doğrulama uyarısı.
+- Testteki FormData tuple dizisi typecheck'te `TS2769` verdi; açık tiple düzeltildi. Kapılar: typecheck/lint/format PASS; 327 Vitest (4 yeni) + 2 + 3 PASS; coverage satır %99,57; build, secret:scan, Gitleaks PASS; E2E 31/31 PASS. 390px ekran görüntüsü incelendi; durum satırına üst boşluk eklendi.
