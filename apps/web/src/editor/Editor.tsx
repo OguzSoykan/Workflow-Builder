@@ -13,6 +13,7 @@ import { InputFields } from './InputFields';
 import { NodePropertiesForm } from './NodePropertiesForm';
 import { ConnectionForm } from './ConnectionForm';
 import { WorkflowCard, type CanvasNode } from './WorkflowCard';
+import { conditionSummary, invalidConditionIds } from './condition-model';
 import {
   connectionError,
   editorReducer,
@@ -37,19 +38,18 @@ function EditorWorkspace() {
     error: null,
   }));
   const { workflow } = state;
-  const nodes = useMemo<CanvasNode[]>(
-    () =>
-      workflow.nodes.map((node) => ({
-        id: node.id,
-        type: 'workflow',
-        position: node.position,
-        data: { node },
-        selected: state.nodeId === node.id,
-        ...(measurements[node.id] ? { measured: measurements[node.id] } : {}),
-        ariaLabel: `${NODE_LABELS[node.type]}: ${node.label}`,
-      })),
-    [workflow.nodes, state.nodeId, measurements],
-  );
+  const nodes = useMemo<CanvasNode[]>(() => {
+    const invalid = invalidConditionIds(workflow);
+    return workflow.nodes.map((node) => ({
+      id: node.id,
+      type: 'workflow',
+      position: node.position,
+      data: { node, summary: invalid.has(node.id) ? null : conditionSummary(workflow, node) },
+      selected: state.nodeId === node.id,
+      ...(measurements[node.id] ? { measured: measurements[node.id] } : {}),
+      ariaLabel: `${NODE_LABELS[node.type]}: ${node.label}`,
+    }));
+  }, [workflow, state.nodeId, measurements]);
   const edges = useMemo<Edge[]>(
     () =>
       workflow.edges.map((edge) => ({
@@ -212,7 +212,12 @@ function EditorWorkspace() {
         <aside className="inspector" aria-label="Adım özellikleri">
           <h2>Özellikler</h2>
           {selectedNode ? (
-            <NodePropertiesForm key={selectedNode.id} node={selectedNode} dispatch={dispatch} />
+            <NodePropertiesForm
+              key={selectedNode.id}
+              workflow={workflow}
+              node={selectedNode}
+              dispatch={dispatch}
+            />
           ) : selectedEdge ? (
             <div>
               <p>{HANDLE_LABELS[selectedEdge.sourceHandle]} bağlantısı</p>

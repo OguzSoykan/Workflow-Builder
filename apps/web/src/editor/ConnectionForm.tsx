@@ -12,6 +12,10 @@ export function ConnectionForm({
   const [sourceId, setSourceId] = useState('');
   const source = workflow.nodes.find((node) => node.id === sourceId);
   const handles = source ? NODE_HANDLES[source.type] : [];
+  // Suggest the first free branch so a second connection does not hit the duplicate-handle error.
+  const connected = (handle: string) =>
+    workflow.edges.some((edge) => edge.sourceNodeId === source?.id && edge.sourceHandle === handle);
+  const free = handles.find((handle) => !connected(handle));
   return (
     <form
       className="connection-form"
@@ -51,15 +55,16 @@ export function ConnectionForm({
         Çıkış
         <select
           id="connection-handle"
-          key={source?.id ?? 'none'}
+          key={`${source?.id ?? 'none'}:${free ?? ''}`}
           name="handle"
           required
-          defaultValue={handles[0] ?? ''}
+          defaultValue={free ?? handles[0] ?? ''}
         >
           {!handles.length && <option value="">Önce kaynak seçin</option>}
           {handles.map((handle) => (
             <option key={handle} value={handle}>
               {HANDLE_LABELS[handle]}
+              {connected(handle) ? ' (bağlı)' : ''}
             </option>
           ))}
         </select>

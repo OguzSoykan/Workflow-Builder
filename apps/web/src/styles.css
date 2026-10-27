@@ -473,3 +473,21 @@ select {
   min-height: 100px;
   resize: vertical;
 }
+.branch-status {
+  border-top: 1px solid #e3eaf2;
+  margin-top: 20px;
+  padding-top: 18px;
+  overflow-wrap: anywhere;
+}
+.branch-status ul {
+  padding-left: 18px;
+}
+.branch-status .is-missing {
+  color: #8a5a12;
+}
+.condition-options {
+  border: 1px solid #dce4ed;
+  border-radius: 7px;
+  margin: 0 0 12px;
+  overflow-wrap: anywhere;
+}
