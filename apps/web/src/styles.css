@@ -118,6 +118,16 @@ select {
   border-radius: 20px;
   padding: 6px 10px;
 }
+.draft-alert {
+  background: #fff1f0;
+  border-bottom: 1px solid #f0cfcc;
+  padding: 10px 28px;
+  font-size: 13px;
+  overflow-wrap: anywhere;
+}
+.draft-alert p {
+  margin: 0 0 8px;
+}
 .draft-notice {
   color: #795623;
   background: #fffaee;

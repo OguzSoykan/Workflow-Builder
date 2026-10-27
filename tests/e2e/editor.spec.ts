@@ -6,7 +6,7 @@ test('opens an empty editor, adds all node kinds and preserves IDs on rename and
   await page.goto('/');
   await expect(page.getByRole('heading', { name: 'İş akışı tasarımı' })).toBeVisible();
   await expect(
-    page.getByText('Sayfayı yenilemek çalışmanızı siler.', { exact: false }),
+    page.getByText('Taslak bu tarayıcıda otomatik kaydedilir', { exact: false }),
   ).toBeVisible();
   for (const kind of ['Başlangıç', 'Onay', 'Koşul', 'Bitiş'])
     await page.getByRole('button', { name: `${kind} ekle`, exact: true }).click();

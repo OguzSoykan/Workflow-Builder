@@ -60,3 +60,19 @@ Doğrulama: tip/default/operator matrisi, UTF-8 eşik testleri, hash değişim v
 Önceki bekleme kalktı. D-15 teknik biçim/unknown-key/issue-code kararı
 [ADR-014](adr/ADR-014-workflow-v1.md) ile kaydedilir. D-03/D-11 ve diğer sonraki
 faz ürün politikaları açık kalır; auth/AI/hosting kapsamı değişmez.
+
+## 27 Ekim 2026 — D-03/D-08 yerel taslak kararı (onaylandı)
+
+Ürün sahibi bu oturumda önerilen seçenekleri seçerek onay verdi. Etkilenen işler
+WB-007A/B; cloud-save (WB-014) kuralı değişmez.
+
+- D-03: Workflow v1 şemasından geçen her taslak, semantik olarak eksik olsa da
+  (bağlanmamış çıkış, alanı seçilmemiş koşul) tarayıcıda otomatik saklanabilir ve
+  import/export edilebilir. Validator hataları uyarı olarak gösterilir. Cloud kayıt
+  sonraki fazda tam semantik doğrulama ister.
+- D-08: Depolama `localStorage`, tek anahtar; belge 256 KiB sınırına sığar. Bozuk
+  kayıt yedek anahtara taşınır ve editör boş taslakla açılır. Quota veya erişim hatası
+  çalışmayı silmez, kullanıcıya gösterilir. Başka sekme aynı taslağı değiştirirse
+  `storage` olayıyla uyarı çıkar; otomatik kayıt durur ve kullanıcı diğer sekmenin
+  sürümünü yüklemeyi veya bu sekmedekiyle üzerine yazmayı seçer (son yazan kazanır).
+  Undo/revizyon geçmişi saklanmaz; sync altyapısı kurulmaz.
