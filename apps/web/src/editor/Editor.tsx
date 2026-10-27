@@ -8,10 +8,13 @@ import {
   type Connection,
   type Edge,
 } from '@xyflow/react';
-import { WORKFLOW_LIMITS } from '@workflow-builder/workflow-contract';
+import { computeContentHash, WORKFLOW_LIMITS } from '@workflow-builder/workflow-contract';
+import type { SimulationRun } from '@workflow-builder/workflow-core';
 import { InputFields } from './InputFields';
 import { TransferPanel } from './TransferPanel';
 import { ValidationPanel } from './ValidationPanel';
+import { SimulationPanel } from './SimulationPanel';
+import { visitedPath } from './simulation-view';
 import { describeWorkflow, issueCountsByNode } from './validation-messages';
 import { NodePropertiesForm } from './NodePropertiesForm';
 import { ConnectionForm } from './ConnectionForm';
@@ -67,6 +70,16 @@ function EditorWorkspace() {
   }, []);
   const draft = useDraft(store, load, workflow, dispatch);
   const issues = useMemo(() => describeWorkflow(workflow), [workflow]);
+  const [run, setRun] = useState<SimulationRun | null>(null);
+  // Layout is outside the content hash, so moving steps keeps a run current (ADR-014/017).
+  const stale = useMemo(
+    () => run !== null && computeContentHash(workflow) !== run.workflowContentHash,
+    [run, workflow],
+  );
+  const path = useMemo(
+    () => (run && !stale ? visitedPath(workflow, run) : null),
+    [run, stale, workflow],
+  );
   const nodes = useMemo<CanvasNode[]>(() => {
     const invalid = invalidConditionIds(workflow);
     const counts = issueCountsByNode(issues);
@@ -78,12 +91,18 @@ function EditorWorkspace() {
         node,
         summary: invalid.has(node.id) ? null : conditionSummary(workflow, node),
         issueCount: counts.get(node.id) ?? 0,
+        simulation:
+          run && !stale && run.currentNodeId === node.id
+            ? ('current' as const)
+            : path?.nodes.has(node.id)
+              ? ('visited' as const)
+              : null,
       },
       selected: state.nodeId === node.id,
       ...(measurements[node.id] ? { measured: measurements[node.id] } : {}),
       ariaLabel: `${NODE_LABELS[node.type]}: ${node.label}`,
     }));
-  }, [workflow, issues, state.nodeId, measurements]);
+  }, [workflow, issues, run, stale, path, state.nodeId, measurements]);
   const edges = useMemo<Edge[]>(
     () =>
       workflow.edges.map((edge) => ({
@@ -95,8 +114,10 @@ function EditorWorkspace() {
         label: HANDLE_LABELS[edge.sourceHandle],
         selected: state.edgeId === edge.id,
         type: 'smoothstep',
+        animated: path?.edges.has(edge.id) ?? false,
+        ...(path?.edges.has(edge.id) ? { className: 'sim-edge' } : {}),
       })),
-    [workflow.edges, state.edgeId],
+    [workflow.edges, state.edgeId, path],
   );
   const selectedNode = workflow.nodes.find((node) => node.id === state.nodeId);
   const selectedEdge = workflow.edges.find((edge) => edge.id === state.edgeId);
@@ -301,6 +322,13 @@ function EditorWorkspace() {
             )}
           </div>
           <ValidationPanel issues={issues} dispatch={dispatch} />
+          <SimulationPanel
+            workflow={workflow}
+            executable={issues.length === 0}
+            run={run}
+            stale={stale}
+            setRun={setRun}
+          />
         </section>
         <aside className="inspector" aria-label="Adım özellikleri">
           <h2>Özellikler</h2>

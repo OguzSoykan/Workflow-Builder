@@ -3,16 +3,21 @@ import { NODE_HANDLES, type WorkflowNode } from '@workflow-builder/workflow-cont
 import { HANDLE_LABELS, NODE_LABELS } from './model';
 
 export type CanvasNode = Node<
-  { node: WorkflowNode; summary: string | null; issueCount: number },
+  {
+    node: WorkflowNode;
+    summary: string | null;
+    issueCount: number;
+    simulation: 'current' | 'visited' | null;
+  },
   'workflow'
 >;
 
 export function WorkflowCard({ data, selected, isConnectable }: NodeProps<CanvasNode>) {
-  const { node, summary, issueCount } = data;
+  const { node, summary, issueCount, simulation } = data;
   const handles = NODE_HANDLES[node.type];
   return (
     <div
-      className={`workflow-card kind-${node.type}${selected ? ' is-selected' : ''}${issueCount ? ' has-issues' : ''}`}
+      className={`workflow-card kind-${node.type}${selected ? ' is-selected' : ''}${issueCount ? ' has-issues' : ''}${simulation ? ` sim-${simulation}` : ''}`}
     >
       {node.type !== 'start' && (
         <Handle type="target" position={Position.Left} id="input" isConnectable={isConnectable} />
@@ -31,6 +36,7 @@ export function WorkflowCard({ data, selected, isConnectable }: NodeProps<Canvas
               : 'Akış burada başlar'}
       </span>
       {issueCount > 0 && <span className="node-issues">⚠ {issueCount} sorun</span>}
+      {simulation === 'current' && <span className="node-sim">▶ Simülasyon burada</span>}
       {handles.map((handle, index) => (
         <div key={handle}>
           <span
