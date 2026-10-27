@@ -6,13 +6,15 @@
 27 Ekim'de squash merge edildi: `e5ad0ea`. PR check ve merge sonrası main `quality`
 check'i geçti. Main run: [40495104283](https://github.com/OguzSoykan/Workflow-Builder/actions/runs/40495104283).
 
-Faz 2 kullanıcı onayıyla başladı; aktif görev WB-005A tuval temeli. Cloud deploy ve canlı model çağrısı başlatılmadı. Zod advisory'si aşağıda
+Faz 2 kullanıcı onayıyla başladı; aktif görev WB-005B özellik paneli. Cloud deploy ve canlı model çağrısı başlatılmadı. Zod advisory'si aşağıda
 açık takip riski olarak kayıtlıdır; Faz 1 kabul testleri/CI'ı engellemedi.
 
 ## Aktif çalışma
 
 [Faz 2 planı](docs/PHASE-2.md) ve [adım günlüğü](docs/worklogs/PHASE-2.md).
-WB-005A temeli [PR #8](https://github.com/OguzSoykan/Workflow-Builder/pull/8) ile main'e alındı (`fb7ae38`). Mobil tuval/mini harita düzeltmesi [PR #9](https://github.com/OguzSoykan/Workflow-Builder/pull/9) üzerinde Review; `5555295` kod commit'inin [quality kontrolü](https://github.com/OguzSoykan/Workflow-Builder/actions/runs/40545359671) PASS. Sonraki doküman commit'inin CI durumu yeniden kontrol edilmeli. Sonraki uygulama kartı WB-005B; ayrıntılı devir günlüğün son girdisinde. Aşağıdaki Faz 1 sonuçları tarihsel teslim kanıtıdır.
+WB-005A temeli PR #8, mobil tuval/mini harita düzeltmesi [PR #9](https://github.com/OguzSoykan/Workflow-Builder/pull/9) ile main'e alındı (`9ddbc8a`). PR #9 güncel main ile yenilendi; [quality 40546965579](https://github.com/OguzSoykan/Workflow-Builder/actions/runs/40546965579) PASS sonrası kullanıcı talimatıyla birleştirildi.
+
+WB-005B özellik paneli uygulandı: Start açıklaması, Approval rolü, End sonucu ve ad tek atomik değişiklikte doğrulanır. 205 Vitest + 2 scanner + 3 OpenAPI, 15/15 E2E, typecheck/lint ve build PASS. Yeni PR/hosted CI teslimi hazırlanıyor; henüz Done değil. Sonraki kart WB-006A tipli input alanları. Aşağıdaki Faz 1 sonuçları tarihsel teslim kanıtıdır.
 
 ## Yapılanların özeti
 
@@ -33,8 +35,8 @@ Görev dalında `/` görsel editör, `/health` servis ekranıdır. Dört adım t
    Güncel paket/advisory durumu yeniden doğrulanmalı; çözümden sonra npm audit, tip kontrolü,
    şema/validator ve browser/Worker uyumluluğu kanıtlanmalı. Mevcut girdi limitleri açığın
    giderildiği anlamına gelmez.
-2. **WB-005A review:** Tuval tesliminin PR/CI kontrolü; adımlar ve kanıtlar çalışma günlüğünde.
-3. **Faz 2 devamı:** WB-005B config paneli → tipli input/condition → yerel kayıt ve import/export → validation UX ve undo/redo. D-03/D-08 kararları saklama işinden önce netleşecek.
+2. **WB-005B review:** Özellik panelinin PR/CI teslimi; adımlar ve kanıtlar çalışma günlüğünde.
+3. **Faz 2 devamı:** Tipli input/condition → yerel kayıt ve import/export → validation UX ve undo/redo. D-03/D-08 kararları saklama işinden önce netleşecek.
 4. **Sonraki fazlar:** Simülasyon → auth/bulut kayıt → bütçe kontrollü AI → yayın kalitesi.
    Ayrıntılı kapsam ve bağımlılıklar [ROADMAP](ROADMAP.md), yakın işler [TASKS](TASKS.md) içinde.
 
@@ -51,7 +53,7 @@ Görev dalında `/` görsel editör, `/health` servis ekranıdır. Dört adım t
 | WB-004A     | Done        | PR #4/#5; main quality workflow, pozitif ve beklenen negatif CI kanıtları         |
 | WB-004B     | Done        | PR #5; OpenAPI, env, ADR, issue-code ve eşleşme testleri geçti                    |
 | WB-004C     | Done        | PR #5 merge; PR ve merge sonrası main quality check geçti                         |
-| Faz 2       | In Progress | WB-005A; kullanıcı başlama onayı alındı                                           |
+| Faz 2       | In Progress | WB-005B; WB-005A main’de                                                          |
 | Faz 3–6     | Başlamadı   | Ayrı faz onayı gerekir                                                            |
 
 Kod öz incelemesi bağımsız insan review olarak gösterilmedi. Main branch protection required `quality` check uygular; approving review sayısı 0 olarak ayarlıdır.

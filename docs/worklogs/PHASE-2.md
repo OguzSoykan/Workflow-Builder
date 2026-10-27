@@ -145,3 +145,11 @@ ham uygulama içeriği kaydedilmez. Saat dilimi Europe/Istanbul; girişler geçm
 - Uygulama snapshot commit: `5d865a3`. `git merge origin/main` kod/test/CSS dosyalarını otomatik birleştirdi; yalnız çalışma günlüğünün sonuna eklenen kayıtlar çakıştı.
 - Günlükte iki tarafın tüm kayıtları P2-012–017 sırasıyla korundu. Mobil tuval/mini harita ve limit-devir kuralı artık bu dalda da mevcut.
 - Main tabanı `9ddbc8a`; entegrasyon sonrası tip/lint/E2E ve kaynak/build taraması yeniden çalıştırılacak.
+
+## P2-019 — Entegrasyon kabulü ve PR hazırlığı (2026-10-27)
+
+- Entegrasyon commit'i `72ab791`; typecheck/lint/format, 15/15 E2E ve web + Worker dry-run build PASS. Gitleaks 34 commit, kaynak ve artifact taramasında bulgu yok.
+- Desktop ekran görüntüsünde özellik paneli ve mini harita kontrol edildi. Mobil test tuval yüksekliği/node/mini harita görünürlüğüyle geçti.
+- Diff öz incelemesi: public contract kullanımı, atomik hata yolu, koşulun kapsam dışında kalması, seçimde form değerleri ve eski test davranışları doğrulandı. Sekiz orijinal planlama belgesi değişmedi; yeni bağımlılık yok.
+- STATUS/TASKS/Faz planı WB-005A Done, WB-005B Review, sonraki WB-006A olarak güncellendi. PR #9 main CI 40547334504 henüz çalışıyor.
+- Sonraki adım WB-005B dalını push edip PR açmak ve required hosted quality sonucunu doğrulamak.

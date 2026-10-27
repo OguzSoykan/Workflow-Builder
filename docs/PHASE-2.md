@@ -1,13 +1,13 @@
 # Faz 2 — Editör ve yerel çalışma
 
-**Durum:** WB-005A temeli PR #8 ile main’de; mobil görünürlük düzeltmesi PR #9 Review. Sonraki kart WB-005B. Fazın tamamı henüz bitmedi.
+**Durum:** WB-005A PR #8/#9 ile main’de. WB-005B özellik paneli uygulandı; PR/hosted CI teslimi hazırlanıyor. Sonraki kart WB-006A. Fazın tamamı henüz bitmedi.
 İşlem kaydı: [çalışma günlüğü](worklogs/PHASE-2.md). Kaynak kapsam: PRD FR-01–03/05,
 AC-01/05/11 ve BACKLOG WB-005–008. Mevcut şema/limit/kimlik sözleşmesi korunur.
 
 | Kart    | İş                             | Durum   | Kabul / bağımlılık                                                                                                                                                |
 | ------- | ------------------------------ | ------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| WB-005A | Tuval ve temel graph düzenleme | Review  | Dört node ekle/seç/taşı/etiketle/sil; zoom; bağlantı ekle/sil; stable ID; 50 node/100 edge sınırı; Start hedefi, geçersiz handle, duplicate çıkış ve cycle engeli |
-| WB-005B | Node config özellik paneli     | Backlog | Start açıklaması, Approval rolü, End sonucu, Condition ayarlarının ilgili input görevine bağlanması; şema uyumlu değişiklikler                                    |
+| WB-005A | Tuval ve temel graph düzenleme | Done    | Dört node ekle/seç/taşı/etiketle/sil; zoom; bağlantı ekle/sil; stable ID; 50 node/100 edge sınırı; Start hedefi, geçersiz handle, duplicate çıkış ve cycle engeli |
+| WB-005B | Node config özellik paneli     | Review  | Start açıklaması, Approval rolü, End sonucu, Condition ayarlarının ilgili input görevine bağlanması; şema uyumlu değişiklikler                                    |
 | WB-006A | Tipli input alanları           | Backlog | number/string/boolean/date/enum; benzersiz key, default/options/validation; mevcut alan referanslarına etkiler görünür                                            |
 | WB-006B | Koşul ve onay dalı deneyimi    | Backlog | Alan türüne uygun operatör/değer; true/false ve approved/rejected bağlantıları, açıklayıcı hatalar                                                                |
 | WB-007A | Yerel kayıt                    | Backlog | D-03/D-08 kararları; refresh ile devam; bozuk/quota/çok sekme senaryoları                                                                                         |
@@ -36,3 +36,11 @@ Typecheck/lint/format/unit/build/secret scan ve PR CI sonuçları günlüğe yaz
 D-03 (taslak saklama), D-08 (storage ve çok sekme UX), D-14'ün ilgili kabul maddeleri
 henüz çözülmüş sayılmaz. Yalnız bağımlı kartlar bekler. Zod güvenlik takibi açık;
 Faz 2 başlatma onayı bu advisory'nin giderildiği anlamına gelmez.
+
+## WB-005B uygulama sınırı
+
+- Özellik paneli ad ile Start açıklaması, Approval rolü veya End sonucunu tek işlemde uygular. Boş açıklama isteğe bağlı alanı kaldırır.
+- Şema kontrolü reddederse belge ve seçili adım korunur; kısmi güncelleme yapılmaz. ID, konum ve bağlantılar değişmez, türetilmiş hash kaldırılır.
+- Başka bir adıma geçmek uygulanmamış form girişlerini bırakır; kayıtlı değerler yeniden gösterilir. Bu davranış arayüzde açıklanır.
+- Condition adı düzenlenebilir; alan/operatör/değer paneli WB-006'ya bağlıdır. Kalıcı kayıt henüz yoktur.
+- Kanıt: 205 Vitest + 2 scanner + 3 OpenAPI; 15 Chromium senaryosu. Güncel PR/CI ve entegrasyon sonuçları çalışma günlüğünde.
