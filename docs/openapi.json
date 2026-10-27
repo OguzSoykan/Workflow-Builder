@@ -3,7 +3,7 @@
   "info": {
     "title": "Workflow Builder API — Phase 1 draft",
     "version": "0.1.0",
-    "description": "Only GET /api/health is implemented. All /api/v1 operations are planning specifications. Workflow v1 structure is shared with the runtime contract; draft persistence and AI payload/policy decisions remain explicit TBD. Firebase client owns registration/login/password handling. Browser owns validation and simulation. No cloud resources are provisioned."
+    "description": "GET /api/health and GET /api/v1/me are implemented; other /api/v1 operations are planning specifications. Workflow v1 structure is shared with the runtime contract; draft persistence and AI payload/policy decisions remain explicit TBD. Firebase client owns registration/login/password handling. Browser owns validation and simulation. No cloud resources are provisioned."
   },
   "servers": [
     {
@@ -44,8 +44,8 @@
       "get": {
         "operationId": "getMe",
         "summary": "Current profile, emailVerified and cloudSyncAllowed",
-        "x-status": "planned",
-        "description": "Specification only; not implemented in Phase 1.",
+        "x-status": "implemented",
+        "description": "Implemented in Phase 4 (WB-013). Verifies the Firebase ID token (RS256, kid, aud, iss, exp, iat, auth_time, sub). preferredLocale is tr until profiles are stored; cloudSyncAllowed mirrors emailVerified (D-05).",
         "security": [
           {
             "firebaseBearer": []
@@ -53,7 +53,7 @@
         ],
         "responses": {
           "200": {
-            "description": "Planned success envelope; data shape TBD.",
+            "description": "Verified profile.",
             "headers": {
               "X-Request-ID": {
                 "$ref": "#/components/headers/RequestId"
@@ -62,19 +62,16 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/PlannedResponse"
+                  "$ref": "#/components/schemas/Profile"
                 }
               }
             }
           },
-          "400": {
-            "$ref": "#/components/responses/Error400"
-          },
           "401": {
             "$ref": "#/components/responses/Error401"
           },
-          "404": {
-            "$ref": "#/components/responses/Error404"
+          "503": {
+            "$ref": "#/components/responses/Error503"
           }
         },
         "x-decisions": ["D-05"]
@@ -1489,6 +1486,57 @@
           "calendar-dates",
           "input-bounds-defaults",
           "unique-options"
+        ]
+      },
+      "Profile": {
+        "type": "object",
+        "properties": {
+          "data": {
+            "type": "object",
+            "properties": {
+              "uid": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 128
+              },
+              "emailVerified": {
+                "type": "boolean"
+              },
+              "preferredLocale": {
+                "enum": ["tr", "en"]
+              },
+              "cloudSyncAllowed": {
+                "type": "boolean"
+              }
+            },
+            "required": ["uid", "emailVerified", "preferredLocale", "cloudSyncAllowed"],
+            "additionalProperties": false
+          },
+          "meta": {
+            "type": "object",
+            "properties": {
+              "requestId": {
+                "type": "string"
+              }
+            },
+            "required": ["requestId"],
+            "additionalProperties": false
+          }
+        },
+        "required": ["data", "meta"],
+        "additionalProperties": false,
+        "examples": [
+          {
+            "data": {
+              "uid": "synthetic-uid",
+              "emailVerified": true,
+              "preferredLocale": "tr",
+              "cloudSyncAllowed": true
+            },
+            "meta": {
+              "requestId": "synthetic-request-id"
+            }
+          }
         ]
       }
     },

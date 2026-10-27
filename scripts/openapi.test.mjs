@@ -54,12 +54,17 @@ test('OpenAPI draft has unique operations, resolvable references and explicit pa
   assert.equal(ids.size, 15);
 });
 
-test('only health is implemented and member routes require bearer authentication', () => {
+const implemented = new Set(['get /api/health', 'get /api/v1/me']);
+
+test('only listed operations are implemented and member routes require bearer authentication', () => {
   for (const [path, item] of Object.entries(spec.paths)) {
     assert.ok(!/auth\/(login|register)|simulations\/run|workflows\/validate/.test(path));
     for (const [method, operation] of Object.entries(item)) {
       if (!methods.has(method)) continue;
-      assert.equal(operation['x-status'], path === '/api/health' ? 'implemented' : 'planned');
+      assert.equal(
+        operation['x-status'],
+        implemented.has(`${method} ${path}`) ? 'implemented' : 'planned',
+      );
       if (path.startsWith('/api/v1/me') || path.startsWith('/api/v1/workflows')) {
         assert.deepEqual(operation.security, [{ firebaseBearer: [] }]);
       }
@@ -80,6 +85,9 @@ test('JSON Schema 2020 schemas compile; health/error examples pass and bad envel
     const validate = ajv.compile({ $ref: `workflow-api#/components/schemas/${name}` });
     for (const example of schema.examples ?? []) assert.equal(validate(example), true);
   }
+  const profile = ajv.compile({ $ref: 'workflow-api#/components/schemas/Profile' });
+  assert.equal(profile(spec.components.schemas.Profile.examples[0]), true);
+  assert.equal(profile({ data: { uid: '' }, meta: { requestId: 'x' } }), false);
   const health = ajv.compile({ $ref: 'workflow-api#/components/schemas/Health' });
   assert.equal(health({ data: { status: 'bad' }, meta: { requestId: 'test' } }), false);
   assert.equal(health({ data: { status: 'ok' } }), false);
