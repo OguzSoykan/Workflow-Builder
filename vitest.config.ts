@@ -6,7 +6,11 @@ export default defineConfig({
     include: ['apps/*/test/**/*.test.ts', 'packages/*/test/**/*.test.ts', 'scripts/**/*.test.ts'],
     coverage: {
       provider: 'v8',
-      include: ['packages/*/src/**/*.ts', 'apps/worker/src/**/*.ts'],
+      include: [
+        'packages/*/src/**/*.ts',
+        'apps/worker/src/**/*.ts',
+        'apps/web/src/editor/model.ts',
+      ],
       reporter: ['text', 'json-summary', 'html'],
     },
   },

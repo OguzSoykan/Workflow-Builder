@@ -6,8 +6,13 @@
 27 Ekim'de squash merge edildi: `e5ad0ea`. PR check ve merge sonrası main `quality`
 check'i geçti. Main run: [40495104283](https://github.com/OguzSoykan/Workflow-Builder/actions/runs/40495104283).
 
-Faz 2, cloud deploy ve canlı model çağrısı başlatılmadı. Zod advisory'si aşağıda
+Faz 2 kullanıcı onayıyla başladı; aktif görev WB-005A tuval temeli. Cloud deploy ve canlı model çağrısı başlatılmadı. Zod advisory'si aşağıda
 açık takip riski olarak kayıtlıdır; Faz 1 kabul testleri/CI'ı engellemedi.
+
+## Aktif çalışma
+
+[Faz 2 planı](docs/PHASE-2.md) ve [adım günlüğü](docs/worklogs/PHASE-2.md).
+WB-005A uygulandı; yerel doğrulama ve PR teslimi sürüyor. Aşağıdaki Faz 1 sonuçları tarihsel teslim kanıtıdır.
 
 ## Yapılanların özeti
 
@@ -20,8 +25,7 @@ açık takip riski olarak kayıtlıdır; Faz 1 kabul testleri/CI'ı engellemedi.
   kapanış belgeleri [PR #6](https://github.com/OguzSoykan/Workflow-Builder/pull/6) ile `edb0941` olarak main'e alındı.
   PR #6 sonrası [main CI 40496069027](https://github.com/OguzSoykan/Workflow-Builder/actions/runs/40496069027) başarılı.
 
-Çalışan arayüz henüz health ekranıdır. Görsel workflow editörü, simülasyon, kullanıcı
-hesabı, bulut kayıt ve AI üretimi uygulanmış değildir.
+Görev dalında `/` görsel editör, `/health` servis ekranıdır. Dört adım türü, etiket/konum düzenleme, bağlantı ve silme uygulanmıştır. Taslak yalnız oturum belleğindedir. Simülasyon, kullanıcı hesabı, bulut kayıt ve AI henüz yoktur.
 
 ## Sıradaki işler
 
@@ -29,28 +33,26 @@ hesabı, bulut kayıt ve AI üretimi uygulanmış değildir.
    Güncel paket/advisory durumu yeniden doğrulanmalı; çözümden sonra npm audit, tip kontrolü,
    şema/validator ve browser/Worker uyumluluğu kanıtlanmalı. Mevcut girdi limitleri açığın
    giderildiği anlamına gelmez.
-2. **Faz 2 hazırlığı:** Faz onayından sonra WB-005–008'i küçük uygulama kartlarına ayırmak;
-   D-03 taslak saklama, D-08 browser storage ve D-14'ün ilgili UX/kabul maddelerini ilgili
-   göreve başlamadan netleştirmek. Ürün kararları henüz kesinleşmiş sayılmaz.
-3. **Faz 2 uygulaması:** Önce React Flow canvas/node özellikleri, ardından input/condition
-   editörü, yerel kayıt ve güvenli import/export, validation UX ve undo/redo.
+2. **WB-005A review:** Tuval tesliminin PR/CI kontrolü; adımlar ve kanıtlar çalışma günlüğünde.
+3. **Faz 2 devamı:** WB-005B config paneli → tipli input/condition → yerel kayıt ve import/export → validation UX ve undo/redo. D-03/D-08 kararları saklama işinden önce netleşecek.
 4. **Sonraki fazlar:** Simülasyon → auth/bulut kayıt → bütçe kontrollü AI → yayın kalitesi.
    Ayrıntılı kapsam ve bağımlılıklar [ROADMAP](ROADMAP.md), yakın işler [TASKS](TASKS.md) içinde.
 
-Bu kayıt planı günceller; Faz 2 uygulaması veya deploy başlatma talimatı değildir.
+27 Ekim sonraki kullanıcı talimatı Faz 2 uygulamasını başlattı; güncel sıra Faz 2 planındadır.
 
 ## Mevcut durum
 
-| İş          | Durum     | Kanıt / kalan                                                                     |
-| ----------- | --------- | --------------------------------------------------------------------------------- |
-| WB-001A/B   | Done      | Main'de; PR #1/#2 birleşti                                                        |
-| WB-001C     | Done      | PR #3/#5; gerçek Worker/Chromium health + contract smoke: 10/10                   |
-| WB-002A/B/C | Done      | PR #5; şema, hash, round-trip, limit matrisi ve browser/Worker hash vektörü geçti |
-| WB-003A/B/C | Done      | PR #5; validator, hostile input, deterministik issue ve coverage geçti            |
-| WB-004A     | Done      | PR #4/#5; main quality workflow, pozitif ve beklenen negatif CI kanıtları         |
-| WB-004B     | Done      | PR #5; OpenAPI, env, ADR, issue-code ve eşleşme testleri geçti                    |
-| WB-004C     | Done      | PR #5 merge; PR ve merge sonrası main quality check geçti                         |
-| Faz 2–6     | Başlamadı | Ayrı faz onayı gerekir                                                            |
+| İş          | Durum       | Kanıt / kalan                                                                     |
+| ----------- | ----------- | --------------------------------------------------------------------------------- |
+| WB-001A/B   | Done        | Main'de; PR #1/#2 birleşti                                                        |
+| WB-001C     | Done        | PR #3/#5; gerçek Worker/Chromium health + contract smoke: 10/10                   |
+| WB-002A/B/C | Done        | PR #5; şema, hash, round-trip, limit matrisi ve browser/Worker hash vektörü geçti |
+| WB-003A/B/C | Done        | PR #5; validator, hostile input, deterministik issue ve coverage geçti            |
+| WB-004A     | Done        | PR #4/#5; main quality workflow, pozitif ve beklenen negatif CI kanıtları         |
+| WB-004B     | Done        | PR #5; OpenAPI, env, ADR, issue-code ve eşleşme testleri geçti                    |
+| WB-004C     | Done        | PR #5 merge; PR ve merge sonrası main quality check geçti                         |
+| Faz 2       | In Progress | WB-005A; kullanıcı başlama onayı alındı                                           |
+| Faz 3–6     | Başlamadı   | Ayrı faz onayı gerekir                                                            |
 
 Kod öz incelemesi bağımsız insan review olarak gösterilmedi. Main branch protection required `quality` check uygular; approving review sayısı 0 olarak ayarlıdır.
 
@@ -62,7 +64,7 @@ onayladı. [DECISIONS](docs/DECISIONS.md) ve [ADR-014](docs/adr/ADR-014-workflow
 ID/alan/unknown-key, canonicalization, şema-semantic ayrımı ve hata kodlarını kaydeder.
 D-03 taslak saklama ve D-11 AI payload/patch politikaları sonraki fazda açık kalır.
 
-## Gerçek doğrulama
+## Faz 1 gerçek doğrulaması (tarihsel)
 
 Repo kökünde sabit Node 24.22.1/npm 11.19.1 ile `npm ci` temiz kuruldu.
 Build'ler Wrangler 4.151.3, Vite 8.3.5; test ve tarayıcı aynı sabit lockfile
@@ -99,7 +101,7 @@ ortam tipi eklenmedi. Zod öncesi JSON-tree parser 12 derinlik, 20.000 değer,
 
 `npm ci` install-script izin uyarısı iki platforma özel `fsevents` kopyası içindi;
 repo allowScripts kuralları değişmedi. `npm audit fix --force` çalıştırılmadı.
-Faz 1 çıkışı tamamlandı. WB-005/Faz 2 ayrıca onaylanmadan başlamaz.
+Faz 1 çıkışı tamamlandı; Faz 2 için başlama onayı alındı.
 
 ## Önceki teslimler
 

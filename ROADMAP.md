@@ -2,7 +2,7 @@
 
 **Durum:** Faz 1, PR #5'in `e5ad0ea` squash merge'i, başarılı PR CI ve başarılı
 merge sonrası main CI ile tamamlandı. Zod 4.3.6 advisory'si Faz 1 doğrulamasında
-açık takip riski olarak kaydedildi. Faz 2 başlamadı. [STATUS](STATUS.md) ve [TASKS](TASKS.md).
+açık takip riski olarak kaydedildi. Faz 2 başlatıldı: [WB-005A tuval temeli](docs/PHASE-2.md). [STATUS](STATUS.md) ve [TASKS](TASKS.md).
 
 | Faz / milestone        | Amaç ve kapsam                                                                                                 | Bağımlılık                                         | Çıkış kapısı                                                                                                                                                                                                            |
 | ---------------------- | -------------------------------------------------------------------------------------------------------------- | -------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
@@ -16,11 +16,10 @@ açık takip riski olarak kaydedildi. Faz 2 başlamadı. [STATUS](STATUS.md) ve 
 
 ## Yakın dönem sırası
 
-Önce açık Zod güvenlik bulgusunun uyumlu çözümü takip edilecek. Faz 2 onayıyla
-WB-005–008 ayrıntılandırılacak: canvas/node özellikleri → input ve koşul editörü →
-yerel kayıt/import-export → validation UX ve undo/redo. D-03/D-08/D-14'ün ilgili
-kararları, bağımlı işe geçmeden netleştirilecek. Bu başlık planlama kaydıdır;
-Faz 2 uygulaması başlamadı. Uygulanabilir takip listesi [TASKS](TASKS.md)'ta.
+Zod güvenlik bulgusu açık takipte. Faz 2 başladı; WB-005A tuval temeli ilk teslimdir.
+Sıra: node özellikleri → input ve koşul editörü → yerel kayıt/import-export → validation UX ve undo/redo.
+D-03/D-08/D-14'ün ilgili kararları bağımlı işe geçmeden netleştirilecek.
+Güncel alt kartlar [Faz 2 planında](docs/PHASE-2.md), işlemler [günlükte](docs/worklogs/PHASE-2.md).
 
 ## Kapsamı koruma
 

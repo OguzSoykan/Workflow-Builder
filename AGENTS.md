@@ -2,7 +2,14 @@
 
 ## Mevcut yetki sınırı
 
-Kullanıcının 22 Ekim 2026 “PR onayını yap, Faz 1 için kalan görevleri de tamamla” talimatı **WB-001–004 ve tüm Faz 1 alt kartları** için uygulama, doğrulama, PR ve birleştirme yetkisidir. Her kart için yeniden onay isteme. PR #1 bu talimatla birleştirildi. Tek GitHub hesabı kendi PR'ına resmi Approve review veremez; kullanıcı oturum onayı ve agent öz incelemesi açıkça kaydedilir, bağımsız insan review uydurulmaz. Cloud kaynakları, ücretli API çağrısı, deploy ve Faz 2 kapsam dışıdır. Ürün gereksinimi değişikliği ayrıca onay gerektirir.
+Kullanıcının 22 Ekim 2026 “PR onayını yap, Faz 1 için kalan görevleri de tamamla” talimatı **WB-001–004 ve tüm Faz 1 alt kartları** için uygulama, doğrulama, PR ve birleştirme yetkisidir. Her kart için yeniden onay isteme. PR #1 bu talimatla birleştirildi. Tek GitHub hesabı kendi PR'ına resmi Approve review veremez; kullanıcı oturum onayı ve agent öz incelemesi açıkça kaydedilir, bağımsız insan review uydurulmaz. Cloud kaynakları, ücretli API çağrısı ve deploy kapsam dışıdır. Ürün gereksinimi değişikliği ayrıca onay gerektirir.
+
+27 Ekim 2026 “faz2 ye başla ve yaptığın her adımı bir yerde kayıt altına al”
+talimatı WB-005–008 kapsamında Faz 2 uygulama/doğrulama başlangıç onayıdır.
+Aktif plan [Faz 2](docs/PHASE-2.md), zorunlu adım kaydı
+[çalışma günlüğü](docs/worklogs/PHASE-2.md) içindedir. Her anlamlı işlemden sonra
+komut/sonuç/karar ve başarısız denemeyi günlüğe ekle. Önceki Git push tercihi sürer;
+Faz 2 uygulama PR'ları review ve required CI üzerinden ilerler. Faz 3–6 kapsam dışıdır.
 
 ## Kaynakların önceliği
 
