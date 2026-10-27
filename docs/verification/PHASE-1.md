@@ -224,10 +224,17 @@ validator ölçümüdür.
 [39842997729](https://github.com/OguzSoykan/Workflow-Builder/actions/runs/39842997729)
 tip hatasında Typecheck'te; run
 [39843201908](https://github.com/OguzSoykan/Workflow-Builder/actions/runs/39843201908)
-assertion hatasında unit test adımında başarısız oldu. PR #5 güncel hosted `quality` check'i geçti: [run 40494350145](https://github.com/OguzSoykan/Workflow-Builder/actions/runs/40494350145). Main `quality` check'i koruma kuralında zorunlu;
+assertion hatasında unit test adımında başarısız oldu. PR #5 güncel hosted `quality` check'i geçti: [run 40494769664](https://github.com/OguzSoykan/Workflow-Builder/actions/runs/40494769664). Main `quality` check'i koruma kuralında zorunlu;
 PR inceleme kuralı açık ancak onay sayısı sıfır.
 
 `npm audit` Zod 4.3.6 için bir yüksek bulgu (`GHSA-mrhx-c7xc-m3w5`) bildiriyor.
 4.6.7 derleme denemesi ES-only paketlerde DOM `URL` ambient tipini gerektirdi ve
 reddedildi. Parser'ın Zod öncesi derinlik 12, 20.000 değer ve 256 KiB sınırları
 var; bu durum advisory'yi kapatmaz. Ayrıntı/sonraki çözüm ADR-014 ve STATUS'ta.
+
+PR #5 (`feat(contract): complete Phase 1 workflow validation`) 27 Ekim 2026
+tarihinde `e5ad0ea` squash commit'iyle main'e merge edildi. PR check ve merge
+sonrası main check başarılıdır: [main run 40495104283](https://github.com/OguzSoykan/Workflow-Builder/actions/runs/40495104283). Main koruması zorunlu
+`quality` check'ini uygular. Required approving review sayısı repository kuralında
+sıfırdır; agent öz incelemesi bağımsız insan onayı olarak gösterilmez. Faz 1
+kapanışında Zod advisory'si çözülmemiş takip riski olarak kaldı (ADR-014/STATUS).
