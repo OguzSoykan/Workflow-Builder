@@ -16,3 +16,9 @@ Sıra bağımlılığa göre: önce Worker doğrulaması ve D1 API, sonra istemc
 - Ayrıntılar [ADR-018](adr/ADR-018-firebase-token-verification.md). `createApp` anahtar kaynağı ve saati enjekte edilebilir; varsayılan Google JWK önbelleği.
 - `/api/v1/*` önce kimlik doğrular; tanımsız v1 rotaları da yetkisiz istekte 401/503 döner (rota varlığı sızdırılmaz). OpenAPI'de `GET /me` uygulandı olarak işaretlendi, `Profile` şeması eklendi.
 - Kanıt: 365 Vitest (25 yeni auth testi) + 2 scanner + 3 OpenAPI; 36 Chromium (yapılandırmasız 503 dahil).
+
+## WB-014 uygulama sınırı
+
+- Ayrıntılar [ADR-019](adr/ADR-019-d1-workflow-storage.md). Rotalar: liste, oluştur, getir, güncelle (iyimser kilit), soft delete, revizyon listesi ve tek revizyon; `restore` P1.
+- `/me` D1 varsa profil satırını ilk çağrıda oluşturur ve dili oradan okur.
+- Testler gerçek yerel D1'de (`tests/platform/d1-proxy.mjs`, bellek içi); OpenAPI şemaları gerçek yanıtlarla Ajv'de doğrulanır.
