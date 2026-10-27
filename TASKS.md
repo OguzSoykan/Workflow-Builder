@@ -5,6 +5,12 @@ tarafından onaylandı; D-15 teknik ayrıntıları ADR-014'te. Sabit araç zinci
 Worker/Chromium, secret taraması ve hosted CI kapıları geçti; PR #5 main'e merge edildi.
 Zod advisory açık takip riskidir. [STATUS](STATUS.md) kanıtları içerir.
 
+## Aktif Faz 2
+
+Kullanıcı WB-005–008 için başlama onayı verdi. Küçük kartlar ve kabul koşulları
+[Faz 2 planında](docs/PHASE-2.md); aktif kart WB-005A. Her anlamlı adım
+[çalışma günlüğüne](docs/worklogs/PHASE-2.md) eklenir. Aşağıdaki Faz 1 kayıtları korunur.
+
 ## Hazır ve tamamlanmış iş tanımı
 
 **Ready:** Açık kapsam, kaynak FR/AC/contract, tamamlanmış bağımlılıklar, çözümlenmiş ilgili D-kararları, izin verilen çalışma kapsamı, pozitif/negatif doğrulama ve maliyet etkisi belli. Bir kartın onayı aynı üst işteki diğer kartlara kendiliğinden izin vermez; kullanıcı birden fazla kartı/fazı açıkça onaylayabilir.
@@ -131,17 +137,16 @@ WB-001A'da henüz uygulama/test runner yoktur: Q-TEST yerine workspace/config do
 
 ## Yakın takip ve sonraki işler
 
-Faz 1 kartları tamamlandı; aşağıdaki işler henüz uygulanmadı. Güvenlik bulgusu
-kapanmış sayılmaz. Bu liste yeni ürün kararı veya Faz 2 uygulama onayı değildir.
+Faz 1 tamamlandı; Faz 2 kullanıcı talimatıyla başladı. Güncel alt kartlar Faz 2 planında; güvenlik bulgusu açık.
 
-| Sıra | İş                                            | Durum      | Tamamlanma / başlangıç koşulu                                                                            |
-| ---- | --------------------------------------------- | ---------- | -------------------------------------------------------------------------------------------------------- |
-| 1    | Zod güvenlik bulgusu                          | Açık takip | GHSA-mrhx-c7xc-m3w5 çözümü; ES-only sınırı ve mevcut API davranışı korunarak audit/typecheck/test kanıtı |
-| 2    | Faz 2 görev ve karar hazırlığı                | Planlandı  | Faz onayı; WB-005–008 için küçük kartlar, ilgili D-03/D-08/D-14 kararları                                |
-| 3    | WB-005: React Flow canvas ve node özellikleri | Backlog    | Faz 2 onayı; dört node türü, bağlantı yönetimi, zoom/selection                                           |
-| 4    | WB-006: Input ve koşul/onay dalları editörü   | Backlog    | WB-005; tipli alanlar, handle UX, hata açıklamaları                                                      |
-| 5    | WB-007: Yerel kayıt ve güvenli import/export  | Backlog    | WB-005; D-03/D-08 ve ilgili taşıma kararları; bozuk import mevcut belgeyi bozmamalı                      |
-| 6    | WB-008: Validation UX ve undo/redo            | Backlog    | WB-003/005; node bazlı hata gösterimi ve geri al/yeniden yap doğrulaması                                 |
+| Sıra | İş                                            | Durum       | Tamamlanma / başlangıç koşulu                                                                            |
+| ---- | --------------------------------------------- | ----------- | -------------------------------------------------------------------------------------------------------- |
+| 1    | Zod güvenlik bulgusu                          | Açık takip  | GHSA-mrhx-c7xc-m3w5 çözümü; ES-only sınırı ve mevcut API davranışı korunarak audit/typecheck/test kanıtı |
+| 2    | Faz 2 görev ve karar hazırlığı                | Hazır       | Alt kartlar oluşturuldu; D-03/D-08 bağımlı saklama işinden önce çözülecek                                |
+| 3    | WB-005: React Flow canvas ve node özellikleri | In Progress | WB-005A uygulandı; WB-005B config paneli sırada                                                          |
+| 4    | WB-006: Input ve koşul/onay dalları editörü   | Backlog     | WB-005; tipli alanlar, handle UX, hata açıklamaları                                                      |
+| 5    | WB-007: Yerel kayıt ve güvenli import/export  | Backlog     | WB-005; D-03/D-08 ve ilgili taşıma kararları; bozuk import mevcut belgeyi bozmamalı                      |
+| 6    | WB-008: Validation UX ve undo/redo            | Backlog     | WB-003/005; node bazlı hata gösterimi ve geri al/yeniden yap doğrulaması                                 |
 
 WB-005–027'nin üst kapsamı [ROADMAP](ROADMAP.md) ve korunmuş
 [BACKLOG](docs/BACKLOG.md) içinde bulunur. Sonraki fazlar sırasıyla simulator,
@@ -177,7 +182,7 @@ eksikliğiyle bozdu ve geri alındı. Ayrıntı ve kalan etki [STATUS](STATUS.md
 
 WB-004C tamamlandı: PR #5 başarıyla main'e merge edildi ve merge sonrası zorunlu
 `quality` check geçti. Zod advisory'si açık risk olarak STATUS/ADR'de izlenir;
-Faz 2 başlamaz ve kullanıcı onayı olmadan başka faz işi açılmaz.
+Bu kapanıştan sonraki 27 Ekim kullanıcı talimatıyla Faz 2 başladı; diğer fazlar için ayrıca onay gerekir.
 
 Kapanış belgeleri [PR #6](https://github.com/OguzSoykan/Workflow-Builder/pull/6)
 ile `edb0941` olarak main'e alındı; [main run 40496069027](https://github.com/OguzSoykan/Workflow-Builder/actions/runs/40496069027)

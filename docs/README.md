@@ -30,3 +30,10 @@ ADR-001–011 mevcut Architecture tablosunda kalır; kopya karar kaynağı oluş
 
 - [ADR-014](adr/ADR-014-workflow-v1.md): onaylı şema/hash varsayılanları, saf validator,
   alan/limit/metadata/migration ve issue-code sözleşmesi.
+
+## Faz 2 çalışma belgeleri
+
+- [Faz 2 planı](PHASE-2.md): WB-005–008 alt kartları ve kabul koşulları.
+- [Faz 2 çalışma günlüğü](worklogs/PHASE-2.md): adımlar, komutlar, kararlar ve gerçek sonuçlar.
+
+- [ADR-015](adr/ADR-015-editor-canvas.md): canonical editör modeli ve dar kapsamlı React Flow tip uyumluluğu.

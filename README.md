@@ -3,11 +3,11 @@
 Görsel veya doğal dil ile workflow tasarlama ve manuel onay/ret ile simülasyon ürünü.
 Ürün gereksinimleri [PRD v1.1](docs/PRD.md) içinde korunur.
 
-**27 Ekim 2026:** Faz 1 uygulaması ve yerel çıkış kontrolleri tamamlandı;
-10 Chromium smoke testi, Worker build ve tam secret taraması geçti. PR #5 squash merge edildi; PR CI ve merge sonrası main CI geçti. `npm audit` Zod için
-bir yüksek önem seviyeli advisory bildiriyor; bu açık takip riski [STATUS](STATUS.md)
-ve ADR-014 içinde kayıtlıdır.
-Ayrıntılar [STATUS](STATUS.md) ve [Faz 1 kanıtında](docs/verification/PHASE-1.md).
+**27 Ekim 2026:** Faz 1 main'de tamamlandı; Faz 2'nin ilk kartı WB-005A uygulanıyor.
+Dört adım türü, tuval, etiket/konum düzenleme ve kurallı bağlantılar hazır.
+Taslak yalnız oturum belleğinde: sayfa yenilenince silinir.
+[Faz 2 planı](docs/PHASE-2.md), [adım günlüğü](docs/worklogs/PHASE-2.md) ve
+[gerçek doğrulama / açık Zod riski](STATUS.md).
 
 ## Kurulum ve çalıştırma
 
@@ -22,7 +22,7 @@ npm ci
 npm run dev
 ```
 
-`http://127.0.0.1:8787` built React uygulamasını, `/api/health` aynı origin'deki
+`http://127.0.0.1:8787` editörü, `/health` servis ekranını, `/api/health` aynı origin'deki
 Worker yanıtını sunar. Faz 1 için hesap, `.env`, API anahtarı veya cloud kaynağı yoktur.
 İsteğe bağlı hızlı frontend geliştirmede iki terminalde `npm run dev:worker` ve
 `npm run dev:web` kullanın. [Ortam ayrımı](docs/ENVIRONMENTS.md).
@@ -43,7 +43,7 @@ npm run test:e2e
 ```
 
 - `npm test`: Vitest Worker testleri, bağımsız Node secret scanner ve API doküman testleri.
-- `test:coverage`: contract/core/Worker Vitest V8 kapsam raporu.
+- `test:coverage`: contract/core/Worker/editör Vitest V8 kapsam raporu.
 - `test:negative-gates`: geçici tip/assertion hatalarının beklenen şekilde reddini
   kontrol eder, probe dosyalarını temizler; temiz typecheck/test sonrasında çalıştırın.
 - `build`: web asset'leri + Worker `deploy --dry-run`; cloud'a yayın yapmaz.
@@ -52,18 +52,18 @@ npm run test:e2e
 - Playwright gerçek uygulamayı 8787, yalnız test amaçlı contract Worker fixture'ını
   8788 portunda açar. İki port da boş olmalıdır. Test bundle'ı production asset'lerine eklenmez.
   CI'da Chromium sistem bağımlılıkları `--with-deps` ile kurulur.
-- CI tanımı [.github/workflows/ci.yml](.github/workflows/ci.yml) içindedir; bu oturumda
-  GitHub üzerinde çalıştırılmadı ve branch protection etkinleştirilmedi.
+- CI tanımı [.github/workflows/ci.yml](.github/workflows/ci.yml) içindedir; main için
+  PR ve required quality check etkin. Güncel teslim kanıtları STATUS içindedir.
 
 ## Yapı
 
 ```text
-apps/web/                   React/Vite health ekranı
+apps/web/                   React/Vite workflow editörü ve health ekranı
 apps/worker/                Hono health ve JSON hata envelope'u
 apps/worker/test/           Binding gerektirmeyen HTTP birim testleri
 packages/workflow-contract/ Zod şeması, güvenli parser, serializer ve SHA-256 hash
 packages/workflow-core/     Saf graph ve condition validator
-tests/e2e/                  Health/hata/timeout ve browser/Worker hash eşitliği
+tests/e2e/                  Editör, health/hata/timeout ve browser/Worker hash eşitliği
 scripts/                    Secret, API taslağı ve negatif kapı kontrolleri
 infra/wrangler.jsonc        Tek Worker + statik asset; local ve ortam adları
 docs/openapi.json           Health + planlanan API rotaları; açık TBD alanları
@@ -71,7 +71,7 @@ docs/verification/          Gerçek doğrulama kayıtları
 ```
 
 Web/Worker yalnızca ortak paketlerin public export'larını kullanır. Core/contract
-UI, ağ, DB veya sağlayıcı SDK'sına bağımlı değildir. Editor, simulator, auth, D1,
+UI, ağ, DB veya sağlayıcı SDK'sına bağımlı değildir. Simulator, auth, D1,
 Durable Object ve AI uygulaması sonraki fazlardadır.
 
 ## Plan ve çalışma kuralları
