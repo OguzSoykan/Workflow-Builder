@@ -15,6 +15,7 @@ import { TransferPanel } from './TransferPanel';
 import { ExamplesPanel } from './ExamplesPanel';
 import { AccountPanel } from '../account/AccountPanel';
 import { useAccount } from '../account/use-account';
+import { CloudPanel } from '../account/CloudPanel';
 import { ValidationPanel } from './ValidationPanel';
 import { SimulationPanel } from './SimulationPanel';
 import { visitedPath } from './simulation-view';
@@ -254,6 +255,7 @@ function EditorWorkspace() {
           </ol>
           <ExamplesPanel dispatch={dispatch} />
           <TransferPanel workflow={workflow} dispatch={dispatch} />
+          <CloudPanel workflow={workflow} executable={issues.length === 0} account={account} />
         </aside>
         <section className="canvas-panel" aria-label="İş akışı tuvali">
           <div className="canvas-title">

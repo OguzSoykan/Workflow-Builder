@@ -20,6 +20,7 @@ export default defineConfig({
         'apps/web/src/editor/simulation-view.ts',
         'apps/web/src/editor/examples.ts',
         'apps/web/src/account/firebase-auth.ts',
+        'apps/web/src/account/cloud-api.ts',
       ],
       reporter: ['text', 'json-summary', 'html'],
     },
