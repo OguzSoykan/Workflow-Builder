@@ -5,7 +5,7 @@ import {
   WORKFLOW_LIMITS,
   type Workflow,
 } from '@workflow-builder/workflow-contract';
-import { validateWorkflow } from '@workflow-builder/workflow-core';
+import { describeWorkflow } from './validation-messages';
 
 export type ImportResult =
   | { ok: true; workflow: Workflow; hashMismatch: boolean; issueCount: number }
@@ -20,8 +20,9 @@ const IMPORT_ERRORS: Partial<Record<string, string>> = {
   DUPLICATE_INPUT_KEY: 'Dosyada aynı anahtarı kullanan birden fazla alan var.',
 };
 
+// Same count as the validation panel (derived path issues hidden) so the UI agrees.
 export function semanticIssueCount(workflow: Workflow): number {
-  return validateWorkflow(workflow).issues.length;
+  return describeWorkflow(workflow).length;
 }
 
 // D-03: incomplete but schema-valid drafts may be exported; the hash is always recomputed.

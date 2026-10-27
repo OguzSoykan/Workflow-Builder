@@ -6,8 +6,7 @@
 27 Ekim'de squash merge edildi: `e5ad0ea`. PR check ve merge sonrası main `quality`
 check'i geçti. Main run: [40495104283](https://github.com/OguzSoykan/Workflow-Builder/actions/runs/40495104283).
 
-Faz 2 kullanıcı onayıyla başladı; son kart WB-008B undo/redo ve Faz 2 çıkışı. Cloud deploy ve canlı model çağrısı başlatılmadı. Zod advisory'si aşağıda
-açık takip riski olarak kayıtlıdır; Faz 1 kabul testleri/CI'ı engellemedi.
+**Faz 2 tamamlandı:** WB-005–008 PR #8–#16 ile main'de (`e7e3e0e`), merge sonrası main quality PASS ([40563748969](https://github.com/OguzSoykan/Workflow-Builder/actions/runs/40563748969)). Cloud deploy ve canlı model çağrısı başlatılmadı. Zod advisory'si Zod 4.6.7 ile kapatıldı ([ADR-016](docs/adr/ADR-016-zod-declarations.md)); `npm audit` 0 bulgu.
 
 ## Aktif çalışma
 
@@ -31,12 +30,9 @@ Görev dalında `/` görsel editör, `/health` servis ekranıdır. Dört adım t
 
 ## Sıradaki işler
 
-1. **Açık güvenlik takibi:** Zod advisory'sini ES-only contract/core sınırını koruyarak çözmek.
-   Güncel paket/advisory durumu yeniden doğrulanmalı; çözümden sonra npm audit, tip kontrolü,
-   şema/validator ve browser/Worker uyumluluğu kanıtlanmalı. Mevcut girdi limitleri açığın
-   giderildiği anlamına gelmez.
-2. **Faz 2 kapanışı:** WB-008B PR/CI teslimi; adımlar ve kanıtlar çalışma günlüğünde.
-3. **Faz 3 onayı:** Simülasyon fazı kullanıcı onayı olmadan başlamaz.
+1. **Faz 3 onayı:** Simülasyon fazı (WB-009+) kullanıcı onayı olmadan başlamaz.
+2. **Açık takip:** React Flow declaration yaması upstream [#6038](https://github.com/xyflow/xyflow/issues/6038) düzeltmesi yayınlanınca kaldırılacak (ADR-015); düzeltme PR'ları #6039/#6045/#6060 27 Ekim'de açık. Bağımsız insan review yok.
+3. **Tamamlanan güvenlik takibi:** Zod 4.6.7 + saf paketlerde `skipLibCheck` (ADR-016); ES-only sınırı probe ile doğrulandı.
 4. **Sonraki fazlar:** Simülasyon → auth/bulut kayıt → bütçe kontrollü AI → yayın kalitesi.
    Ayrıntılı kapsam ve bağımlılıklar [ROADMAP](ROADMAP.md), yakın işler [TASKS](TASKS.md) içinde.
 
@@ -93,13 +89,10 @@ Node/npm pinleri, tam Gitleaks taraması ve Faz 1 kalite kapılarını içerir. 
 hosted negatif denemeler API'den doğrulandı: tip hatası Typecheck adımında,
 bozuk assertion Unit tests adımında başarısız oldu. Main'de zorunlu `quality` check'i ve PR kuralı mevcut; required approving review sayısı sıfır. PR ve main run bağlantıları yukarıda.
 
-Zod 4.3.6, bağımlılık taramasında `GHSA-mrhx-c7xc-m3w5` yüksek bulgusunu taşıyor.
-Önerilen Zod 4.6.7'ye geçiş saf contract/core TypeScript derlemesinde DOM `URL`
-tiplerini zorunlu kılıyor; deneme bu nedenle reddedildi ve mimaride onaysız
-ortam tipi eklenmedi. Zod öncesi JSON-tree parser 12 derinlik, 20.000 değer,
-256 KiB sınırları koyuyor; ancak bu, advisory'yi ortadan kaldırmaz. Bu Faz 1
-çıkışında açık güvenlik riski olarak kalır ve şema sürüm yükseltmesi/uyumluluk
-çözümü gerektirir.
+Tarihsel: Zod 4.3.6 `GHSA-mrhx-c7xc-m3w5` yüksek bulgusunu taşıyordu; Faz 1'de 4.6.7
+denemesi saf paketlerde DOM `URL` declaration hatası nedeniyle ertelendi. 27 Ekim'de
+Zod 4.6.7'ye geçildi; yalnız contract/core'da `skipLibCheck` ile çözüldü, ortam tipi
+eklenmedi ([ADR-016](docs/adr/ADR-016-zod-declarations.md)). `npm audit` 0 bulgu.
 
 `npm ci` install-script izin uyarısı iki platforma özel `fsevents` kopyası içindi;
 repo allowScripts kuralları değişmedi. `npm audit fix --force` çalıştırılmadı.

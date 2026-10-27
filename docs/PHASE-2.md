@@ -34,7 +34,7 @@ node ekleme, etiket, taşıma, bağlantı ve silme; mevcut health/hash senaryola
 Typecheck/lint/format/unit/build/secret scan ve PR CI sonuçları günlüğe yazılır.
 
 D-03 (taslak saklama), D-08 (storage ve çok sekme UX), D-14'ün ilgili kabul maddeleri
-henüz çözülmüş sayılmaz. Yalnız bağımlı kartlar bekler. Zod güvenlik takibi açık;
+henüz çözülmüş sayılmaz. Yalnız bağımlı kartlar bekler. Zod güvenlik takibi 27 Ekim'de kapatıldı (ADR-016);
 Faz 2 başlatma onayı bu advisory'nin giderildiği anlamına gelmez.
 
 ## WB-005B uygulama sınırı
@@ -86,4 +86,4 @@ Faz 2 başlatma onayı bu advisory'nin giderildiği anlamına gelmez.
 - `historyReducer` mevcut `editorReducer`'ı sarar; yalnız bellekte 50 adım tutar (D-08). Başarılı ve içeriği değiştiren işlem bir adımdır; seçim, reddedilen ve etkisiz işlem adım açmaz. Bir sürükleme (`onNodeDragStart` checkpoint) tek adımdır. Import/diğer sekme yüklemesi geri alınabilir.
 - Başlıkta Geri al/Yinele; form alanı dışında Ctrl/Cmd+Z, Ctrl/Cmd+Shift+Z ve Ctrl+Y. Metin alanlarında tarayıcının yerel geri alması korunur. Yenileme geçmişi sıfırlar.
 - Çıkış kanıtı (`tests/e2e/phase2-exit.spec.ts`): alan + koşul + iki dallı onay ile çalıştırılabilir akış oluşturma, yenilemede koruma, export, bozma, import, undo/redo ve tekrar yenileme. Toplam 292 Vitest + 2 scanner + 3 OpenAPI; 29 Chromium senaryosu.
-- Kalan riskler: Zod advisory, React Flow tip yaması (ADR-015), elle mobil görsel inceleme yapılmadı, bağımsız insan review yok.
+- Kalan riskler: React Flow tip yaması (ADR-015, upstream bekliyor) ve bağımsız insan review yok. Zod advisory ADR-016 ile kapatıldı. 390px mobil görsel inceleme 27 Ekim'de yapıldı; Dosya bölümünün sıkışması ve panel/dosya sorun sayısı farkı düzeltildi.

@@ -549,3 +549,11 @@ select {
   display: flex;
   gap: 6px;
 }
+@media (max-width: 600px) {
+  .palette > .transfer {
+    grid-column: 1 / -1;
+  }
+  .draft-alert {
+    padding: 10px 16px;
+  }
+}
