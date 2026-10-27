@@ -1,19 +1,19 @@
 # Faz 2 — Editör ve yerel çalışma
 
-**Durum:** WB-005A/B ve WB-006A/B main’de. D-03/D-08 onaylandı; WB-007A main’de. WB-007B main’de. WB-008A validation UX uygulandı, PR ve hosted CI bekleniyor. Sonraki kart WB-008B. Fazın tamamı henüz bitmedi.
+**Durum:** WB-005A/B ve WB-006A/B main’de. D-03/D-08 onaylandı; WB-007A main’de. WB-007A/B ve WB-008A main’de. WB-008B undo/redo ve Faz 2 çıkış senaryosu uygulandı; PR merge edilince faz kartları tamamlanır. Faz 3 ayrı onay gerektirir. Fazın tamamı henüz bitmedi.
 İşlem kaydı: [çalışma günlüğü](worklogs/PHASE-2.md). Kaynak kapsam: PRD FR-01–03/05,
 AC-01/05/11 ve BACKLOG WB-005–008. Mevcut şema/limit/kimlik sözleşmesi korunur.
 
-| Kart    | İş                             | Durum   | Kabul / bağımlılık                                                                                                                                                |
-| ------- | ------------------------------ | ------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| WB-005A | Tuval ve temel graph düzenleme | Done    | Dört node ekle/seç/taşı/etiketle/sil; zoom; bağlantı ekle/sil; stable ID; 50 node/100 edge sınırı; Start hedefi, geçersiz handle, duplicate çıkış ve cycle engeli |
-| WB-005B | Node config özellik paneli     | Done    | Start açıklaması, Approval rolü, End sonucu, Condition ayarlarının ilgili input görevine bağlanması; şema uyumlu değişiklikler                                    |
-| WB-006A | Tipli input alanları           | Done    | number/string/boolean/date/enum; benzersiz key, default/options/validation; mevcut alan referanslarına etkiler görünür                                            |
-| WB-006B | Koşul ve onay dalı deneyimi    | Done    | Alan türüne uygun operatör/değer; true/false ve approved/rejected bağlantıları, açıklayıcı hatalar                                                                |
-| WB-007A | Yerel kayıt                    | Done    | D-03/D-08 kararları; refresh ile devam; bozuk/quota/çok sekme senaryoları                                                                                         |
-| WB-007B | Güvenli import/export          | Done    | Boyut/şema/semantik sınırlar; bozuk import çalışma kopyasını değiştirmez; D-03 taslak politikası                                                                  |
-| WB-008A | Graph validation UX            | Review  | Mevcut saf validator; lokalize açıklama, ilgili node/edge/alanı gösterme; AC-05                                                                                   |
-| WB-008B | Undo/redo ve Faz 2 çıkışı      | Backlog | Anlamlı işlem bazlı geri al/yeniden yap; oluştur/düzenle/kaydet/import akışının E2E kanıtı                                                                        |
+| Kart    | İş                             | Durum  | Kabul / bağımlılık                                                                                                                                                |
+| ------- | ------------------------------ | ------ | ----------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| WB-005A | Tuval ve temel graph düzenleme | Done   | Dört node ekle/seç/taşı/etiketle/sil; zoom; bağlantı ekle/sil; stable ID; 50 node/100 edge sınırı; Start hedefi, geçersiz handle, duplicate çıkış ve cycle engeli |
+| WB-005B | Node config özellik paneli     | Done   | Start açıklaması, Approval rolü, End sonucu, Condition ayarlarının ilgili input görevine bağlanması; şema uyumlu değişiklikler                                    |
+| WB-006A | Tipli input alanları           | Done   | number/string/boolean/date/enum; benzersiz key, default/options/validation; mevcut alan referanslarına etkiler görünür                                            |
+| WB-006B | Koşul ve onay dalı deneyimi    | Done   | Alan türüne uygun operatör/değer; true/false ve approved/rejected bağlantıları, açıklayıcı hatalar                                                                |
+| WB-007A | Yerel kayıt                    | Done   | D-03/D-08 kararları; refresh ile devam; bozuk/quota/çok sekme senaryoları                                                                                         |
+| WB-007B | Güvenli import/export          | Done   | Boyut/şema/semantik sınırlar; bozuk import çalışma kopyasını değiştirmez; D-03 taslak politikası                                                                  |
+| WB-008A | Graph validation UX            | Done   | Mevcut saf validator; lokalize açıklama, ilgili node/edge/alanı gösterme; AC-05                                                                                   |
+| WB-008B | Undo/redo ve Faz 2 çıkışı      | Review | Anlamlı işlem bazlı geri al/yeniden yap; oluştur/düzenle/kaydet/import akışının E2E kanıtı                                                                        |
 
 ## WB-005A uygulama sınırı
 
@@ -80,3 +80,10 @@ Faz 2 başlatma onayı bu advisory'nin giderildiği anlamına gelmez.
 - Liste önce graph geneli sorunları, sonra adımları tuval sırasıyla gösterir. Aynı adımın başka sorunu varsa türetilmiş `PATH_NOT_TERMINATING` gizlenir. Soruna tıklamak ilgili adımı veya bağlantıyı seçer.
 - Sorunlu kartlar çerçeve ve “⚠ N sorun” etiketiyle işaretlenir; geçerli akışta “çalıştırılabilir” durumu görünür. D-03 gereği sorunlu taslak kaydı engellenmez.
 - Kanıt: 287 Vitest + 2 scanner + 3 OpenAPI; 27 Chromium senaryosu. Bağımlılık değişikliği yok.
+
+## WB-008B uygulama sınırı ve Faz 2 çıkışı
+
+- `historyReducer` mevcut `editorReducer`'ı sarar; yalnız bellekte 50 adım tutar (D-08). Başarılı ve içeriği değiştiren işlem bir adımdır; seçim, reddedilen ve etkisiz işlem adım açmaz. Bir sürükleme (`onNodeDragStart` checkpoint) tek adımdır. Import/diğer sekme yüklemesi geri alınabilir.
+- Başlıkta Geri al/Yinele; form alanı dışında Ctrl/Cmd+Z, Ctrl/Cmd+Shift+Z ve Ctrl+Y. Metin alanlarında tarayıcının yerel geri alması korunur. Yenileme geçmişi sıfırlar.
+- Çıkış kanıtı (`tests/e2e/phase2-exit.spec.ts`): alan + koşul + iki dallı onay ile çalıştırılabilir akış oluşturma, yenilemede koruma, export, bozma, import, undo/redo ve tekrar yenileme. Toplam 292 Vitest + 2 scanner + 3 OpenAPI; 29 Chromium senaryosu.
+- Kalan riskler: Zod advisory, React Flow tip yaması (ADR-015), elle mobil görsel inceleme yapılmadı, bağımsız insan review yok.

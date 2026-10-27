@@ -273,3 +273,19 @@ ham uygulama içeriği kaydedilmez. Saat dilimi Europe/Istanbul; girişler geçm
 - İlk E2E koşusu iki beklenti hatası verdi: genel sorunlar kod sırasıyla (END_MISSING önce) geliyor; tamamlanmamış onay nedeniyle Başlangıç için de yol sorunu doğru biçimde raporlanıyor. Davranış doğru, beklentiler güncellendi. Test yardımcısındaki birleşik node tipi typecheck'te FAIL; dönüş tipi açıkça yazılarak düzeltildi.
 - Son durum: typecheck/lint/format PASS; `npm test` 287 Vitest (4 yeni) + 2 scanner + 3 OpenAPI PASS; coverage satır %99,29 / branch %95,54; `build`, `secret:scan`, Gitleaks PASS; `npm run test:e2e` 27/27 PASS.
 - Elle mobil görsel inceleme NOT RUN. Bağımsız insan review yok.
+
+## P2-035 — WB-008A merge ve WB-008B başlangıcı (2026-10-27)
+
+- [PR #15](https://github.com/OguzSoykan/Workflow-Builder/pull/15) [quality 40562391564](https://github.com/OguzSoykan/Workflow-Builder/actions/runs/40562391564) PASS sonrası squash merge: main `66cf83d`. WB-008A Done.
+- `feat/WB-008B-undo-redo` açıldı. Plan: `editorReducer`'ı saran saf history reducer (yalnız bellekte, 50 adım; D-08 undo geçmişini saklamaz), başarılı işlem başına bir adım, aynı sürüklemedeki konum değişimleri tek adım, seçim/başarısız işlem geçmişe girmez; import ve diğer sekme yüklemesi geri alınabilir. Başlıkta Geri al/Yinele, form alanı dışındaki Ctrl/Cmd+Z, Shift+Z ve Y kısayolları. Faz 2 çıkışı için oluştur→düzenle→kaydet→export/import→undo uçtan uca E2E.
+
+## P2-036 — WB-008B uygulama, doğrulama ve Faz 2 devir notu (2026-10-27)
+
+- `history.ts` + Editor bağlantısı: Geri al/Yinele, kısayollar, sürükleme checkpoint'i; import onay metni geri alınabilirliği belirtir. Unit testte etkisiz düzenlemenin (olmayan adımı yeniden adlandırma) geçmiş adımı açtığı yakalandı; içerik karşılaştırmasıyla düzeltildi. İlk E2E'de metin alanındaki Ctrl+Z'nin tarayıcı yerel geri almasıyla girişi geri çevirdiği görüldü; beklenen davranış, test buna göre netleştirildi.
+- typecheck/lint/format PASS; 292 Vitest (5 yeni) + 2 scanner + 3 OpenAPI PASS; coverage satır %99,48 / branch %96,02; build, secret:scan, Gitleaks PASS; E2E 29/29, yeni Faz 2 spec'leri `--repeat-each=5` ile 55/55 PASS.
+- Kullanıcı “hadi bitir” dedi: WB-008B PR'ı CI sonrası merge edilecek ve Faz 2 kartları tamamlanmış olacak. Faz 3 (simülasyon) başlatılmadı.
+
+### Durum ve sonraki somut adım
+
+- Dallar: WB-006B–008B PR #12–#16 (#16 bu dal, `feat/WB-008B-undo-redo`). Açık riskler: Zod GHSA-mrhx-c7xc-m3w5, React Flow tip yaması, elle mobil görsel inceleme NOT RUN, bağımsız insan review yok. Yerel Gitleaks: `GITLEAKS_BIN=/private/tmp/wb-gitleaks`.
+- Sonraki: `git checkout main && git pull --ff-only`; main `quality` sonucunu kontrol et; Zod advisory takibi veya kullanıcı onayıyla Faz 3 (WB-009 simülatör) planı.
