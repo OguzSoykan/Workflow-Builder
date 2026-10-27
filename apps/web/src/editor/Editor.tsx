@@ -9,6 +9,7 @@ import {
   type Edge,
 } from '@xyflow/react';
 import { WORKFLOW_LIMITS } from '@workflow-builder/workflow-contract';
+import { InputFields } from './InputFields';
 import { NodePropertiesForm } from './NodePropertiesForm';
 import { ConnectionForm } from './ConnectionForm';
 import { WorkflowCard, type CanvasNode } from './WorkflowCard';
@@ -251,6 +252,7 @@ function EditorWorkspace() {
           )}
         </aside>
       </div>
+      <InputFields workflow={workflow} dispatch={dispatch} />
     </main>
   );
 }

@@ -8,7 +8,7 @@ Zod advisory açık takip riskidir. [STATUS](STATUS.md) kanıtları içerir.
 ## Aktif Faz 2
 
 Kullanıcı WB-005–008 için başlama onayı verdi. Küçük kartlar ve kabul koşulları
-[Faz 2 planında](docs/PHASE-2.md); WB-005A PR #8/#9 ile main’de; WB-005B özellik paneli Review, sıradaki WB-006A. Her anlamlı adım
+[Faz 2 planında](docs/PHASE-2.md); WB-005A/B PR #8/#9/#10 ile main’de; WB-006A tipli alan editörü Review, sıradaki WB-006B. Her anlamlı adım
 [çalışma günlüğüne](docs/worklogs/PHASE-2.md) eklenir. Aşağıdaki Faz 1 kayıtları korunur.
 
 ## Hazır ve tamamlanmış iş tanımı
