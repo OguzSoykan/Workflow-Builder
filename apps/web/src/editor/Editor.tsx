@@ -12,6 +12,7 @@ import { computeContentHash, WORKFLOW_LIMITS } from '@workflow-builder/workflow-
 import type { SimulationRun } from '@workflow-builder/workflow-core';
 import { InputFields } from './InputFields';
 import { TransferPanel } from './TransferPanel';
+import { ExamplesPanel } from './ExamplesPanel';
 import { ValidationPanel } from './ValidationPanel';
 import { SimulationPanel } from './SimulationPanel';
 import { visitedPath } from './simulation-view';
@@ -247,6 +248,7 @@ function EditorWorkspace() {
               </li>
             ))}
           </ol>
+          <ExamplesPanel dispatch={dispatch} />
           <TransferPanel workflow={workflow} dispatch={dispatch} />
         </aside>
         <section className="canvas-panel" aria-label="İş akışı tuvali">

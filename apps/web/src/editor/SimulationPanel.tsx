@@ -15,9 +15,9 @@ function InputControl({ field, used }: { field: InputField; used: boolean }) {
   const label = `${field.label} (${INPUT_LABELS[field.type]}${field.required || used ? ', gerekli' : ''})`;
   if (field.type === 'boolean' || field.type === 'enum')
     return (
-      <label>
-        {label}
-        <select name={name} defaultValue={initial}>
+      <>
+        <label htmlFor={`sim-${field.key}`}>{label}</label>
+        <select id={`sim-${field.key}`} name={name} defaultValue={initial}>
           <option value="">Seçilmedi</option>
           {(field.type === 'enum' ? field.options : ['true', 'false']).map((option) => (
             <option key={option} value={option}>
@@ -25,7 +25,7 @@ function InputControl({ field, used }: { field: InputField; used: boolean }) {
             </option>
           ))}
         </select>
-      </label>
+      </>
     );
   return (
     <label>
