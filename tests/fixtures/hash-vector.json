@@ -1,0 +1,43 @@
+{
+  "workflow": {
+    "schemaVersion": 1,
+    "workflowId": "vector",
+    "title": "Türkçe 😀",
+    "locale": "tr",
+    "inputs": [],
+    "nodes": [
+      {
+        "id": "start",
+        "type": "start",
+        "label": "Başlangıç",
+        "position": {
+          "x": 0,
+          "y": 0
+        },
+        "config": {}
+      },
+      {
+        "id": "end",
+        "type": "end",
+        "label": "Son",
+        "position": {
+          "x": 100,
+          "y": 200
+        },
+        "config": {
+          "outcome": "completed"
+        }
+      }
+    ],
+    "edges": [
+      {
+        "id": "e",
+        "sourceNodeId": "start",
+        "sourceHandle": "next",
+        "targetNodeId": "end"
+      }
+    ]
+  },
+  "canonicalJSON": "{\"edges\":[{\"id\":\"e\",\"sourceHandle\":\"next\",\"sourceNodeId\":\"start\",\"targetNodeId\":\"end\"}],\"inputs\":[],\"locale\":\"tr\",\"nodes\":[{\"config\":{\"outcome\":\"completed\"},\"id\":\"end\",\"label\":\"Son\",\"type\":\"end\"},{\"config\":{},\"id\":\"start\",\"label\":\"Başlangıç\",\"type\":\"start\"}],\"schemaVersion\":1,\"title\":\"Türkçe 😀\",\"workflowId\":\"vector\"}",
+  "contentHash": "23e172fe039c02c0fe0cbcf75e6b6218640d3de25ee248b0df837f4ce10f0761"
+}

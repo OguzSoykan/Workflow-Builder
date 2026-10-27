@@ -1,6 +1,9 @@
 # Fazlara göre yol haritası
 
-**Durum:** Yönetim temeli GitHub main'de; Faz 1'in ilk kartı WB-001A kullanıcı onayıyla uygulandı ve Review'da. Diğer kartlar başlamadı. Kaynak: [PRD v1.1](docs/PRD.md), [orijinal backlog](docs/BACKLOG.md). Faz geçişleri kullanıcı onayıyla yapılır. P0/P1 ürün önceliği ile Faz 1/Faz 2 aynı kavram değildir.
+**Durum:** Faz 1'in yerel şema/hash/validator/test/CI/API dokümanları uygulandı;
+D-01/02/04 varsayılanları onaylandı. Sabit kurulum/gerçek Worker-E2E/hosted CI
+yerel kalite kapıları geçti; güncel dalın hosted CI/PR kanıtı ve Zod advisory çözümü açık, Faz 1 resmen kapanmadı. [STATUS](STATUS.md) ve [TASKS](TASKS.md).
+Faz 2 başlamadı.
 
 | Faz / milestone        | Amaç ve kapsam                                                                                                 | Bağımlılık                                         | Çıkış kapısı                                                                                                                                                                                                            |
 | ---------------------- | -------------------------------------------------------------------------------------------------------------- | -------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |

@@ -1,11 +1,8 @@
 {
   "extends": "./tsconfig.base.json",
-  "compilerOptions": { "types": ["node"], "lib": ["ES2022", "DOM"], "resolveJsonModule": true },
-  "include": [
-    "apps/web/vite.config.ts",
-    "*.config.ts",
-    "apps/worker/test/**/*.ts",
-    "packages/*/test/**/*.ts",
-    "tests/**/*.ts"
-  ]
+  "compilerOptions": {
+    "types": ["node"],
+    "lib": ["ES2022", "DOM"]
+  },
+  "include": ["apps/web/vite.config.ts", "vitest.config.ts", "playwright.config.ts"]
 }

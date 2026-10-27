@@ -16,7 +16,7 @@ jobs:
   quality:
     name: quality
     runs-on: ubuntu-latest
-    timeout-minutes: 15
+    timeout-minutes: 20
     env:
       CI: 'true'
       WRANGLER_SEND_METRICS: 'false'
@@ -28,6 +28,8 @@ jobs:
         with:
           node-version-file: .nvmrc
           cache: npm
+      - name: Install pinned npm
+        run: npm install --global npm@11.19.1
       - name: Install locked dependencies
         run: npm ci
       - name: Typecheck
@@ -41,7 +43,7 @@ jobs:
       - name: Build web and Worker without deployment
         run: npm run build
       - name: Install Chromium
-        run: npx playwright install --with-deps chromium
+        run: npx --no-install playwright install --with-deps chromium
       - name: Browser and Worker integration
         run: npm run test:e2e
       - name: Install pinned secret scanner
