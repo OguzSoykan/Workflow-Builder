@@ -5,7 +5,7 @@ Görsel veya doğal dil ile workflow tasarlama ve manuel onay/ret ile simülasyo
 
 **27 Ekim 2026:** Faz 1 uygulaması ve yerel çıkış kontrolleri tamamlandı;
 10 Chromium smoke testi, Worker build ve tam secret taraması geçti. Güncel dalın
-hosted CI/PR birleştirme kanıtı bekleniyor. `npm audit` Zod için bir yüksek
+PR #5 hosted CI geçti; merge sonrası kanıt kaydı sürüyor. `npm audit` Zod için bir yüksek
 önemli advisory bildiriyor; uyumlu ES-only sürüm çözümü Faz 1 çıkış kaydında açık.
 Ayrıntılar [STATUS](STATUS.md) ve [Faz 1 kanıtında](docs/verification/PHASE-1.md).
 

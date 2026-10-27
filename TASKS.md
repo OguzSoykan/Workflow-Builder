@@ -155,6 +155,6 @@ belirtir; bağımsız insan review veya remote merge iddiası değildir. Faz 2 b
 Node 24.22.1/npm 11.19.1 temiz kurulum ve tüm yerel kalite kapıları geçti.
 Chromium/Worker E2E 10/10, artifact secret taramaları ve Gitleaks sentetik negatif
 testi geçti. GitHub'daki önceki tip/assertion negatif run'ları beklenen adımlarda
-başarısız oldu. Güncel dalın PR CI'ı henüz bekliyor. Zod 4.3.6 için yüksek npm
+başarısız oldu. PR #5 hosted quality CI geçti; merge sonrası main kanıtı eklenecek. Zod 4.3.6 için yüksek npm
 advisory açık; 4.6.7 denemesi ES-only contract/core typecheck'ini ambient URL
 edikliğiyle bozdu ve geri alındı. Ayrıntı ve kalan etki [STATUS](STATUS.md)'ta.

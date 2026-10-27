@@ -3,7 +3,7 @@
 **Son güncelleme:** 27 Ekim 2026 (Europe/Istanbul).
 
 Faz 1'in yerel uygulaması ve gerçek Worker/Chromium doğrulaması tamamlandı.
-Çıkış kapısı, bu dalın PR'ı için hosted CI ve merge kanıtı gelene kadar açık.
+PR #5 hosted `quality` check'i geçti; merge ve sonrasında kayıt güncellemesi kaldı.
 
 Dal: `feat/WB-002A-workflow-contract`; `origin/main` güncel ve korumalı.
 Faz 2, cloud deploy ve canlı model çağrısı başlatılmadı.
@@ -69,7 +69,7 @@ ortam tipi eklenmedi. Zod öncesi JSON-tree parser 12 derinlik, 20.000 değer,
 
 `npm ci` install-script izin uyarısı iki platforma özel `fsevents` kopyası içindi;
 repo allowScripts kuralları değişmedi. `npm audit fix --force` çalıştırılmadı.
-Hosted PR check ve merge sonrası WB-004C kapanabilir; WB-005/Faz 2 ayrıca
+PR #5 merge sonrası main CI kanıtı da kayda alınınca WB-004C değerlendirilebilir; WB-005/Faz 2 ayrıca
 onaylanmadan başlamaz.
 
 ## Önceki teslimler

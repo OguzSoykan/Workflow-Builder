@@ -224,8 +224,7 @@ validator ölçümüdür.
 [39842997729](https://github.com/OguzSoykan/Workflow-Builder/actions/runs/39842997729)
 tip hatasında Typecheck'te; run
 [39843201908](https://github.com/OguzSoykan/Workflow-Builder/actions/runs/39843201908)
-assertion hatasında unit test adımında başarısız oldu. Güncel birleştirilmiş dalın
-PR CI sonucu henüz alınmadı. Main `quality` check'i koruma kuralında zorunlu;
+assertion hatasında unit test adımında başarısız oldu. PR #5 güncel hosted `quality` check'i geçti: [run 40494350145](https://github.com/OguzSoykan/Workflow-Builder/actions/runs/40494350145). Main `quality` check'i koruma kuralında zorunlu;
 PR inceleme kuralı açık ancak onay sayısı sıfır.
 
 `npm audit` Zod 4.3.6 için bir yüksek bulgu (`GHSA-mrhx-c7xc-m3w5`) bildiriyor.
