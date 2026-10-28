@@ -19,3 +19,11 @@
 - [PR #32](https://github.com/OguzSoykan/Workflow-Builder/pull/32) [quality 40766081069](https://github.com/OguzSoykan/Workflow-Builder/actions/runs/40766081069) PASS (test düzeltmesi sonrası) agent squash merge: main `bd8ecc3`. WB-022A Done.
 - `feat/WB-022B-a11y`: `@axe-core/playwright` 4.14.0 devDependency (audit 0). Keşif taraması 4 durumda yalnız `color-contrast` (serious) buldu; renkler koyulaştırıldı, yeniden tarama 0 ihlal. `tests/e2e/a11y.spec.ts`: 6 durumda axe, klavye-yalnız ana senaryo (ilk sürüm tutar alanına `focus()` ile gidiyordu; etiket tanıyan Tab yardımcısıyla gerçekten klavye-yalnız yapıldı), görünür odak.
 - Kapılar: typecheck/lint/format, 494 Vitest + 2 + 3, negatif kapılar, build, secret:scan, Gitleaks PASS; E2E 52/52; a11y spec `--repeat-each=3` 9/9.
+
+## P6-004 — WB-022B merge ve WB-023 yayın hazırlığı (2026-10-28)
+
+- [PR #33](https://github.com/OguzSoykan/Workflow-Builder/pull/33) [quality 40767063414](https://github.com/OguzSoykan/Workflow-Builder/actions/runs/40767063414) PASS sonrası agent squash merge: main `32d0862`. WB-022 Done.
+- `feat/WB-023-release-readiness`: staging dry-run'ı Wrangler'ın D1/DO binding'lerini ortamlara devretmediğini gösterdi (staging bağlantısızdı); ortam başına binding/vars/observability eklendi, iki ortam dry-run PASS. `build:envs` build'e eklendi.
+- `scripts/check-deploy-config.mjs` (yer tutucu D1 ID'de deploy'u durdurur; şu an iki ortamda da doğru şekilde reddediyor), `scripts/smoke.mjs` (salt okunur), `.github/workflows/deploy.yml` (manuel, main, environment, kapılar → migration → deploy → smoke, SHA sabit), `scripts/release.test.mjs`, `apps/worker/test/environments.test.ts`, `docs/OPERATIONS.md`, ENVIRONMENTS güncellemesi.
+- Kapılar: typecheck/lint/format, 496 Vitest + 5 security/release + 3 docs, coverage, negatif kapılar, build (3 config), secret:scan, Gitleaks PASS; E2E 52/52.
+- NOT RUN: gerçek Cloudflare/Firebase kaynakları, secret yükleme, deploy, smoke, ücretsiz katman ölçümü — ürün sahibinin açık onayı ve hesap erişimi gerekir.

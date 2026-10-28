@@ -1,21 +1,17 @@
 # Ortamlar ve yapılandırma
 
-Faz 1 yalnızca yerel React + Worker health iskeletidir. Hiçbir değişken, hesap,
-Firebase/D1/DO binding'i veya API anahtarı gerekmez. `npm run dev`, built React
-asset'lerini ve `/api/health` rotasını `http://127.0.0.1:8787` üzerinde sunar.
-`npm run dev:web` isteğe bağlı Vite geliştirme sunucusudur; API için ayrıca
-`npm run dev:worker` çalışmalıdır.
+Yerel geliştirme: `npm run dev` built React asset'lerini ve Worker API'sini `http://127.0.0.1:8787` üzerinde sunar;
+`npm run db:migrate:local` yerel D1'i hazırlar. Hesap özellikleri `FIREBASE_PROJECT_ID` + `FIREBASE_WEB_API_KEY`,
+AI `AI_ENABLED`/`AI_PROVIDER` (+ secret `OPENAI_API_KEY`) ile açılır; ayrıntı `infra/.dev.vars.example`.
 
-| Ortam      | Mevcut durum                                                 | Yapılandırma / izolasyon                                                                                             |
-| ---------- | ------------------------------------------------------------ | -------------------------------------------------------------------------------------------------------------------- |
-| Local      | Uygulama hedefi mevcut; bu oturumda Wrangler çalıştırılamadı | `infra/wrangler.jsonc`, hesap/binding/key yok; örnek dosyaları kopyalamak gerekmez                                   |
-| CI         | Workflow tanımlı, hosted çalıştırma bekliyor                 | Sabit Node/npm, `npm ci`, unit/security/docs/negatif kapılar, build ve Playwright; production secret veya deploy yok |
-| Staging    | Provision edilmedi                                           | Yalnızca Wrangler ortam adı var; sonraki fazda ayrı D1 ve Firebase test yapılandırması, varsayılan mock AI           |
-| Production | Provision edilmedi                                           | Ayrı Worker/D1/secret yapılandırması ve açık deploy yetkisi sonraki fazlarda gerekir                                 |
+| Ortam      | Mevcut durum                         | Yapılandırma / izolasyon                                                                    |
+| ---------- | ------------------------------------ | ------------------------------------------------------------------------------------------- |
+| Local      | Çalışır                              | `infra/wrangler.jsonc` kök ayarları, yerel D1/DO (yer tutucu ID), secret yok                |
+| CI         | Her PR ve `main` push'unda `quality` | Sabit Node/npm, tüm kapılar, iki ortamın dry-run build'i; production secret veya deploy yok |
+| Staging    | Provision edilmedi                   | Ayrı Worker/D1/DO binding'leri, `AI_PROVIDER=mock`; kurulum [OPERATIONS](OPERATIONS.md)     |
+| Production | Provision edilmedi                   | Ayrı Worker/D1/DO, `AI_ENABLED=false` ile başlar; elle ve onaylı Deploy workflow'u          |
 
-Wrangler ortam adlarının bulunması cloud kaynağı yaratıldığı anlamına gelmez.
-`npm run build` web build ve `wrangler deploy --dry-run` çalıştırır; yayın yapmaz.
-Staging/prod config'i bu aşamada deploy için hazır sayılmaz.
+`npm run build` web build'ini ve üç Worker yapılandırmasının `wrangler deploy --dry-run`'ını çalıştırır; yayın yapmaz.
 
 ## Public ve secret ayrımı
 
@@ -34,15 +30,6 @@ Staging/prod config'i bu aşamada deploy için hazır sayılmaz.
 
 ## API taslağı
 
-[openapi.json](openapi.json) OpenAPI 3.1 taslağıdır. Yalnızca `/api/health`
-uygulanmıştır; `/api/v1` rotaları `x-status: planned` olarak işaretlidir.
-`Workflow` bileşeni ortak Zod şemasından üretilir; runtime byte/unique/default/
-takvim kontrolleri ayrıca gereklidir. AI payload'ları ve taslak saklama politikası
-açık `TBD` kalır. Bu taslak planlanan endpoint'lerin uygulandığı anlamına gelmez. `npm run test:docs` yerel referansları,
-rota durumlarını, bearer/204 kurallarını, JSON Schema derlemesini ve mevcut
-health/error örneklerini kontrol eder; kapsamlı bir harici OpenAPI linter'ı değildir.
-
-Playwright contract uyumluluk testi için `tests/platform/wrangler.jsonc` yalnızca
-localhost:8788 üzerinde ikinci bir test Worker'ı başlatır. Production config'ine
-route/binding eklenmedi; bu fixture deploy hedefi değildir. `tests/platform/dist`
-altındaki browser test bundle'ı Git ve production build dışında kalır.
+[openapi.json](openapi.json) OpenAPI 3.1; uygulanmış operasyonlar `x-status: implemented` ile işaretlidir
+(health, public config, `/api/v1/me`, workflow CRUD/revizyonlar, AI limits/generate/edit). `npm run test:docs`
+referansları, rota durumlarını, bearer/204 kurallarını ve JSON Schema derlemesini kontrol eder.
