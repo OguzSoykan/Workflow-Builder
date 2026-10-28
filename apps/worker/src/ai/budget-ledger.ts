@@ -37,7 +37,8 @@ export class BudgetLedger {
         day TEXT NOT NULL,
         reserved INTEGER NOT NULL CHECK (reserved >= 0),
         actual INTEGER,
-        state TEXT NOT NULL CHECK (state IN ('reserved', 'settled', 'charged_unknown', 'released'))
+        state TEXT NOT NULL CHECK (state IN ('reserved', 'settled', 'charged_unknown', 'released')),
+        result TEXT
       )`,
     );
     sql.exec(
@@ -115,8 +116,23 @@ export class BudgetLedger {
     return { ok: true, replay: false, state: 'reserved' };
   }
 
+  /** The stored response of a settled request, replayed instead of calling the provider again. */
+  result(requestId: string): string | null {
+    const [row] = this.sql
+      .exec<{ result: string | null }>(
+        'SELECT result FROM reservations WHERE request_id = ?',
+        requestId,
+      )
+      .toArray();
+    return row?.result ?? null;
+  }
+
   /** Settles a pending reservation once; later calls return the recorded state unchanged. */
-  settle(requestId: string, settlement: Settlement): ReservationState | null {
+  settle(
+    requestId: string,
+    settlement: Settlement,
+    result: string | null = null,
+  ): ReservationState | null {
     const [row] = this.sql
       .exec<{ subject: string; day: string; reserved: number; state: ReservationState }>(
         'SELECT subject, day, reserved, state FROM reservations WHERE request_id = ?',
@@ -130,14 +146,16 @@ export class BudgetLedger {
         if (!isMicros(settlement.actualMicros)) throw new Error('Invalid billed amount');
         // The real cost is recorded even above the estimate; the stop check then sees it.
         this.sql.exec(
-          "UPDATE reservations SET actual = ?, state = 'settled' WHERE request_id = ?",
+          "UPDATE reservations SET actual = ?, state = 'settled', result = ? WHERE request_id = ?",
           settlement.actualMicros,
+          result,
           requestId,
         );
         return 'settled';
       case 'unknown':
         this.sql.exec(
-          "UPDATE reservations SET actual = reserved, state = 'charged_unknown' WHERE request_id = ?",
+          "UPDATE reservations SET actual = reserved, state = 'charged_unknown', result = ? WHERE request_id = ?",
+          result,
           requestId,
         );
         return 'charged_unknown';

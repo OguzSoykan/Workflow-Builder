@@ -667,3 +667,17 @@ select {
     grid-column: 1 / -1;
   }
 }
+.ai-panel textarea {
+  min-height: 90px;
+  width: 100%;
+  resize: vertical;
+}
+.ai-steps {
+  padding-left: 18px;
+  font-size: 12px;
+}
+@media (max-width: 600px) {
+  .palette > .ai-panel {
+    grid-column: 1 / -1;
+  }
+}

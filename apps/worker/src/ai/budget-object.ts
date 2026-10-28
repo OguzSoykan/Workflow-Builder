@@ -6,7 +6,8 @@ export const DAILY_LIMIT = 1;
 
 type Command =
   | { op: 'reserve'; requestId: string; subject: string; day: string; maxMicros: number }
-  | { op: 'settle'; requestId: string; settlement: Settlement }
+  | { op: 'settle'; requestId: string; settlement: Settlement; result?: string | null }
+  | { op: 'result'; requestId: string }
   | { op: 'totals' }
   | { op: 'quota'; subject: string; day: string };
 
@@ -31,7 +32,11 @@ export class AiBudget {
       case 'reserve':
         return Response.json(this.ledger.reserve(command));
       case 'settle':
-        return Response.json({ state: this.ledger.settle(command.requestId, command.settlement) });
+        return Response.json({
+          state: this.ledger.settle(command.requestId, command.settlement, command.result ?? null),
+        });
+      case 'result':
+        return Response.json({ result: this.ledger.result(command.requestId) });
       case 'totals':
         return Response.json(this.ledger.totals());
       case 'quota':
@@ -79,8 +84,11 @@ export function budgetClient(namespace: DurableObjectNamespaceLike | undefined) 
         }
       );
     },
-    settle(requestId: string, settlement: Settlement) {
-      return send<{ state: string | null }>({ op: 'settle', requestId, settlement });
+    settle(requestId: string, settlement: Settlement, result: string | null = null) {
+      return send<{ state: string | null }>({ op: 'settle', requestId, settlement, result });
+    },
+    result(requestId: string) {
+      return send<{ result: string | null }>({ op: 'result', requestId });
     },
     quota(subject: string, day: string) {
       return send<{ used: number; limit: number }>({ op: 'quota', subject, day });

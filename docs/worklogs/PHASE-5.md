@@ -34,3 +34,14 @@
 - `apps/worker/src/ai/provider.ts`: Responses API + strict Structured Outputs, fiyat tablosu, bayt tabanlı maliyet tavanı, uzlaştırma eşlemesi, mock sağlayıcı, `providerFromEnv`; `Bindings`'e `AI_PROVIDER`/`OPENAI_API_KEY`/`AI_MODEL`; `infra/.dev.vars.example`.
 - Hatalar: testte `undefined` argümanı varsayılan parametreyi tetikledi (`null` ile düzeltildi), `exactOptionalPropertyTypes` tip hatası. Repo `secret:scan` `.dev.vars.example` içindeki yorum satırı `OPENAI_API_KEY=…` atamasını işaretledi (FAIL); kural gevşetilmedi, satır açıklamaya çevrildi → 0 bulgu.
 - Kapılar: typecheck/lint/format, 435 Vitest + 2 + 3, coverage satır %99,14 (provider %100 satır), negatif kapılar, build, secret:scan (düzeltme sonrası), Gitleaks PASS; E2E 42/42. Canlı OpenAI çağrısı yok. Karar ADR-022.
+
+## P5-007 — WB-018 merge ve WB-019 başlangıcı (2026-10-28)
+
+- [PR #27](https://github.com/OguzSoykan/Workflow-Builder/pull/27) [quality 40609133122](https://github.com/OguzSoykan/Workflow-Builder/actions/runs/40609133122) PASS sonrası agent squash merge: main `673fdee`. WB-018 Done.
+- `feat/WB-019-ai-create` açıldı. Plan: ledger'a sonuç saklama (aynı Idempotency-Key tekrarında model çağrısı yok), strict AI taslak şeması → sunucuda ID/konum/bağlantı üretimi → contract + validator, `POST /api/v1/ai/workflows/generate`, mock üretici, web AI paneli (limit, önizleme, onaylı ve geri alınabilir uygulama).
+
+## P5-008 — WB-019 prompt'tan oluşturma (2026-10-28)
+
+- Worker: ledger'a `result` sütunu/komutu, `ai/draft.ts` (strict taslak şeması, talimat, ID/yerleşim üretimi, mock), `registerGenerateRoute`. Web: `account/ai-api.ts`, `AiPanel`. OpenAPI: generate implemented + `AiGenerateRequest`/`AiProposal`.
+- Hatalar: ledger `UPDATE` değişikliği önceki biçimlendirme yüzünden ilk denemede uygulanmadı (`TS6133`), elle düzeltildi; `fail` yardımcısında 422 tipi eksikti; testte kullanıcıya kapsamlı key'in başka kullanıcıda çakışma vereceği yanlış varsayılmıştı (tasarım doğru, beklenti düzeltildi); lint `any`/kullanılmayan değişken; tam koşuda `ai-access` korunan rota testi 404 bekliyordu, rota artık var → 415 (gövde kontrolü) beklentisi; ADR koşu sırasında yazıldığı için format FAIL → prettier.
+- Kapılar: typecheck/lint/format, 462 Vitest + 2 + 3, coverage, negatif kapılar, build, secret:scan, Gitleaks PASS; E2E 45/45. Canlı OpenAI çağrısı yok. Karar ADR-023.

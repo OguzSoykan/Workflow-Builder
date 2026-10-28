@@ -16,6 +16,7 @@ import { ExamplesPanel } from './ExamplesPanel';
 import { AccountPanel } from '../account/AccountPanel';
 import { useAccount } from '../account/use-account';
 import { CloudPanel } from '../account/CloudPanel';
+import { AiPanel } from '../account/AiPanel';
 import { ValidationPanel } from './ValidationPanel';
 import { SimulationPanel } from './SimulationPanel';
 import { visitedPath } from './simulation-view';
@@ -253,6 +254,7 @@ function EditorWorkspace() {
               </li>
             ))}
           </ol>
+          <AiPanel account={account} dispatch={dispatch} />
           <ExamplesPanel dispatch={dispatch} />
           <TransferPanel workflow={workflow} dispatch={dispatch} />
           <CloudPanel workflow={workflow} executable={issues.length === 0} account={account} />

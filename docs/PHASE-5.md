@@ -26,3 +26,8 @@ Kaynak: PRD FR-06–08/12, AC-06/07/09–11, Architecture §4, Data Model §5–
 
 - Ayrıntılar [ADR-022](adr/ADR-022-openai-adapter.md). Henüz rota yok; WB-019 sağlayıcıyı ledger rezervasyonu ve uzlaştırmasıyla sarar.
 - `infra/.dev.vars.example` yalnız yer tutucu içerir; key satırı açıklama olarak yazıldı (repo secret taraması atama biçimini haklı olarak yakaladı).
+
+## WB-019 uygulama sınırı
+
+- Ayrıntılar [ADR-023](adr/ADR-023-ai-create.md): `POST /api/v1/ai/workflows/generate`, ledger'da saklı yanıt ile idempotent tekrar, strict taslak şeması → sunucuda ID/yerleşim → contract + validator; web “AI ile oluştur” paneli (kalan hak, önizleme, onaylı ve geri alınabilir uygulama, ret hiçbir şey yazmaz).
+- Kanıt: 462 Vitest + 2 scanner + 3 OpenAPI; 45 Chromium. Canlı model: NOT RUN (WB-021).
