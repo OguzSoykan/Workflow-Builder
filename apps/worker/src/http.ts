@@ -1,6 +1,7 @@
 import type { Context } from 'hono';
 import type { VerifiedUser } from './auth/firebase-token';
 import type { D1Database } from './workflows/d1';
+import type { DurableObjectNamespaceLike } from './ai/budget-object';
 
 export type Bindings = {
   FIREBASE_PROJECT_ID?: string;
@@ -9,6 +10,7 @@ export type Bindings = {
   /** Local Firebase Auth emulator origin for development only. */
   FIREBASE_AUTH_EMULATOR_URL?: string;
   DB?: D1Database;
+  AI_BUDGET?: DurableObjectNamespaceLike;
 };
 export type AppEnv = {
   Bindings: Bindings;

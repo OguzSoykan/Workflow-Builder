@@ -18,6 +18,9 @@
       "migrations_dir": "migrations",
     },
   ],
+  // Single global AI budget ledger (ADR-021); SQLite-backed Durable Object class.
+  "durable_objects": { "bindings": [{ "name": "AI_BUDGET", "class_name": "AiBudget" }] },
+  "migrations": [{ "tag": "v1", "new_sqlite_classes": ["AiBudget"] }],
   "env": {
     "staging": { "name": "workflow-builder-staging" },
     "production": { "name": "workflow-builder-production" },
