@@ -1,0 +1,175 @@
+{
+  "date": "2026-10-28T20:20:41.454Z",
+  "mode": "live",
+  "model": "gpt-6-luna",
+  "target": 0.85,
+  "passRate": 0.95,
+  "passed": 19,
+  "total": 20,
+  "validProposals": 19,
+  "spentMicros": 10374,
+  "worstCaseMicros": 85366,
+  "capMicros": 500000,
+  "results": [
+    {
+      "id": "purchase-threshold",
+      "passed": true,
+      "valid": true,
+      "reasons": [],
+      "costMicros": 291,
+      "providerResult": "ok"
+    },
+    {
+      "id": "leave-two-step",
+      "passed": true,
+      "valid": true,
+      "reasons": [],
+      "costMicros": 556,
+      "providerResult": "ok"
+    },
+    {
+      "id": "expense-invoice",
+      "passed": false,
+      "valid": false,
+      "reasons": ["no-proposal"],
+      "costMicros": 4056,
+      "providerResult": "AI_PROVIDER_INVALID_RESPONSE"
+    },
+    {
+      "id": "simple-approval",
+      "passed": true,
+      "valid": true,
+      "reasons": [],
+      "costMicros": 197,
+      "providerResult": "ok"
+    },
+    {
+      "id": "department-route",
+      "passed": true,
+      "valid": true,
+      "reasons": [],
+      "costMicros": 347,
+      "providerResult": "ok"
+    },
+    {
+      "id": "date-deadline",
+      "passed": true,
+      "valid": true,
+      "reasons": [],
+      "costMicros": 389,
+      "providerResult": "ok"
+    },
+    {
+      "id": "travel",
+      "passed": true,
+      "valid": true,
+      "reasons": [],
+      "costMicros": 257,
+      "providerResult": "ok"
+    },
+    {
+      "id": "hiring",
+      "passed": true,
+      "valid": true,
+      "reasons": [],
+      "costMicros": 263,
+      "providerResult": "ok"
+    },
+    {
+      "id": "discount",
+      "passed": true,
+      "valid": true,
+      "reasons": [],
+      "costMicros": 299,
+      "providerResult": "ok"
+    },
+    {
+      "id": "contract-amount",
+      "passed": true,
+      "valid": true,
+      "reasons": [],
+      "costMicros": 445,
+      "providerResult": "ok"
+    },
+    {
+      "id": "it-access",
+      "passed": true,
+      "valid": true,
+      "reasons": [],
+      "costMicros": 369,
+      "providerResult": "ok"
+    },
+    {
+      "id": "urgent-flag",
+      "passed": true,
+      "valid": true,
+      "reasons": [],
+      "costMicros": 379,
+      "providerResult": "ok"
+    },
+    {
+      "id": "overtime",
+      "passed": true,
+      "valid": true,
+      "reasons": [],
+      "costMicros": 306,
+      "providerResult": "ok"
+    },
+    {
+      "id": "supplier",
+      "passed": true,
+      "valid": true,
+      "reasons": [],
+      "costMicros": 303,
+      "providerResult": "ok"
+    },
+    {
+      "id": "refund-text",
+      "passed": true,
+      "valid": true,
+      "reasons": [],
+      "costMicros": 369,
+      "providerResult": "ok"
+    },
+    {
+      "id": "budget-category",
+      "passed": true,
+      "valid": true,
+      "reasons": [],
+      "costMicros": 361,
+      "providerResult": "ok"
+    },
+    {
+      "id": "training",
+      "passed": true,
+      "valid": true,
+      "reasons": [],
+      "costMicros": 283,
+      "providerResult": "ok"
+    },
+    {
+      "id": "asset-return",
+      "passed": true,
+      "valid": true,
+      "reasons": [],
+      "costMicros": 321,
+      "providerResult": "ok"
+    },
+    {
+      "id": "loan",
+      "passed": true,
+      "valid": true,
+      "reasons": [],
+      "costMicros": 318,
+      "providerResult": "ok"
+    },
+    {
+      "id": "publication",
+      "passed": true,
+      "valid": true,
+      "reasons": [],
+      "costMicros": 265,
+      "providerResult": "ok"
+    }
+  ]
+}
