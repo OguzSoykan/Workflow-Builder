@@ -117,3 +117,17 @@ describe('budget ledger', () => {
     });
   });
 });
+
+describe('stored results', () => {
+  it('keeps the response of a settled request for replays', () => {
+    const target = ledger(5);
+    reserve(target, 'r', 1_000);
+    expect(target.result('r')).toBeNull();
+    target.settle('r', { kind: 'billed', actualMicros: 10 }, '{"ok":true}');
+    expect(target.result('r')).toBe('{"ok":true}');
+    reserve(target, 'u', 1_000);
+    target.settle('u', { kind: 'unknown' }, '{"partial":true}');
+    expect(target.result('u')).toBe('{"partial":true}');
+    expect(target.result('missing')).toBeNull();
+  });
+});

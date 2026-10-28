@@ -102,7 +102,7 @@ describe('AI access policy', () => {
       });
   });
 
-  it('guards every other AI route before any work is done', async () => {
+  it('guards every other AI route before any work is done (then body checks apply)', async () => {
     const base = { FIREBASE_PROJECT_ID: PROJECT, AI_BUDGET: budget() };
     const path = '/api/v1/ai/workflows/generate';
     expect((await call(path, base, {}, 'POST')).body.error?.code).toBe('AI_DISABLED');
@@ -110,7 +110,7 @@ describe('AI access policy', () => {
       (await call(path, { ...base, AI_ENABLED: 'true' }, { email_verified: false }, 'POST')).body
         .error?.code,
     ).toBe('EMAIL_NOT_VERIFIED');
-    expect((await call(path, { ...base, AI_ENABLED: 'true' }, {}, 'POST')).status).toBe(404);
+    expect((await call(path, { ...base, AI_ENABLED: 'true' }, {}, 'POST')).status).toBe(415);
   });
 
   it('maps remaining budget to a coarse state', () => {

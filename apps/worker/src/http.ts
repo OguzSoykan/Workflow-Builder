@@ -26,7 +26,7 @@ export type AppEnv = {
 
 export function errorResponse(
   context: Context<AppEnv>,
-  status: 400 | 401 | 403 | 404 | 409 | 413 | 415 | 422 | 500 | 503,
+  status: 400 | 401 | 403 | 404 | 409 | 413 | 415 | 422 | 429 | 500 | 502 | 503,
   code: string,
   messageKey: string,
 ) {

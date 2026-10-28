@@ -21,6 +21,7 @@ export default defineConfig({
         'apps/web/src/editor/examples.ts',
         'apps/web/src/account/firebase-auth.ts',
         'apps/web/src/account/cloud-api.ts',
+        'apps/web/src/account/ai-api.ts',
       ],
       reporter: ['text', 'json-summary', 'html'],
     },

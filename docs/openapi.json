@@ -3,7 +3,7 @@
   "info": {
     "title": "Workflow Builder API — Phase 1 draft",
     "version": "0.1.0",
-    "description": "Health, public config, GET /api/v1/me and workflow CRUD/revision routes and GET /api/v1/ai/limits are implemented; restore and AI operations remain planning specifications. Workflow v1 structure is shared with the runtime contract; draft persistence and AI payload/policy decisions remain explicit TBD. Firebase client owns registration/login/password handling. Browser owns validation and simulation. No cloud resources are provisioned."
+    "description": "Health, public config, GET /api/v1/me and workflow CRUD/revision routes GET /api/v1/ai/limits and AI generate are implemented; restore and AI operations remain planning specifications. Workflow v1 structure is shared with the runtime contract; draft persistence and AI payload/policy decisions remain explicit TBD. Firebase client owns registration/login/password handling. Browser owns validation and simulation. No cloud resources are provisioned."
   },
   "servers": [
     {
@@ -687,8 +687,8 @@
       "post": {
         "operationId": "generateProposal",
         "summary": "Propose workflow generate without saving or applying it",
-        "x-status": "planned",
-        "description": "Specification only; not implemented in Phase 1. Request/response payload, candidateGraph vs candidateWorkflow, Turnstile scope, member quotas and idempotency requirement remain TBD. Provider calls require an atomic global budget reservation; errors fail closed. Client approval is required before any change.",
+        "x-status": "implemented",
+        "description": "Implemented in Phase 5 (WB-019, ADR-023). Verified members only, one request per UTC day, global 4.50 USD stop. Requires Idempotency-Key (8–128 [A-Za-z0-9_-], scoped per user); a repeated key replays the stored answer without a provider call. The proposal is never applied or saved by the server.",
         "security": [
           {},
           {
@@ -697,7 +697,7 @@
         ],
         "responses": {
           "200": {
-            "description": "Planned success envelope; data shape TBD.",
+            "description": "Validated proposal (may contain validation issues).",
             "headers": {
               "X-Request-ID": {
                 "$ref": "#/components/headers/RequestId"
@@ -706,7 +706,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/PlannedResponse"
+                  "$ref": "#/components/schemas/AiProposal"
                 }
               }
             }
@@ -744,21 +744,19 @@
           {
             "name": "Idempotency-Key",
             "in": "header",
-            "required": false,
-            "description": "Recommended by source plan; mandatory use, replay and lifetime TBD (D-11).",
+            "required": true,
             "schema": {
-              "type": "string"
+              "type": "string",
+              "pattern": "^[A-Za-z0-9_-]{8,128}$"
             }
           }
         ],
         "requestBody": {
           "required": true,
-          "description": "TBD payload; not a usable runtime validator.",
           "content": {
             "application/json": {
               "schema": {
-                "type": "object",
-                "x-decisions": ["D-05", "D-11"]
+                "$ref": "#/components/schemas/AiGenerateRequest"
               }
             }
           }
@@ -2010,6 +2008,69 @@
             }
           }
         ]
+      },
+      "AiGenerateRequest": {
+        "type": "object",
+        "properties": {
+          "prompt": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 2000
+          },
+          "locale": {
+            "enum": ["tr", "en"]
+          }
+        },
+        "required": ["prompt"],
+        "additionalProperties": false
+      },
+      "AiProposal": {
+        "type": "object",
+        "properties": {
+          "data": {
+            "type": "object",
+            "properties": {
+              "proposalId": {
+                "type": "string"
+              },
+              "candidateWorkflow": {
+                "$ref": "#/components/schemas/Workflow"
+              },
+              "validation": {
+                "type": "object",
+                "properties": {
+                  "valid": {
+                    "type": "boolean"
+                  },
+                  "issues": {
+                    "type": "array"
+                  }
+                },
+                "required": ["valid", "issues"]
+              },
+              "warnings": {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                }
+              }
+            },
+            "required": ["proposalId", "candidateWorkflow", "validation", "warnings"],
+            "additionalProperties": false
+          },
+          "meta": {
+            "type": "object",
+            "properties": {
+              "requestId": {
+                "type": "string"
+              }
+            },
+            "required": ["requestId"],
+            "additionalProperties": false
+          }
+        },
+        "required": ["data", "meta"],
+        "additionalProperties": false
       }
     },
     "responses": {
