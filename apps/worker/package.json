@@ -7,7 +7,8 @@
   "scripts": {
     "typecheck": "tsc --project tsconfig.json",
     "build": "wrangler deploy --config ../../infra/wrangler.jsonc --dry-run --outdir dist",
-    "dev": "wrangler dev --config ../../infra/wrangler.jsonc --local --show-interactive-dev-session=false"
+    "dev": "wrangler dev --config ../../infra/wrangler.jsonc --local --show-interactive-dev-session=false",
+    "build:envs": "wrangler deploy --config ../../infra/wrangler.jsonc --dry-run --outdir dist/staging --env staging && wrangler deploy --config ../../infra/wrangler.jsonc --dry-run --outdir dist/production --env production"
   },
   "dependencies": {
     "@workflow-builder/workflow-contract": "0.0.0",
