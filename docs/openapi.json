@@ -3,7 +3,7 @@
   "info": {
     "title": "Workflow Builder API — Phase 1 draft",
     "version": "0.1.0",
-    "description": "Health, public config, GET /api/v1/me and workflow CRUD/revision routes GET /api/v1/ai/limits and AI generate are implemented; restore and AI operations remain planning specifications. Workflow v1 structure is shared with the runtime contract; draft persistence and AI payload/policy decisions remain explicit TBD. Firebase client owns registration/login/password handling. Browser owns validation and simulation. No cloud resources are provisioned."
+    "description": "Health, public config, GET /api/v1/me and workflow CRUD/revision routes GET /api/v1/ai/limits and AI generate/edit are implemented; restore and AI operations remain planning specifications. Workflow v1 structure is shared with the runtime contract; draft persistence and AI payload/policy decisions remain explicit TBD. Firebase client owns registration/login/password handling. Browser owns validation and simulation. No cloud resources are provisioned."
   },
   "servers": [
     {
@@ -767,8 +767,8 @@
       "post": {
         "operationId": "editProposal",
         "summary": "Propose workflow edit without saving or applying it",
-        "x-status": "planned",
-        "description": "Specification only; not implemented in Phase 1. Request/response payload, candidateGraph vs candidateWorkflow, Turnstile scope, member quotas and idempotency requirement remain TBD. Provider calls require an atomic global budget reservation; errors fail closed. Client approval is required before any change.",
+        "x-status": "implemented",
+        "description": "Implemented in Phase 5 (WB-020, ADR-024). Same access, quota, budget and Idempotency-Key rules as generate. baseContentHash must equal the hash of the sent workflow (409 STALE_PROPOSAL); the client re-checks it before applying. Operations are canonical (D-11) and applied atomically by the pure core patch engine; unchanged IDs are preserved.",
         "security": [
           {},
           {
@@ -777,7 +777,7 @@
         ],
         "responses": {
           "200": {
-            "description": "Planned success envelope; data shape TBD.",
+            "description": "Validated edit proposal with semantic diff.",
             "headers": {
               "X-Request-ID": {
                 "$ref": "#/components/headers/RequestId"
@@ -786,7 +786,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/PlannedResponse"
+                  "$ref": "#/components/schemas/AiEditProposal"
                 }
               }
             }
@@ -824,21 +824,19 @@
           {
             "name": "Idempotency-Key",
             "in": "header",
-            "required": false,
-            "description": "Recommended by source plan; mandatory use, replay and lifetime TBD (D-11).",
+            "required": true,
             "schema": {
-              "type": "string"
+              "type": "string",
+              "pattern": "^[A-Za-z0-9_-]{8,128}$"
             }
           }
         ],
         "requestBody": {
           "required": true,
-          "description": "TBD payload; not a usable runtime validator.",
           "content": {
             "application/json": {
               "schema": {
-                "type": "object",
-                "x-decisions": ["D-05", "D-11"]
+                "$ref": "#/components/schemas/AiEditRequest"
               }
             }
           }
@@ -2056,6 +2054,177 @@
               }
             },
             "required": ["proposalId", "candidateWorkflow", "validation", "warnings"],
+            "additionalProperties": false
+          },
+          "meta": {
+            "type": "object",
+            "properties": {
+              "requestId": {
+                "type": "string"
+              }
+            },
+            "required": ["requestId"],
+            "additionalProperties": false
+          }
+        },
+        "required": ["data", "meta"],
+        "additionalProperties": false
+      },
+      "AiEditRequest": {
+        "type": "object",
+        "properties": {
+          "prompt": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 2000
+          },
+          "locale": {
+            "enum": ["tr", "en"]
+          },
+          "workflow": {
+            "$ref": "#/components/schemas/Workflow"
+          },
+          "baseContentHash": {
+            "type": "string",
+            "pattern": "^[a-f0-9]{64}$"
+          }
+        },
+        "required": ["prompt", "workflow", "baseContentHash"],
+        "additionalProperties": false
+      },
+      "AiEditProposal": {
+        "type": "object",
+        "properties": {
+          "data": {
+            "type": "object",
+            "properties": {
+              "proposalId": {
+                "type": "string"
+              },
+              "baseContentHash": {
+                "type": "string",
+                "pattern": "^[a-f0-9]{64}$"
+              },
+              "operations": {
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "required": ["op"],
+                  "properties": {
+                    "op": {
+                      "enum": [
+                        "deleteEdge",
+                        "deleteNode",
+                        "removeInputField",
+                        "upsertInputField",
+                        "addNode",
+                        "updateNode",
+                        "addEdge",
+                        "updateMetadata"
+                      ]
+                    }
+                  }
+                }
+              },
+              "candidateWorkflow": {
+                "$ref": "#/components/schemas/Workflow"
+              },
+              "diffSummary": {
+                "type": "object",
+                "properties": {
+                  "addedNodes": {
+                    "type": "array",
+                    "items": {
+                      "type": "string"
+                    }
+                  },
+                  "removedNodes": {
+                    "type": "array",
+                    "items": {
+                      "type": "string"
+                    }
+                  },
+                  "changedNodes": {
+                    "type": "array",
+                    "items": {
+                      "type": "string"
+                    }
+                  },
+                  "addedEdges": {
+                    "type": "array",
+                    "items": {
+                      "type": "string"
+                    }
+                  },
+                  "removedEdges": {
+                    "type": "array",
+                    "items": {
+                      "type": "string"
+                    }
+                  },
+                  "addedInputs": {
+                    "type": "array",
+                    "items": {
+                      "type": "string"
+                    }
+                  },
+                  "removedInputs": {
+                    "type": "array",
+                    "items": {
+                      "type": "string"
+                    }
+                  },
+                  "changedInputs": {
+                    "type": "array",
+                    "items": {
+                      "type": "string"
+                    }
+                  },
+                  "metadataChanged": {
+                    "type": "boolean"
+                  }
+                },
+                "additionalProperties": false,
+                "required": [
+                  "addedNodes",
+                  "removedNodes",
+                  "changedNodes",
+                  "addedEdges",
+                  "removedEdges",
+                  "addedInputs",
+                  "removedInputs",
+                  "changedInputs",
+                  "metadataChanged"
+                ]
+              },
+              "validation": {
+                "type": "object",
+                "properties": {
+                  "valid": {
+                    "type": "boolean"
+                  },
+                  "issues": {
+                    "type": "array"
+                  }
+                },
+                "required": ["valid", "issues"]
+              },
+              "warnings": {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                }
+              }
+            },
+            "required": [
+              "proposalId",
+              "baseContentHash",
+              "operations",
+              "candidateWorkflow",
+              "diffSummary",
+              "validation",
+              "warnings"
+            ],
             "additionalProperties": false
           },
           "meta": {

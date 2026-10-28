@@ -45,3 +45,14 @@
 - Worker: ledger'a `result` sütunu/komutu, `ai/draft.ts` (strict taslak şeması, talimat, ID/yerleşim üretimi, mock), `registerGenerateRoute`. Web: `account/ai-api.ts`, `AiPanel`. OpenAPI: generate implemented + `AiGenerateRequest`/`AiProposal`.
 - Hatalar: ledger `UPDATE` değişikliği önceki biçimlendirme yüzünden ilk denemede uygulanmadı (`TS6133`), elle düzeltildi; `fail` yardımcısında 422 tipi eksikti; testte kullanıcıya kapsamlı key'in başka kullanıcıda çakışma vereceği yanlış varsayılmıştı (tasarım doğru, beklenti düzeltildi); lint `any`/kullanılmayan değişken; tam koşuda `ai-access` korunan rota testi 404 bekliyordu, rota artık var → 415 (gövde kontrolü) beklentisi; ADR koşu sırasında yazıldığı için format FAIL → prettier.
 - Kapılar: typecheck/lint/format, 462 Vitest + 2 + 3, coverage, negatif kapılar, build, secret:scan, Gitleaks PASS; E2E 45/45. Canlı OpenAI çağrısı yok. Karar ADR-023.
+
+## P5-009 — WB-019 merge ve WB-020 başlangıcı (2026-10-28)
+
+- [PR #28](https://github.com/OguzSoykan/Workflow-Builder/pull/28) [quality 40610205777](https://github.com/OguzSoykan/Workflow-Builder/actions/runs/40610205777) PASS sonrası agent squash merge: main `80b1c24`. WB-019 Done.
+- `feat/WB-020-ai-edit` açıldı. Plan (D-11 kanonik kararı): saf `applyPatch` + `diffWorkflows` (`workflow-core`), kanonik işlem sırası ve atomiklik, `POST /api/v1/ai/workflows/edit` (hash kontrolü, model işlemleri → çekirdek işlemler, yeni ID'ler sunucuda), web düzenleme modu (diff özeti, uygulama öncesi hash kontrolü).
+
+## P5-010 — WB-020 AI düzenleme (2026-10-28)
+
+- Core `patch.ts` (`applyPatch`, `diffWorkflows`), Worker `ai/edit.ts` (strict işlem şeması, talimat, model → çekirdek işlem dönüşümü, mock) ve ortak `handleProposal` boru hattı (generate de buna taşındı, 106 mevcut test değişmeden geçti); web `editWorkflow`/`proposalMatches`/`diffText` ve panel düzenleme modu. OpenAPI edit implemented + `AiEditRequest`/`AiEditProposal`.
+- Hatalar: diff, `parseWorkflow` sonrası değişen anahtar sırası yüzünden değişmeyen alanı “değişti” sayıyordu → sıralı-anahtar karşılaştırma; panel imza değişikliği biçimlendirilmiş imzaya uymadı (`TS2304`) → elle düzeltildi. E2E öncesi 8787'de kullanıcıya ait yeni bir `wrangler dev` (Node v22) bulundu; soruldu, “Durdur” cevabıyla kapatıldı.
+- Kapılar: typecheck/lint/format, 488 Vitest + 2 + 3, coverage, negatif kapılar, build, secret:scan, Gitleaks PASS; E2E 47/47. Karar ADR-024.

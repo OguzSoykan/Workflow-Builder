@@ -1,17 +1,29 @@
 import { useEffect, useState, type Dispatch } from 'react';
+import type { Workflow } from '@workflow-builder/workflow-contract';
 import type { EditorAction } from '../editor/model';
-import { fetchLimits, generateWorkflow, type AiLimits, type Proposal } from './ai-api';
+import {
+  diffText,
+  editWorkflow,
+  fetchLimits,
+  generateWorkflow,
+  proposalMatches,
+  type AiLimits,
+  type Proposal,
+} from './ai-api';
 import type { Account } from './use-account';
 
 const MAX_PROMPT = 2000;
 
 export function AiPanel({
   account,
+  workflow,
   dispatch,
 }: {
   account: Account;
+  workflow: Workflow;
   dispatch: Dispatch<EditorAction>;
 }) {
+  const [mode, setMode] = useState<'create' | 'edit'>('create');
   const [limits, setLimits] = useState<AiLimits | null>(null);
   const [prompt, setPrompt] = useState('');
   const [busy, setBusy] = useState(false);
@@ -47,8 +59,32 @@ export function AiPanel({
           {limits.budgetState === 'low' ? ' Genel AI bütçesi azalıyor.' : ''}
         </p>
       )}
+      {workflow.nodes.length > 0 && (
+        <div className="ai-mode" role="radiogroup" aria-label="AI modu">
+          <label className="checkbox-label">
+            <input
+              type="radio"
+              name="ai-mode"
+              checked={mode === 'create'}
+              onChange={() => setMode('create')}
+            />
+            Yeni akış oluştur
+          </label>
+          <label className="checkbox-label">
+            <input
+              type="radio"
+              name="ai-mode"
+              checked={mode === 'edit'}
+              onChange={() => setMode('edit')}
+            />
+            Bu akışı düzenle
+          </label>
+        </div>
+      )}
       <label>
-        Süreci anlatın
+        {mode === 'edit' && workflow.nodes.length
+          ? 'İstediğiniz değişikliği anlatın'
+          : 'Süreci anlatın'}
         <textarea
           maxLength={MAX_PROMPT}
           value={prompt}
@@ -70,7 +106,9 @@ export function AiPanel({
           setProposal(null);
           const idToken = await token();
           const result = idToken
-            ? await generateWorkflow(idToken, prompt.trim(), `ui_${crypto.randomUUID()}`)
+            ? mode === 'edit' && workflow.nodes.length
+              ? await editWorkflow(idToken, prompt.trim(), workflow, `ui_${crypto.randomUUID()}`)
+              : await generateWorkflow(idToken, prompt.trim(), `ui_${crypto.randomUUID()}`)
             : { ok: false as const, message: 'Oturum geçersiz. Tekrar giriş yapın.' };
           setBusy(false);
           if (result.ok) setProposal(result.proposal);
@@ -91,17 +129,29 @@ export function AiPanel({
               ? ` · ${proposal.issueCount} doğrulama sorunu`
               : ' · çalıştırılabilir'}
           </p>
+          {proposal.diff && <p className="ai-diff">Değişiklik: {diffText(proposal.diff)}</p>}
           <ul className="ai-steps" aria-label="Önerilen adımlar">
             {proposal.workflow.nodes.map((node) => (
               <li key={node.id}>{node.label}</li>
             ))}
           </ul>
           <p className="muted">
-            Uygularsanız mevcut taslağın yerine geçer; “Geri al” ile dönebilirsiniz.
+            Uygularsanız{' '}
+            {proposal.diff ? 'değişiklikler taslağa işlenir' : 'mevcut taslağın yerine geçer'};
+            “Geri al” ile dönebilirsiniz.
           </p>
           <button
             type="button"
             onClick={() => {
+              // An edit proposal applies only to the exact document it was made for (stale hash check).
+              if (!proposalMatches(proposal, workflow)) {
+                setProposal(null);
+                setMessage({
+                  kind: 'error',
+                  text: 'Taslak öneriden sonra değişti; öneri uygulanmadı. Yeniden isteyin.',
+                });
+                return;
+              }
               dispatch({ type: 'replace-workflow', workflow: proposal.workflow });
               setProposal(null);
               setMessage({ kind: 'info', text: 'AI önerisi taslağa uygulandı.' });
