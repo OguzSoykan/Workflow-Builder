@@ -4,6 +4,7 @@ import { googleKeySource, verifyFirebaseToken, type KeySource } from './auth/fir
 import { errorResponse, type AppEnv } from './http';
 import { WorkflowRepository } from './workflows/repository';
 import { registerWorkflowRoutes } from './workflows/routes';
+import { registerAiRoutes } from './ai/routes';
 
 export type { AppEnv, Bindings } from './http';
 export { AiBudget } from './ai/budget-object';
@@ -94,6 +95,7 @@ export function createApp(dependencies: AppDependencies = {}) {
     });
   });
   registerWorkflowRoutes(app, now);
+  registerAiRoutes(app, now);
 
   app.notFound((context) => errorResponse(context, 404, 'ROUTE_NOT_FOUND', 'errors.routeNotFound'));
   app.onError((_error, context) =>
