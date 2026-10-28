@@ -33,6 +33,7 @@
     "docs:sync-api": "node scripts/sync-openapi.mjs && prettier --write docs/openapi.json",
     "benchmark:validator": "node scripts/benchmark-validator.mjs",
     "benchmark:simulator": "node scripts/benchmark-simulator.mjs",
+    "ai:eval": "node apps/worker/eval/run.mjs",
     "secrets:check": "node scripts/check-secrets.mjs",
     "secrets:self-test": "node scripts/check-secrets.mjs --self-test",
     "postinstall": "node scripts/patch-xyflow-types.mjs"

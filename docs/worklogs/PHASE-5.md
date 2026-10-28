@@ -56,3 +56,14 @@
 - Core `patch.ts` (`applyPatch`, `diffWorkflows`), Worker `ai/edit.ts` (strict işlem şeması, talimat, model → çekirdek işlem dönüşümü, mock) ve ortak `handleProposal` boru hattı (generate de buna taşındı, 106 mevcut test değişmeden geçti); web `editWorkflow`/`proposalMatches`/`diffText` ve panel düzenleme modu. OpenAPI edit implemented + `AiEditRequest`/`AiEditProposal`.
 - Hatalar: diff, `parseWorkflow` sonrası değişen anahtar sırası yüzünden değişmeyen alanı “değişti” sayıyordu → sıralı-anahtar karşılaştırma; panel imza değişikliği biçimlendirilmiş imzaya uymadı (`TS2304`) → elle düzeltildi. E2E öncesi 8787'de kullanıcıya ait yeni bir `wrangler dev` (Node v22) bulundu; soruldu, “Durdur” cevabıyla kapatıldı.
 - Kapılar: typecheck/lint/format, 488 Vitest + 2 + 3, coverage, negatif kapılar, build, secret:scan, Gitleaks PASS; E2E 47/47. Karar ADR-024.
+
+## P5-011 — WB-020 merge ve WB-021 başlangıcı (2026-10-28)
+
+- [PR #29](https://github.com/OguzSoykan/Workflow-Builder/pull/29) [quality 40611755667](https://github.com/OguzSoykan/Workflow-Builder/actions/runs/40611755667) PASS sonrası agent squash merge: main `b6625d4`. WB-020 Done.
+- `feat/WB-021-ai-eval` açıldı. Onay/ret/geri al UX'i WB-019/020'de tamamlandı (E2E kanıtlı). Plan: 20 sentetik prompt + ölçülebilir rubrik, `scripts/ai-eval.mjs` (mock ve canlı mod, çalıştırmadan önce en kötü durum maliyet tavanı, key yalnız `infra/.dev.vars`'tan, rapor `docs/evals/`).
+
+## P5-012 — WB-021 değerlendirme aracı (2026-10-28)
+
+- `apps/worker/eval/cases.ts` (20 sentetik vaka + rubrik), `apps/worker/eval/run.mjs` (`npm run ai:eval`; mock/canlı, en kötü durum tavanı, key yalnız `infra/.dev.vars`, rapor `docs/evals/`), `apps/worker/test/ai-eval.test.ts`. İlk konum `scripts/` idi; lint `no-restricted-imports` uygulama içi import'u reddetti → araç Worker paketinin içine taşındı (kural gevşetilmedi), `tsconfig.test` eval'i kapsar.
+- Mock çalıştırma: 5/20 (sabit mock akış; rubrik farkları doğru yakaladı), 0 USD. Canlı en kötü durum offline hesaplandı: 85.366 µUSD ≈ 0,085 USD; sınır 0,50 USD. Ön kayıt `docs/evals/README.md`.
+- Canlı eval: NOT RUN — kullanıcı `infra/.dev.vars` dosyasına `OPENAI_API_KEY` satırını kendisi ekleyecek; key sohbete yazılmayacak.

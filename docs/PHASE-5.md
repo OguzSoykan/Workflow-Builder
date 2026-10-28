@@ -36,3 +36,8 @@ Kaynak: PRD FR-06–08/12, AC-06/07/09–11, Architecture §4, Data Model §5–
 
 - Ayrıntılar [ADR-024](adr/ADR-024-ai-edit-patch.md): çekirdekte `applyPatch`/`diffWorkflows`, `POST /api/v1/ai/workflows/edit`, AI panelinde “Bu akışı düzenle” modu (diff özeti, uygulamadan önce hash kontrolü).
 - Kanıt: 488 Vitest + 2 scanner + 3 OpenAPI; 47 Chromium. Canlı model: NOT RUN (WB-021).
+
+## WB-021 durumu
+
+- Onay/ret/geri al UX'i WB-019/020'de tamamlandı (E2E: reddetmek hiçbir şey yazmaz, uygula + geri al, eski taslağa uygulanmaz).
+- Değerlendirme aracı ve ön kayıt: [docs/evals](evals/README.md). Canlı çalıştırma kullanıcının `infra/.dev.vars`'a key koymasını bekliyor; sonuç geldiğinde kart kapanır.
