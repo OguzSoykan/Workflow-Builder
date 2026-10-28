@@ -17,7 +17,8 @@ test('opens an empty editor, adds all node kinds and preserves IDs on rename and
   await page.getByLabel('Adım adı', { exact: true }).fill('Bitiş güncellendi');
   await page.getByRole('button', { name: 'Değişiklikleri uygula', exact: true }).click();
   await expect(end).toContainText('Bitiş güncellendi');
-  const before = await end.getAttribute('style');
+  const transform = () => end.evaluate((element) => (element as HTMLElement).style.transform);
+  const before = await transform();
   const box = await end.boundingBox();
   expect(box).not.toBeNull();
   if (!box) throw new Error('Node is not rendered');
@@ -25,7 +26,7 @@ test('opens an empty editor, adds all node kinds and preserves IDs on rename and
   await page.mouse.down();
   await page.mouse.move(box.x + 95, box.y + 95, { steps: 12 });
   await page.mouse.up();
-  await expect(end).not.toHaveAttribute('style', before ?? '');
+  await expect.poll(transform).not.toBe(before);
   await expect(end).toHaveAttribute('data-id', id ?? '');
   await page.getByRole('button', { name: 'Uzaklaştır', exact: true }).click();
   await page.getByRole('button', { name: 'Tümünü göster', exact: true }).click();
