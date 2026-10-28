@@ -13,6 +13,11 @@ export type Bindings = {
   AI_BUDGET?: DurableObjectNamespaceLike;
   /** "true" enables AI routes; anything else keeps them off (Architecture §4.8). */
   AI_ENABLED?: string;
+  /** "openai" (needs OPENAI_API_KEY secret) or "mock" (no network, no cost). */
+  AI_PROVIDER?: string;
+  /** Secret: set with `wrangler secret put` or a local .dev.vars file; never committed or logged. */
+  OPENAI_API_KEY?: string;
+  AI_MODEL?: string;
 };
 export type AppEnv = {
   Bindings: Bindings;
