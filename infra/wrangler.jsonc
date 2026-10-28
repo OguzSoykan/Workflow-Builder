@@ -21,8 +21,36 @@
   // Single global AI budget ledger (ADR-021); SQLite-backed Durable Object class.
   "durable_objects": { "bindings": [{ "name": "AI_BUDGET", "class_name": "AiBudget" }] },
   "migrations": [{ "tag": "v1", "new_sqlite_classes": ["AiBudget"] }],
+  // Bindings and vars are not inherited by environments; each one declares its own (AC-13: separate data).
+  // Database IDs are placeholders until the owner creates the databases; the deploy workflow refuses them.
   "env": {
-    "staging": { "name": "workflow-builder-staging" },
-    "production": { "name": "workflow-builder-production" },
+    "staging": {
+      "name": "workflow-builder-staging",
+      "observability": { "enabled": true },
+      "vars": { "AI_ENABLED": "true", "AI_PROVIDER": "mock" },
+      "d1_databases": [
+        {
+          "binding": "DB",
+          "database_name": "workflow-builder-staging",
+          "database_id": "00000000-0000-0000-0000-00000000aaaa",
+          "migrations_dir": "migrations",
+        },
+      ],
+      "durable_objects": { "bindings": [{ "name": "AI_BUDGET", "class_name": "AiBudget" }] },
+    },
+    "production": {
+      "name": "workflow-builder-production",
+      "observability": { "enabled": true },
+      "vars": { "AI_ENABLED": "false", "AI_PROVIDER": "openai", "AI_MODEL": "gpt-6-luna" },
+      "d1_databases": [
+        {
+          "binding": "DB",
+          "database_name": "workflow-builder-production",
+          "database_id": "00000000-0000-0000-0000-00000000bbbb",
+          "migrations_dir": "migrations",
+        },
+      ],
+      "durable_objects": { "bindings": [{ "name": "AI_BUDGET", "class_name": "AiBudget" }] },
+    },
   },
 }
