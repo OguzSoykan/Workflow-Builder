@@ -11,6 +11,8 @@ export type Bindings = {
   FIREBASE_AUTH_EMULATOR_URL?: string;
   DB?: D1Database;
   AI_BUDGET?: DurableObjectNamespaceLike;
+  /** "true" enables AI routes; anything else keeps them off (Architecture §4.8). */
+  AI_ENABLED?: string;
 };
 export type AppEnv = {
   Bindings: Bindings;

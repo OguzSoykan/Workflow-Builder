@@ -65,6 +65,7 @@ const implemented = new Set([
   'delete /api/v1/workflows/{id}',
   'get /api/v1/workflows/{id}/revisions',
   'get /api/v1/workflows/{id}/revisions/{n}',
+  'get /api/v1/ai/limits',
 ]);
 
 test('only listed operations are implemented and member routes require bearer authentication', () => {

@@ -7,7 +7,8 @@ export const DAILY_LIMIT = 1;
 type Command =
   | { op: 'reserve'; requestId: string; subject: string; day: string; maxMicros: number }
   | { op: 'settle'; requestId: string; settlement: Settlement }
-  | { op: 'totals' };
+  | { op: 'totals' }
+  | { op: 'quota'; subject: string; day: string };
 
 /** The single global SQLite-backed Durable Object (`AI_BUDGET`, name "global"). */
 export class AiBudget {
@@ -33,6 +34,11 @@ export class AiBudget {
         return Response.json({ state: this.ledger.settle(command.requestId, command.settlement) });
       case 'totals':
         return Response.json(this.ledger.totals());
+      case 'quota':
+        return Response.json({
+          used: this.ledger.used(command.subject, command.day),
+          limit: DAILY_LIMIT,
+        });
       default:
         return Response.json({ error: 'INVALID_COMMAND' }, { status: 400 });
     }
@@ -75,6 +81,9 @@ export function budgetClient(namespace: DurableObjectNamespaceLike | undefined) 
     },
     settle(requestId: string, settlement: Settlement) {
       return send<{ state: string | null }>({ op: 'settle', requestId, settlement });
+    },
+    quota(subject: string, day: string) {
+      return send<{ used: number; limit: number }>({ op: 'quota', subject, day });
     },
     totals() {
       return send<{ committedMicros: number; outstandingMicros: number; remainingMicros: number }>({

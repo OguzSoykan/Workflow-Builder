@@ -3,7 +3,7 @@
   "info": {
     "title": "Workflow Builder API — Phase 1 draft",
     "version": "0.1.0",
-    "description": "Health, public config, GET /api/v1/me and workflow CRUD/revision routes are implemented; restore and AI operations remain planning specifications. Workflow v1 structure is shared with the runtime contract; draft persistence and AI payload/policy decisions remain explicit TBD. Firebase client owns registration/login/password handling. Browser owns validation and simulation. No cloud resources are provisioned."
+    "description": "Health, public config, GET /api/v1/me and workflow CRUD/revision routes and GET /api/v1/ai/limits are implemented; restore and AI operations remain planning specifications. Workflow v1 structure is shared with the runtime contract; draft persistence and AI payload/policy decisions remain explicit TBD. Firebase client owns registration/login/password handling. Browser owns validation and simulation. No cloud resources are provisioned."
   },
   "servers": [
     {
@@ -851,17 +851,16 @@
       "get": {
         "operationId": "getAiLimits",
         "summary": "Coarse AI availability and remaining usage; never expose secrets or raw ledger",
-        "x-status": "planned",
-        "description": "Specification only; not implemented in Phase 1.",
+        "x-status": "implemented",
+        "description": "Implemented in Phase 5 (WB-017). Members only (no guest AI); one request per UTC day; coarse budget state without ledger totals. AI off when AI_ENABLED is not \"true\", the email is unverified or the ledger is unavailable.",
         "security": [
-          {},
           {
             "firebaseBearer": []
           }
         ],
         "responses": {
           "200": {
-            "description": "Planned success envelope; data shape TBD.",
+            "description": "AI availability for the caller.",
             "headers": {
               "X-Request-ID": {
                 "$ref": "#/components/headers/RequestId"
@@ -870,13 +869,13 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/PlannedResponse"
+                  "$ref": "#/components/schemas/AiLimits"
                 }
               }
             }
           },
-          "429": {
-            "$ref": "#/components/responses/Error429"
+          "401": {
+            "$ref": "#/components/responses/Error401"
           },
           "503": {
             "$ref": "#/components/responses/Error503"
@@ -1959,6 +1958,52 @@
           {
             "data": {
               "firebase": null
+            },
+            "meta": {
+              "requestId": "synthetic-request-id"
+            }
+          }
+        ]
+      },
+      "AiLimits": {
+        "type": "object",
+        "properties": {
+          "data": {
+            "type": "object",
+            "properties": {
+              "aiEnabled": {
+                "type": "boolean"
+              },
+              "memberRemaining": {
+                "type": "integer",
+                "minimum": 0
+              },
+              "budgetState": {
+                "enum": ["ok", "low", "exhausted", "unavailable"]
+              }
+            },
+            "required": ["aiEnabled", "memberRemaining", "budgetState"],
+            "additionalProperties": false
+          },
+          "meta": {
+            "type": "object",
+            "properties": {
+              "requestId": {
+                "type": "string"
+              }
+            },
+            "required": ["requestId"],
+            "additionalProperties": false
+          }
+        },
+        "required": ["data", "meta"],
+        "additionalProperties": false,
+        "examples": [
+          {
+            "data": {
+              "aiEnabled": true,
+              "memberRemaining": 1,
+              "budgetState": "ok"
             },
             "meta": {
               "requestId": "synthetic-request-id"
