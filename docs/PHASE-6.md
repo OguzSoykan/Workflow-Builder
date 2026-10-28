@@ -13,3 +13,9 @@ Kaynak: PRD FR-11, AC-13, BACKLOG WB-022/023.
 
 - Ayrıntılar [ADR-025](adr/ADR-025-i18n.md). 28 dosyada ~450 satır metin `t()`'ye taşındı (AST tabanlı dönüştürücü + elle düzeltme); parçalı cümleler parametreli tam cümlelere çevrildi. Başlıkta dil seçici; örnek akışlar seçili dilde oluşur.
 - Kanıt: katalog tamlık/kalıntı testleri, 494 Vitest + 2 + 3, 49 Chromium (İngilizce akış + tarayıcı diline göre başlangıç dahil), masaüstü ve 390px İngilizce ekran görüntüsü incelendi.
+
+## WB-022B uygulama sınırı
+
+- `@axe-core/playwright` 4.14.0 (yalnız devDependency, sabit sürüm; audit 0) ile WCAG 2.1 A/AA taraması: boş editör, örnek + seçili koşul, bekleyen simülasyon, İngilizce, giriş formu, oturum açık + AI paneli. İlk tarama yalnız renk kontrastı ihlalleri buldu (gri tonlar 3,47–4,4:1, koşul amber 3,49:1); renkler `#4f6275` ve `#86601f` yapıldı (tüm arka planlarda ≥4,9:1) → 0 ihlal.
+- Klavye smoke: örnek yükleme, tutar girişi, simülasyonu başlatma, onay ve geri al yalnız Tab/Enter/kısayolla; odak halkası görünür.
+- Dar ekran: 390px TR/EN görüntüleri ve mevcut dar görünüm E2E'leri; yatay taşma yok. Mobilde mini harita PR #9 kararıyla korunur.
