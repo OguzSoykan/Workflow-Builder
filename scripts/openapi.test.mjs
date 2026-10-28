@@ -67,6 +67,7 @@ const implemented = new Set([
   'get /api/v1/workflows/{id}/revisions/{n}',
   'get /api/v1/ai/limits',
   'post /api/v1/ai/workflows/generate',
+  'post /api/v1/ai/workflows/edit',
 ]);
 
 test('only listed operations are implemented and member routes require bearer authentication', () => {

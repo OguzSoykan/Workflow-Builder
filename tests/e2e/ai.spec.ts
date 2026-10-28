@@ -99,3 +99,91 @@ test('explains quota and budget refusals', async ({ page }) => {
   await ai(page).getByRole('button', { name: 'Akış öner', exact: true }).click();
   await expect(ai(page).getByRole('alert')).toContainText('AI bütçesi doldu');
 });
+
+async function fakeEdit(page: Page) {
+  await page.route('**/api/v1/ai/workflows/edit', async (route) => {
+    const body = route.request().postDataJSON() as {
+      workflow: ReturnType<typeof purchaseWorkflow>;
+      baseContentHash: string;
+    };
+    const candidate = {
+      ...body.workflow,
+      title: `${body.workflow.title} (finans)`,
+    };
+    return route.fulfill({
+      json: {
+        data: {
+          proposalId: 'p',
+          baseContentHash: body.baseContentHash,
+          operations: [{ op: 'updateMetadata', title: candidate.title }],
+          candidateWorkflow: candidate,
+          diffSummary: {
+            addedNodes: [],
+            removedNodes: [],
+            changedNodes: [],
+            addedEdges: [],
+            removedEdges: [],
+            addedInputs: [],
+            removedInputs: [],
+            changedInputs: [],
+            metadataChanged: true,
+          },
+          validation: { valid: true, issues: [] },
+          warnings: [],
+        },
+        meta: { requestId: 'r' },
+      },
+    });
+  });
+}
+async function loadPurchase(page: Page) {
+  await page
+    .getByRole('region', { name: 'Örnekten başla', exact: true })
+    .getByRole('button', { name: 'Satın alma talebi', exact: true })
+    .click();
+  await page.getByRole('button', { name: 'Örneği yükle', exact: true }).click();
+}
+
+test('edits the current workflow, shows the diff and applies it', async ({ page }) => {
+  await fakeFirebase(page, { verified: true });
+  await fakeAi(page);
+  await fakeEdit(page);
+  await page.goto('/');
+  await signIn(page);
+  await loadPurchase(page);
+  await ai(page).getByRole('radio', { name: 'Bu akışı düzenle', exact: true }).check();
+  await ai(page)
+    .getByLabel('İstediğiniz değişikliği anlatın', { exact: true })
+    .fill('Başlığa finans ekle');
+  await ai(page).getByRole('button', { name: 'Akış öner', exact: true }).click();
+  const proposal = ai(page).getByRole('group', { name: 'AI önerisi', exact: true });
+  await expect(proposal).toContainText('Değişiklik: başlık/açıklama değişti');
+  await proposal.getByRole('button', { name: 'Taslağa uygula', exact: true }).click();
+  await expect(
+    page.getByRole('heading', { name: 'Satın alma talebi (finans)', exact: true }),
+  ).toBeVisible();
+  await page.getByRole('button', { name: 'Geri al', exact: true }).click();
+  await expect(page.getByRole('heading', { name: 'Satın alma talebi', exact: true })).toBeVisible();
+});
+
+test('refuses to apply an edit proposal after the draft changed', async ({ page }) => {
+  await fakeFirebase(page, { verified: true });
+  await fakeAi(page);
+  await fakeEdit(page);
+  await page.goto('/');
+  await signIn(page);
+  await loadPurchase(page);
+  await ai(page).getByRole('radio', { name: 'Bu akışı düzenle', exact: true }).check();
+  await ai(page)
+    .getByLabel('İstediğiniz değişikliği anlatın', { exact: true })
+    .fill('Başlığa finans ekle');
+  await ai(page).getByRole('button', { name: 'Akış öner', exact: true }).click();
+  await expect(ai(page).getByRole('group', { name: 'AI önerisi', exact: true })).toBeVisible();
+  await page.getByRole('button', { name: 'Bitiş ekle', exact: true }).click();
+  await ai(page).getByRole('button', { name: 'Taslağa uygula', exact: true }).click();
+  await expect(ai(page).getByRole('alert')).toContainText('öneri uygulanmadı');
+  await expect(page.getByRole('heading', { name: 'Satın alma talebi', exact: true })).toBeVisible();
+  await expect(
+    page.getByRole('list', { name: 'Akıştaki adımlar', exact: true }).getByRole('button'),
+  ).toHaveCount(6);
+});

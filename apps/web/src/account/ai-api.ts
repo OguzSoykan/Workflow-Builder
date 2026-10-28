@@ -1,11 +1,31 @@
-import { parseWorkflow, type Workflow } from '@workflow-builder/workflow-contract';
+import {
+  computeContentHash,
+  parseWorkflow,
+  type Workflow,
+} from '@workflow-builder/workflow-contract';
 
 export interface AiLimits {
   aiEnabled: boolean;
   memberRemaining: number;
   budgetState: 'ok' | 'low' | 'exhausted' | 'unavailable';
 }
-export type Proposal = { workflow: Workflow; issueCount: number };
+export interface DiffSummary {
+  addedNodes: string[];
+  removedNodes: string[];
+  changedNodes: string[];
+  addedEdges: string[];
+  removedEdges: string[];
+  addedInputs: string[];
+  removedInputs: string[];
+  changedInputs: string[];
+  metadataChanged: boolean;
+}
+export type Proposal = {
+  workflow: Workflow;
+  issueCount: number;
+  baseContentHash?: string;
+  diff?: DiffSummary;
+};
 export type GenerateResult = { ok: true; proposal: Proposal } | { ok: false; message: string };
 
 const ERRORS: Record<string, string> = {
@@ -19,42 +39,104 @@ const ERRORS: Record<string, string> = {
   AI_REFUSED: 'AI bu isteği yanıtlamadı. Açıklamayı iş akışına odaklayarak yeniden yazın.',
   EMAIL_NOT_VERIFIED: 'AI için önce e-postanızı doğrulayın.',
   PROMPT_TOO_LONG: 'Açıklama en fazla 2000 karakter olabilir.',
+  STALE_PROPOSAL: 'Taslak değişti; düzenleme önerisini yeniden isteyin.',
 };
 
 // The proposal is only shown; nothing is applied or saved until the user confirms (AC-06).
-export async function generateWorkflow(
+async function propose(
+  path: string,
   token: string,
-  prompt: string,
   key: string,
-  fetcher: typeof fetch = (input, init) => fetch(input, init),
+  body: Record<string, unknown>,
+  fetcher: typeof fetch,
 ): Promise<GenerateResult> {
   let response: Response;
   try {
-    response = await fetcher('/api/v1/ai/workflows/generate', {
+    response = await fetcher(path, {
       method: 'POST',
       headers: {
         Authorization: `Bearer ${token}`,
         'Content-Type': 'application/json',
         'Idempotency-Key': key,
       },
-      body: JSON.stringify({ prompt, locale: 'tr' }),
+      body: JSON.stringify(body),
     });
   } catch {
     return { ok: false, message: 'Sunucuya ulaşılamadı. Taslağınız değişmedi.' };
   }
-  const body = (await response.json().catch(() => ({}))) as {
-    data?: { candidateWorkflow?: unknown; validation?: { issues?: unknown[] } };
+  const json = (await response.json().catch(() => ({}))) as {
+    data?: {
+      candidateWorkflow?: unknown;
+      validation?: { issues?: unknown[] };
+      baseContentHash?: string;
+      diffSummary?: DiffSummary;
+    };
     error?: { code?: string };
   };
   if (!response.ok)
-    return { ok: false, message: ERRORS[body.error?.code ?? ''] ?? 'AI isteği tamamlanamadı.' };
+    return { ok: false, message: ERRORS[json.error?.code ?? ''] ?? 'AI isteği tamamlanamadı.' };
   // Server output is re-checked against the shared contract before it can reach the editor.
-  const parsed = parseWorkflow(body.data?.candidateWorkflow);
+  const parsed = parseWorkflow(json.data?.candidateWorkflow);
   if (!parsed.success) return { ok: false, message: ERRORS.AI_PROVIDER_INVALID_RESPONSE as string };
   return {
     ok: true,
-    proposal: { workflow: parsed.data, issueCount: body.data?.validation?.issues?.length ?? 0 },
+    proposal: {
+      workflow: parsed.data,
+      issueCount: json.data?.validation?.issues?.length ?? 0,
+      ...(json.data?.baseContentHash ? { baseContentHash: json.data.baseContentHash } : {}),
+      ...(json.data?.diffSummary ? { diff: json.data.diffSummary } : {}),
+    },
   };
+}
+
+/** Sends the shown document with its content hash; the server rejects a mismatch as stale. */
+export function editWorkflow(
+  token: string,
+  prompt: string,
+  workflow: Workflow,
+  key: string,
+  fetcher: typeof fetch = (input, init) => fetch(input, init),
+): Promise<GenerateResult> {
+  const document = { ...workflow };
+  delete document.contentHash;
+  return propose(
+    '/api/v1/ai/workflows/edit',
+    token,
+    key,
+    { prompt, locale: 'tr', workflow: document, baseContentHash: computeContentHash(document) },
+    fetcher,
+  );
+}
+
+/** True while the editor still shows exactly the document the edit proposal was made for. */
+export function proposalMatches(proposal: Proposal, current: Workflow): boolean {
+  if (!proposal.baseContentHash) return true;
+  const document = { ...current };
+  delete document.contentHash;
+  return computeContentHash(document) === proposal.baseContentHash;
+}
+
+export function diffText(diff: DiffSummary): string {
+  const parts = [
+    diff.addedNodes.length && `+${diff.addedNodes.length} adım`,
+    diff.removedNodes.length && `−${diff.removedNodes.length} adım`,
+    diff.changedNodes.length && `${diff.changedNodes.length} adım değişti`,
+    (diff.addedEdges.length || diff.removedEdges.length) &&
+      `bağlantı +${diff.addedEdges.length}/−${diff.removedEdges.length}`,
+    (diff.addedInputs.length || diff.removedInputs.length || diff.changedInputs.length) &&
+      `alan +${diff.addedInputs.length}/−${diff.removedInputs.length}/~${diff.changedInputs.length}`,
+    diff.metadataChanged && 'başlık/açıklama değişti',
+  ].filter(Boolean);
+  return parts.length ? parts.join(' · ') : 'Değişiklik yok';
+}
+
+export function generateWorkflow(
+  token: string,
+  prompt: string,
+  key: string,
+  fetcher: typeof fetch = (input, init) => fetch(input, init),
+): Promise<GenerateResult> {
+  return propose('/api/v1/ai/workflows/generate', token, key, { prompt, locale: 'tr' }, fetcher);
 }
 
 export async function fetchLimits(

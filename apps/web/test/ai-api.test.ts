@@ -1,5 +1,12 @@
 import { describe, expect, it } from 'vitest';
-import { fetchLimits, generateWorkflow } from '../src/account/ai-api';
+import { computeContentHash } from '@workflow-builder/workflow-contract';
+import {
+  diffText,
+  editWorkflow,
+  fetchLimits,
+  generateWorkflow,
+  proposalMatches,
+} from '../src/account/ai-api';
 import { purchaseWorkflow } from '../../../tests/fixtures/purchase';
 
 function fetcher(
@@ -61,5 +68,101 @@ describe('AI client', () => {
     expect(await fetchLimits('t', fetcher({ body: { data: limits } }))).toEqual(limits);
     expect(await fetchLimits('t', fetcher({ status: 401, body: {} }))).toBeNull();
     expect(await fetchLimits('t', fetcher('offline'))).toBeNull();
+  });
+});
+
+describe('AI edit client', () => {
+  const diff = {
+    addedNodes: ['ai-1'],
+    removedNodes: [],
+    changedNodes: ['manager'],
+    addedEdges: ['e-ai-1', 'e-ai-2'],
+    removedEdges: ['e-approved'],
+    addedInputs: [],
+    removedInputs: [],
+    changedInputs: [],
+    metadataChanged: true,
+  };
+  it('sends the shown document with its content hash and keeps the base for apply', async () => {
+    const base = { ...purchaseWorkflow(), contentHash: 'a'.repeat(64) };
+    const seen: { init?: RequestInit | undefined } = {};
+    const hash = computeContentHash(purchaseWorkflow());
+    const result = await editWorkflow(
+      'tok',
+      'Finans onayı ekle',
+      base,
+      'ui_key_edit',
+      fetcher(
+        {
+          body: {
+            data: {
+              candidateWorkflow: purchaseWorkflow(),
+              validation: { issues: [] },
+              baseContentHash: hash,
+              diffSummary: diff,
+            },
+          },
+        },
+        seen,
+      ),
+    );
+    const sent = JSON.parse(String(seen.init?.body)) as {
+      workflow: { contentHash?: string };
+      baseContentHash: string;
+    };
+    expect(sent.baseContentHash).toBe(hash);
+    expect(sent.workflow.contentHash).toBeUndefined();
+    if (!result.ok) throw new Error('failed');
+    expect(result.proposal).toMatchObject({ baseContentHash: hash, diff });
+    expect(proposalMatches(result.proposal, purchaseWorkflow())).toBe(true);
+    expect(proposalMatches(result.proposal, { ...purchaseWorkflow(), title: 'Değişti' })).toBe(
+      false,
+    );
+    expect(
+      proposalMatches(
+        { workflow: purchaseWorkflow(), issueCount: 0 },
+        { ...purchaseWorkflow(), title: 'x' },
+      ),
+    ).toBe(true);
+  });
+
+  it('summarizes the semantic diff and maps stale errors', async () => {
+    expect(diffText(diff)).toBe(
+      '+1 adım · 1 adım değişti · bağlantı +2/−1 · başlık/açıklama değişti',
+    );
+    expect(
+      diffText({
+        ...diff,
+        addedNodes: [],
+        changedNodes: [],
+        addedEdges: [],
+        removedEdges: [],
+        metadataChanged: false,
+        removedNodes: ['x'],
+        changedInputs: ['k'],
+      }),
+    ).toBe('−1 adım · alan +0/−0/~1');
+    expect(
+      diffText({
+        ...diff,
+        addedNodes: [],
+        changedNodes: [],
+        addedEdges: [],
+        removedEdges: [],
+        metadataChanged: false,
+      }),
+    ).toBe('Değişiklik yok');
+    expect(
+      await editWorkflow(
+        't',
+        'p',
+        purchaseWorkflow(),
+        'k',
+        fetcher({ status: 409, body: { error: { code: 'STALE_PROPOSAL' } } }),
+      ),
+    ).toEqual({
+      ok: false,
+      message: expect.stringContaining('Taslak değişti'),
+    });
   });
 });

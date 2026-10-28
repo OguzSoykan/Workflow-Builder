@@ -16,3 +16,5 @@ export type {
   InputIssue,
   InputIssueCode,
 } from './simulator.ts';
+export { applyPatch, diffWorkflows } from './patch.ts';
+export type { PatchOperation, PatchResult, WorkflowDiff } from './patch.ts';
