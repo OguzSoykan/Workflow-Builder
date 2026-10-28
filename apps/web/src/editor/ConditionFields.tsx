@@ -6,6 +6,7 @@ import {
 } from '@workflow-builder/workflow-contract';
 import { INPUT_LABELS } from './input-draft';
 import { OPERATOR_LABELS, operatorsFor, type Operator } from './condition-model';
+import { t } from '../i18n/i18n';
 
 type ConditionNode = Extract<WorkflowNode, { type: 'condition' }>;
 
@@ -22,7 +23,7 @@ function ValueInput({
     const checked = Array.isArray(initial) ? initial : [];
     return (
       <fieldset className="condition-options">
-        <legend>Karşılaştırma değerleri</legend>
+        <legend>{t('Karşılaştırma değerleri')}</legend>
         {field.options.map((option) => (
           <label key={option} className="checkbox-label">
             <input
@@ -40,7 +41,7 @@ function ValueInput({
   if (field.type === 'enum' || field.type === 'boolean')
     return (
       <label htmlFor="condition-value">
-        Karşılaştırma değeri
+        {t('Karşılaştırma değeri')}
         <select
           id="condition-value"
           name="value"
@@ -60,8 +61,8 @@ function ValueInput({
             ))
           ) : (
             <>
-              <option value="true">Doğru</option>
-              <option value="false">Yanlış</option>
+              <option value="true">{t('Doğru')}</option>
+              <option value="false">{t('Yanlış')}</option>
             </>
           )}
         </select>
@@ -69,7 +70,7 @@ function ValueInput({
     );
   return (
     <label>
-      Karşılaştırma değeri
+      {t('Karşılaştırma değeri')}
       <input
         name="value"
         type={field.type === 'number' ? 'number' : field.type === 'date' ? 'date' : 'text'}
@@ -93,7 +94,7 @@ export function ConditionFields({ node, inputs }: { node: ConditionNode; inputs:
   if (!field)
     return (
       <p className="muted">
-        Koşul kurmak için önce aşağıdaki “Giriş alanları” bölümünden bir alan ekleyin.
+        {t('Koşul kurmak için önce aşağıdaki “Giriş alanları” bölümünden bir alan ekleyin.')}
       </p>
     );
   const unchanged = field.key === saved?.key && operator === node.config.operator;
@@ -101,11 +102,11 @@ export function ConditionFields({ node, inputs }: { node: ConditionNode; inputs:
     <>
       {!saved && (
         <p className="muted">
-          Bu koşul henüz tanımlı bir alana bağlı değil. Alanı seçip uygulayın.
+          {t('Bu koşul henüz tanımlı bir alana bağlı değil. Alanı seçip uygulayın.')}
         </p>
       )}
       <label htmlFor="condition-field">
-        Karşılaştırılacak alan
+        {t('Karşılaştırılacak alan')}
         <select
           id="condition-field"
           name="fieldKey"
@@ -114,13 +115,13 @@ export function ConditionFields({ node, inputs }: { node: ConditionNode; inputs:
         >
           {inputs.map((item) => (
             <option key={item.key} value={item.key}>
-              {item.label} ({INPUT_LABELS[item.type]})
+              {item.label} ({t(INPUT_LABELS[item.type])})
             </option>
           ))}
         </select>
       </label>
       <label htmlFor="condition-operator">
-        Karşılaştırma
+        {t('Karşılaştırma')}
         <select
           id="condition-operator"
           name="operator"
@@ -129,7 +130,7 @@ export function ConditionFields({ node, inputs }: { node: ConditionNode; inputs:
         >
           {operators.map((item) => (
             <option key={item} value={item}>
-              {OPERATOR_LABELS[item]}
+              {t(OPERATOR_LABELS[item])}
             </option>
           ))}
         </select>
@@ -140,7 +141,7 @@ export function ConditionFields({ node, inputs }: { node: ConditionNode; inputs:
         operator={operator}
         initial={unchanged ? node.config.value : undefined}
       />
-      <p className="muted">Koşul sağlanırsa “Doğru”, sağlanmazsa “Yanlış” çıkışı izlenir.</p>
+      <p className="muted">{t('Koşul sağlanırsa “Doğru”, sağlanmazsa “Yanlış” çıkışı izlenir.')}</p>
     </>
   );
 }

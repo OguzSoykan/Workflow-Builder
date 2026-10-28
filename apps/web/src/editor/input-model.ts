@@ -1,5 +1,6 @@
 import { parseWorkflow, type Workflow } from '@workflow-builder/workflow-contract';
 import { validateWorkflow } from '@workflow-builder/workflow-core';
+import { t } from '../i18n/i18n';
 
 export type InputEdit =
   | { type: 'save-input'; originalKey: string | null; field: unknown }
@@ -16,10 +17,10 @@ export function editInput(
   const reject = (error: string) => ({ workflow, error });
   const key = edit.type === 'delete-input' ? edit.key : edit.originalKey;
   const original = workflow.inputs.find((field) => field.key === key);
-  if (key !== null && !original) return reject('Düzenlenecek alan bulunamadı.');
+  if (key !== null && !original) return reject(t('Düzenlenecek alan bulunamadı.'));
   const references = key === null ? [] : inputReferences(workflow, key);
   if (edit.type === 'delete-input' && references.length)
-    return reject('Bu alan koşullarda kullanılıyor. Silmeden önce bağlı koşulları düzenleyin.');
+    return reject(t('Bu alan koşullarda kullanılıyor. Silmeden önce bağlı koşulları düzenleyin.'));
   const inputs =
     edit.type === 'delete-input'
       ? workflow.inputs.filter((field) => field.key !== key)
@@ -32,22 +33,28 @@ export function editInput(
   if (!parsed.success) {
     const code = parsed.issues[0]?.code;
     const messages: Record<string, string> = {
-      DUPLICATE_INPUT_KEY: 'Bu alan anahtarı zaten kullanılıyor.',
-      GRAPH_LIMIT_EXCEEDED: 'En fazla 30 alan eklenebilir; belge boyutu sınırı da korunmalıdır.',
-      INPUT_DEFAULT_INVALID:
+      DUPLICATE_INPUT_KEY: t('Bu alan anahtarı zaten kullanılıyor.'),
+      GRAPH_LIMIT_EXCEEDED: t('En fazla 30 alan eklenebilir; belge boyutu sınırı da korunmalıdır.'),
+      INPUT_DEFAULT_INVALID: t(
         'Varsayılan değer alan türüne, seçeneklere ve sınırlara uygun olmalıdır.',
-      INPUT_OPTIONS_INVALID: '1–100 benzersiz seçenek girin; her seçenek 1–120 karakter olmalıdır.',
-      INPUT_VALIDATION_INVALID:
+      ),
+      INPUT_OPTIONS_INVALID: t(
+        '1–100 benzersiz seçenek girin; her seçenek 1–120 karakter olmalıdır.',
+      ),
+      INPUT_VALIDATION_INVALID: t(
         'Alan sınırları geçersiz: alt sınır üst sınırı aşamaz; metin uzunluğu 0–1000 arasında tam sayı olmalıdır.',
+      ),
     };
     return reject(
       messages[code ?? ''] ??
-        'Alan geçersiz. Anahtar harf veya alt çizgiyle başlamalı, yalnız harf/rakam/alt çizgi içermeli ve en fazla 64 karakter olmalıdır. Ad boş olamaz (en fazla 120 karakter); değer ve sınırları kontrol edin.',
+        t(
+          'Alan geçersiz. Anahtar harf veya alt çizgiyle başlamalı, yalnız harf/rakam/alt çizgi içermeli ve en fazla 64 karakter olmalıdır. Ad boş olamaz (en fazla 120 karakter); değer ve sınırları kontrol edin.',
+        ),
     );
   }
   if (edit.type === 'save-input' && original) {
     const field = parsed.data.inputs[workflow.inputs.indexOf(original)];
-    if (!field) return reject('Düzenlenecek alan bulunamadı.');
+    if (!field) return reject(t('Düzenlenecek alan bulunamadı.'));
     parsed.data.nodes = parsed.data.nodes.map((node) =>
       node.type === 'condition' && node.config.fieldKey === key
         ? { ...node, config: { ...node.config, fieldKey: field.key } }
@@ -67,11 +74,15 @@ export function editInput(
       )
     )
       return reject(
-        'Değişiklik bağlı koşulu geçersiz kılıyor. Önce koşulu düzenleyin veya uyumlu bir tür/seçenek seçin.',
+        t(
+          'Değişiklik bağlı koşulu geçersiz kılıyor. Önce koşulu düzenleyin veya uyumlu bir tür/seçenek seçin.',
+        ),
       );
   }
   const final = parseWorkflow(parsed.data);
   return final.success
     ? { workflow: final.data, error: null }
-    : reject('Alan referansları güncellendiğinde belge sınırı aşılıyor; değişiklik uygulanmadı.');
+    : reject(
+        t('Alan referansları güncellendiğinde belge sınırı aşılıyor; değişiklik uygulanmadı.'),
+      );
 }

@@ -7,6 +7,7 @@ import {
   type WorkflowNode,
 } from '@workflow-builder/workflow-contract';
 import { validateWorkflow } from '@workflow-builder/workflow-core';
+import { t } from '../i18n/i18n';
 
 type ConditionConfig = Extract<WorkflowNode, { type: 'condition' }>['config'];
 export type Operator = ConditionConfig['operator'];
@@ -36,7 +37,7 @@ const CONDITION_CODES = new Set([
 ]);
 const VALUE_MESSAGES: Record<InputField['type'], string> = {
   number: 'Karşılaştırma değeri bir sayı olmalıdır.',
-  string: `Karşılaştırma metni en fazla ${WORKFLOW_LIMITS.text} karakter olabilir.`,
+  string: 'Karşılaştırma metni en fazla {max} karakter olabilir.',
   boolean: 'Doğru veya yanlış seçin.',
   date: 'Geçerli bir takvim tarihi girin.',
   enum: 'Değer alanın seçeneklerinden olmalıdır; “şunlardan biridir” için en az bir seçenek işaretleyin.',
@@ -80,10 +81,10 @@ export function conditionSummary(workflow: Workflow, node: WorkflowNode): string
     ? value.join(', ')
     : typeof value === 'boolean'
       ? value
-        ? 'Doğru'
-        : 'Yanlış'
+        ? t('Doğru')
+        : t('Yanlış')
       : String(value);
-  return `${field.label} ${OPERATOR_LABELS[operator]} ${text}`;
+  return `${field.label} ${t(OPERATOR_LABELS[operator])} ${text}`;
 }
 
 export function editCondition(
@@ -92,10 +93,10 @@ export function editCondition(
 ): { workflow: Workflow; error: string | null } {
   const reject = (error: string) => ({ workflow, error });
   const node = workflow.nodes.find((item) => item.id === edit.id);
-  if (node?.type !== 'condition') return reject('Düzenlenecek koşul adımı bulunamadı.');
+  if (node?.type !== 'condition') return reject(t('Düzenlenecek koşul adımı bulunamadı.'));
   const value = (edit.config as { value?: unknown } | null)?.value;
-  if (typeof value === 'number' && !Number.isFinite(value)) return reject(VALUE_MESSAGES.number);
-  if (Array.isArray(value) && !value.length) return reject(VALUE_MESSAGES.enum);
+  if (typeof value === 'number' && !Number.isFinite(value)) return reject(t(VALUE_MESSAGES.number));
+  if (Array.isArray(value) && !value.length) return reject(t(VALUE_MESSAGES.enum));
   const candidate = {
     ...workflow,
     nodes: workflow.nodes.map((item) =>
@@ -106,7 +107,9 @@ export function editCondition(
   const parsed = parseWorkflow(candidate);
   if (!parsed.success)
     return reject(
-      'Koşul uygulanmadı: ad boş olamaz (en fazla 120 karakter); alan, karşılaştırma ve değer geçerli olmalı, belge sınırları korunmalıdır.',
+      t(
+        'Koşul uygulanmadı: ad boş olamaz (en fazla 120 karakter); alan, karşılaştırma ve değer geçerli olmalı, belge sınırları korunmalıdır.',
+      ),
     );
   const issue = validateWorkflow(parsed.data).issues.find(
     (item) => item.nodeId === edit.id && CONDITION_CODES.has(item.code),
@@ -115,9 +118,9 @@ export function editCondition(
   const field = parsed.data.inputs.find((item) => item.key === issue.fieldKey);
   return reject(
     issue.code === 'INPUT_FIELD_MISSING' || !field
-      ? 'Koşul için tanımlı bir giriş alanı seçin.'
+      ? t('Koşul için tanımlı bir giriş alanı seçin.')
       : issue.code === 'OPERATOR_TYPE_MISMATCH'
-        ? 'Seçilen karşılaştırma bu alan türüyle kullanılamaz.'
-        : VALUE_MESSAGES[field.type],
+        ? t('Seçilen karşılaştırma bu alan türüyle kullanılamaz.')
+        : t(VALUE_MESSAGES[field.type], { max: WORKFLOW_LIMITS.text }),
   );
 }

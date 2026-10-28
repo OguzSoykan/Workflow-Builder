@@ -8,6 +8,8 @@ export default defineConfig({
   reporter: [['list'], ['html', { open: 'never' }]],
   use: {
     baseURL: 'http://127.0.0.1:8787',
+    // UI language follows the browser (FR-11); existing scenarios assert Turkish copy.
+    locale: 'tr-TR',
     trace: 'retain-on-failure',
   },
   projects: [{ name: 'chromium', use: { ...devices['Desktop Chrome'] } }],

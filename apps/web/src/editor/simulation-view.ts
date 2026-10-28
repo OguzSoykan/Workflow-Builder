@@ -7,6 +7,7 @@ import type {
 } from '@workflow-builder/workflow-core';
 import { conditionSummary } from './condition-model';
 import { HANDLE_LABELS } from './model';
+import { t } from '../i18n/i18n';
 
 // Empty controls are omitted so defaults and the required/used-field rule apply (D-14).
 export function simulationInputsFromForm(
@@ -28,18 +29,20 @@ export function inputIssueText(issue: InputIssue, workflow: Workflow): string {
   const name = `“${label ?? issue.fieldKey}”`;
   switch (issue.code) {
     case 'INPUT_REQUIRED':
-      return `${name} için bir değer girin; alan zorunlu veya bir koşulda kullanılıyor.`;
+      return t('{name} için bir değer girin; alan zorunlu veya bir koşulda kullanılıyor.', {
+        name,
+      });
     case 'INPUT_TYPE_INVALID':
-      return `${name} değeri alan türüne veya seçeneklerine uymuyor.`;
+      return t('{name} değeri alan türüne veya seçeneklerine uymuyor.', { name });
     case 'INPUT_OUT_OF_RANGE':
-      return `${name} değeri alanın alt/üst sınırları dışında.`;
+      return t('{name} değeri alanın alt/üst sınırları dışında.', { name });
     case 'INPUT_UNKNOWN':
-      return `${name} akışta tanımlı bir alan değil.`;
+      return t('{name} akışta tanımlı bir alan değil.', { name });
   }
 }
 
 function formatValue(value: InputValue): string {
-  return typeof value === 'boolean' ? (value ? 'Doğru' : 'Yanlış') : String(value);
+  return typeof value === 'boolean' ? (value ? t('Doğru') : t('Yanlış')) : String(value);
 }
 
 export function describeStep(workflow: Workflow, step: SimulationStep, run: SimulationRun): string {
@@ -47,24 +50,31 @@ export function describeStep(workflow: Workflow, step: SimulationStep, run: Simu
   const name = `“${node?.label ?? step.nodeId}”`;
   switch (step.action) {
     case 'start':
-      return `${name} başladı.`;
+      return t('{name} başladı.', { name });
     case 'evaluate': {
       const summary = node ? conditionSummary(workflow, node) : null;
       const key = node?.type === 'condition' ? node.config.fieldKey : undefined;
       const actual = key === undefined ? undefined : run.inputValues[key];
-      const result = step.outputState?.conditionResult ? 'Doğru' : 'Yanlış';
-      return `${name}: ${summary ?? 'koşul'}${actual === undefined ? '' : ` (değer: ${formatValue(actual)})`} → ${result}.`;
+      const result = step.outputState?.conditionResult ? t('Doğru') : t('Yanlış');
+      const value =
+        actual === undefined ? '' : t(' (değer: {value})', { value: formatValue(actual) });
+      return t('{name}: {summary}{value} → {result}.', {
+        name,
+        summary: summary ?? t('koşul'),
+        value,
+        result,
+      });
     }
     case 'await_approval': {
       const role = node?.type === 'approval' ? node.config.roleLabel : 'Onaylayan';
-      return `${name} adımı ${role} kararını bekliyor.`;
+      return t('{name} adımı {role} kararını bekliyor.', { name, role });
     }
     case 'decide':
-      return `${name}: ${HANDLE_LABELS[step.decision ?? 'approved']}.`;
+      return `${name}: ${t(HANDLE_LABELS[step.decision ?? 'approved'])}.`;
     case 'end':
-      return `${name} bitişine ulaşıldı: ${
-        step.outputState?.outcome === 'rejected' ? 'akış reddedildi' : 'akış tamamlandı'
-      }.`;
+      return step.outputState?.outcome === 'rejected'
+        ? t('{name} bitişine ulaşıldı: akış reddedildi.', { name })
+        : t('{name} bitişine ulaşıldı: akış tamamlandı.', { name });
   }
 }
 

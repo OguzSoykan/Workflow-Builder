@@ -2,6 +2,7 @@ import { useState, type Dispatch } from 'react';
 import type { Workflow } from '@workflow-builder/workflow-contract';
 import { exportWorkflow, importTooLarge, readImport, semanticIssueCount } from './transfer';
 import type { EditorAction } from './model';
+import { t } from '../i18n/i18n';
 
 type Pending = { fileName: string; workflow: Workflow; hashMismatch: boolean; issueCount: number };
 type Message = { kind: 'error' | 'info'; text: string };
@@ -18,8 +19,8 @@ export function TransferPanel({
   const [message, setMessage] = useState<Message | null>(null);
   const issues = semanticIssueCount(workflow);
   return (
-    <section className="transfer" aria-label="Dosya işlemleri">
-      <h2 className="list-heading">Dosya</h2>
+    <section className="transfer" aria-label={t('Dosya işlemleri')}>
+      <h2 className="list-heading">{t('Dosya')}</h2>
       <button
         type="button"
         className="secondary"
@@ -38,15 +39,20 @@ export function TransferPanel({
           setMessage({ kind: 'info', text: `${result.fileName} indirildi.` });
         }}
       >
-        JSON dışa aktar
+        {t('JSON dışa aktar')}
       </button>
       {issues > 0 && (
         <p className="muted">
-          Akışta {issues} doğrulama sorunu var; taslak dışa aktarılabilir ama henüz çalıştırılamaz.
+          {t(
+            'Akışta {count} doğrulama sorunu var; taslak dışa aktarılabilir ama henüz çalıştırılamaz.',
+            {
+              count: issues,
+            },
+          )}
         </p>
       )}
       <label className="file-label">
-        JSON içe aktar
+        {t('JSON içe aktar')}
         <input
           type="file"
           accept="application/json,.json"
@@ -56,38 +62,47 @@ export function TransferPanel({
             setPending(null);
             if (!file) return;
             if (importTooLarge(file.size)) {
-              setMessage({ kind: 'error', text: 'Dosya 256 KiB sınırını aşıyor; okunmadı.' });
+              setMessage({ kind: 'error', text: t('Dosya 256 KiB sınırını aşıyor; okunmadı.') });
               return;
             }
             file.text().then(
               (text) => {
                 const result = readImport(text);
                 if (!result.ok) {
-                  setMessage({ kind: 'error', text: `İçe aktarılamadı: ${result.error}` });
+                  setMessage({
+                    kind: 'error',
+                    text: t('İçe aktarılamadı: {error}', { error: result.error }),
+                  });
                   return;
                 }
                 setMessage(null);
                 setPending({ fileName: file.name, ...result });
               },
-              () => setMessage({ kind: 'error', text: 'Dosya okunamadı.' }),
+              () => setMessage({ kind: 'error', text: t('Dosya okunamadı.') }),
             );
           }}
         />
       </label>
       {pending && (
-        <div className="import-confirm" role="group" aria-label="İçe aktarma onayı">
+        <div className="import-confirm" role="group" aria-label={t('İçe aktarma onayı')}>
           <p>
-            <strong>{pending.fileName}</strong> mevcut taslağın yerine geçecek. Bu oturumda “Geri
-            al” ile dönebilirsiniz; kalıcı yedek için önce dışa aktarın.
+            <strong>{pending.fileName}</strong>{' '}
+            {t(
+              'mevcut taslağın yerine geçecek. Bu oturumda “Geri al” ile dönebilirsiniz; kalıcı yedek için önce dışa aktarın.',
+            )}
           </p>
           {pending.issueCount > 0 && (
             <p className="muted">
-              Dosyada {pending.issueCount} doğrulama sorunu var; taslak olarak açılır.
+              {t('Dosyada {count} doğrulama sorunu var; taslak olarak açılır.', {
+                count: pending.issueCount,
+              })}
             </p>
           )}
           {pending.hashMismatch && (
             <p className="muted">
-              İçerik özeti eşleşmiyor; dosya elle değiştirilmiş olabilir. Özet yeniden hesaplanacak.
+              {t(
+                'İçerik özeti eşleşmiyor; dosya elle değiştirilmiş olabilir. Özet yeniden hesaplanacak.',
+              )}
             </p>
           )}
           <button
@@ -95,13 +110,16 @@ export function TransferPanel({
             onClick={() => {
               dispatch({ type: 'replace-workflow', workflow: pending.workflow });
               setPending(null);
-              setMessage({ kind: 'info', text: `${pending.fileName} içe aktarıldı.` });
+              setMessage({
+                kind: 'info',
+                text: t('{fileName} içe aktarıldı.', { fileName: pending.fileName }),
+              });
             }}
           >
-            Taslağı değiştir
+            {t('Taslağı değiştir')}
           </button>{' '}
           <button type="button" className="secondary" onClick={() => setPending(null)}>
-            Vazgeç
+            {t('Vazgeç')}
           </button>
         </div>
       )}

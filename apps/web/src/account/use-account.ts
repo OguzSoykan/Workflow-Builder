@@ -8,6 +8,7 @@ import {
   type FirebaseConfig,
   type Session,
 } from './firebase-auth';
+import { t } from '../i18n/i18n';
 
 export interface Profile {
   uid: string;
@@ -77,7 +78,7 @@ export function useAccount() {
       }).catch(() => null);
       if (!response?.ok) {
         if (response?.status === 401) store(null);
-        setMessage({ kind: 'error', text: 'Hesap bilgisi alınamadı. Tekrar giriş yapın.' });
+        setMessage({ kind: 'error', text: t('Hesap bilgisi alınamadı. Tekrar giriş yapın.') });
         return;
       }
       const body = (await response.json()) as { data: Profile };
@@ -118,7 +119,10 @@ export function useAccount() {
         (next) => {
           store(next);
           void client.sendVerification(next.idToken);
-          setMessage({ kind: 'info', text: 'Hesap oluşturuldu. Doğrulama e-postası gönderildi.' });
+          setMessage({
+            kind: 'info',
+            text: t('Hesap oluşturuldu. Doğrulama e-postası gönderildi.'),
+          });
         },
       ),
     sendVerification: () =>
@@ -126,7 +130,7 @@ export function useAccount() {
       session &&
       run(
         () => client.sendVerification(session.idToken),
-        () => setMessage({ kind: 'info', text: 'Doğrulama e-postası gönderildi.' }),
+        () => setMessage({ kind: 'info', text: t('Doğrulama e-postası gönderildi.') }),
       ),
     resetPassword: (email: string) =>
       client &&
@@ -135,7 +139,7 @@ export function useAccount() {
         () =>
           setMessage({
             kind: 'info',
-            text: 'Şifre sıfırlama bağlantısı e-posta adresinize gönderildi.',
+            text: t('Şifre sıfırlama bağlantısı e-posta adresinize gönderildi.'),
           }),
       ),
     /** Forces a token refresh so a just-verified email reaches the Worker. */
@@ -151,7 +155,7 @@ export function useAccount() {
       ),
     signOut: () => {
       store(null);
-      setMessage({ kind: 'info', text: 'Çıkış yapıldı. Yerel taslağınız bu tarayıcıda kalır.' });
+      setMessage({ kind: 'info', text: t('Çıkış yapıldı. Yerel taslağınız bu tarayıcıda kalır.') });
     },
   };
 }

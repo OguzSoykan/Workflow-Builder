@@ -3,6 +3,7 @@ import {
   parseWorkflow,
   type Workflow,
 } from '@workflow-builder/workflow-contract';
+import { getLocale, t } from '../i18n/i18n';
 
 export interface AiLimits {
   aiEnabled: boolean;
@@ -62,7 +63,7 @@ async function propose(
       body: JSON.stringify(body),
     });
   } catch {
-    return { ok: false, message: 'Sunucuya ulaşılamadı. Taslağınız değişmedi.' };
+    return { ok: false, message: t('Sunucuya ulaşılamadı. Taslağınız değişmedi.') };
   }
   const json = (await response.json().catch(() => ({}))) as {
     data?: {
@@ -74,10 +75,16 @@ async function propose(
     error?: { code?: string };
   };
   if (!response.ok)
-    return { ok: false, message: ERRORS[json.error?.code ?? ''] ?? 'AI isteği tamamlanamadı.' };
+    return {
+      ok: false,
+      message:
+        (ERRORS[json.error?.code ?? ''] && t(ERRORS[json.error?.code ?? ''] as string)) ??
+        t('AI isteği tamamlanamadı.'),
+    };
   // Server output is re-checked against the shared contract before it can reach the editor.
   const parsed = parseWorkflow(json.data?.candidateWorkflow);
-  if (!parsed.success) return { ok: false, message: ERRORS.AI_PROVIDER_INVALID_RESPONSE as string };
+  if (!parsed.success)
+    return { ok: false, message: t(ERRORS.AI_PROVIDER_INVALID_RESPONSE as string) };
   return {
     ok: true,
     proposal: {
@@ -103,7 +110,12 @@ export function editWorkflow(
     '/api/v1/ai/workflows/edit',
     token,
     key,
-    { prompt, locale: 'tr', workflow: document, baseContentHash: computeContentHash(document) },
+    {
+      prompt,
+      locale: getLocale(),
+      workflow: document,
+      baseContentHash: computeContentHash(document),
+    },
     fetcher,
   );
 }
@@ -118,16 +130,19 @@ export function proposalMatches(proposal: Proposal, current: Workflow): boolean 
 
 export function diffText(diff: DiffSummary): string {
   const parts = [
-    diff.addedNodes.length && `+${diff.addedNodes.length} adım`,
-    diff.removedNodes.length && `−${diff.removedNodes.length} adım`,
-    diff.changedNodes.length && `${diff.changedNodes.length} adım değişti`,
+    diff.addedNodes.length && t('+{length} adım', { length: diff.addedNodes.length }),
+    diff.removedNodes.length && t('−{length} adım', { length: diff.removedNodes.length }),
+    diff.changedNodes.length && t('{length} adım değişti', { length: diff.changedNodes.length }),
     (diff.addedEdges.length || diff.removedEdges.length) &&
-      `bağlantı +${diff.addedEdges.length}/−${diff.removedEdges.length}`,
+      t('bağlantı +{length}/−{length1}', {
+        length: diff.addedEdges.length,
+        length1: diff.removedEdges.length,
+      }),
     (diff.addedInputs.length || diff.removedInputs.length || diff.changedInputs.length) &&
       `alan +${diff.addedInputs.length}/−${diff.removedInputs.length}/~${diff.changedInputs.length}`,
-    diff.metadataChanged && 'başlık/açıklama değişti',
+    diff.metadataChanged && t('başlık/açıklama değişti'),
   ].filter(Boolean);
-  return parts.length ? parts.join(' · ') : 'Değişiklik yok';
+  return parts.length ? parts.join(' · ') : t('Değişiklik yok');
 }
 
 export function generateWorkflow(
@@ -136,7 +151,13 @@ export function generateWorkflow(
   key: string,
   fetcher: typeof fetch = (input, init) => fetch(input, init),
 ): Promise<GenerateResult> {
-  return propose('/api/v1/ai/workflows/generate', token, key, { prompt, locale: 'tr' }, fetcher);
+  return propose(
+    '/api/v1/ai/workflows/generate',
+    token,
+    key,
+    { prompt, locale: getLocale() },
+    fetcher,
+  );
 }
 
 export async function fetchLimits(

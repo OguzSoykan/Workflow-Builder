@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import type { Account } from './use-account';
+import { t } from '../i18n/i18n';
 
 export function AccountPanel({ account }: { account: Account }) {
   const [email, setEmail] = useState('');
@@ -9,29 +10,31 @@ export function AccountPanel({ account }: { account: Account }) {
     return (
       <span
         className="account-status"
-        title="Firebase projesi bağlanınca hesap özellikleri açılır."
+        title={t('Firebase projesi bağlanınca hesap özellikleri açılır.')}
       >
-        Bulut hesabı yapılandırılmadı
+        {t('Bulut hesabı yapılandırılmadı')}
       </span>
     );
   const { session, profile } = account;
   return (
     <details className="account">
-      <summary>{session ? session.email : 'Giriş yap'}</summary>
-      <section className="account-panel" aria-label="Hesap">
+      <summary>{session ? session.email : t('Giriş yap')}</summary>
+      <section className="account-panel" aria-label={t('Hesap')}>
         {session ? (
           <>
             <p>
               <strong>{session.email}</strong>
             </p>
             {profile === null ? (
-              <p className="muted">Hesap bilgisi yükleniyor…</p>
+              <p className="muted">{t('Hesap bilgisi yükleniyor…')}</p>
             ) : profile.emailVerified ? (
-              <p className="account-ok">E-posta doğrulandı; buluta kayıt açık.</p>
+              <p className="account-ok">{t('E-posta doğrulandı; buluta kayıt açık.')}</p>
             ) : (
               <>
                 <p className="account-warning">
-                  E-postanız doğrulanmadı. Buluta kaydetmek için e-postadaki bağlantıya tıklayın.
+                  {t(
+                    'E-postanız doğrulanmadı. Buluta kaydetmek için e-postadaki bağlantıya tıklayın.',
+                  )}
                 </p>
                 <button
                   type="button"
@@ -39,7 +42,7 @@ export function AccountPanel({ account }: { account: Account }) {
                   disabled={account.busy}
                   onClick={() => void account.sendVerification()}
                 >
-                  Doğrulama e-postası gönder
+                  {t('Doğrulama e-postası gönder')}
                 </button>{' '}
                 <button
                   type="button"
@@ -47,13 +50,13 @@ export function AccountPanel({ account }: { account: Account }) {
                   disabled={account.busy}
                   onClick={() => void account.refreshVerification()}
                 >
-                  Doğruladım, yenile
+                  {t('Doğruladım, yenile')}
                 </button>
               </>
             )}
-            <p className="muted">Çıkış yapmak bu tarayıcıdaki yerel taslağı silmez.</p>
+            <p className="muted">{t('Çıkış yapmak bu tarayıcıdaki yerel taslağı silmez.')}</p>
             <button type="button" onClick={account.signOut}>
-              Çıkış yap
+              {t('Çıkış yap')}
             </button>
           </>
         ) : (
@@ -63,9 +66,9 @@ export function AccountPanel({ account }: { account: Account }) {
               void account.signIn(email, password);
             }}
           >
-            <p className="muted">Şifreniz yalnızca Firebase Authentication'a gönderilir.</p>
+            <p className="muted">{t("Şifreniz yalnızca Firebase Authentication'a gönderilir.")}</p>
             <label>
-              E-posta
+              {t('E-posta')}
               <input
                 type="email"
                 autoComplete="email"
@@ -75,7 +78,7 @@ export function AccountPanel({ account }: { account: Account }) {
               />
             </label>
             <label>
-              Şifre
+              {t('Şifre')}
               <input
                 type="password"
                 autoComplete="current-password"
@@ -86,7 +89,7 @@ export function AccountPanel({ account }: { account: Account }) {
               />
             </label>
             <button type="submit" disabled={account.busy}>
-              Giriş yap
+              {t('Giriş yap')}
             </button>{' '}
             <button
               type="button"
@@ -94,7 +97,7 @@ export function AccountPanel({ account }: { account: Account }) {
               disabled={account.busy || !email || password.length < 6}
               onClick={() => void account.signUp(email, password)}
             >
-              Hesap oluştur
+              {t('Hesap oluştur')}
             </button>{' '}
             <button
               type="button"
@@ -102,7 +105,7 @@ export function AccountPanel({ account }: { account: Account }) {
               disabled={account.busy || !email}
               onClick={() => void account.resetPassword(email)}
             >
-              Şifremi unuttum
+              {t('Şifremi unuttum')}
             </button>
           </form>
         )}

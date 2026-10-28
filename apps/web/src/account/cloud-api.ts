@@ -1,4 +1,5 @@
 import type { Workflow } from '@workflow-builder/workflow-contract';
+import { t } from '../i18n/i18n';
 
 // Client for the owner-scoped D1 API (ADR-019). The local draft is never modified here (D-06).
 export type SaveOutcome =
@@ -23,7 +24,8 @@ const ERRORS: Record<string, string> = {
   WORKFLOW_NOT_FOUND: 'Bulut kaydı bulunamadı; silinmiş olabilir.',
 };
 const message = (code: string | undefined) =>
-  ERRORS[code ?? ''] ?? 'Bulut kaydı tamamlanamadı. Lütfen tekrar deneyin.';
+  (ERRORS[code ?? ''] && t(ERRORS[code ?? ''] as string)) ??
+  t('Bulut kaydı tamamlanamadı. Lütfen tekrar deneyin.');
 
 type Body = {
   data?: Record<string, unknown>;
@@ -74,7 +76,7 @@ export class CloudApi {
       },
     );
     if (!result)
-      return { kind: 'error', message: 'Sunucuya ulaşılamadı. Yerel taslağınız korunuyor.' };
+      return { kind: 'error', message: t('Sunucuya ulaşılamadı. Yerel taslağınız korunuyor.') };
     if (result.status === 200)
       return { kind: 'saved', revision: Number(result.body.data?.revision) };
     const current = result.body.error?.details?.currentRevision;
@@ -91,7 +93,7 @@ export class CloudApi {
     if (knownRevision !== null) return this.put(workflow, knownRevision);
     const created = await this.call('POST', '/api/v1/workflows', { workflow, source: 'manual' });
     if (!created)
-      return { kind: 'error', message: 'Sunucuya ulaşılamadı. Yerel taslağınız korunuyor.' };
+      return { kind: 'error', message: t('Sunucuya ulaşılamadı. Yerel taslağınız korunuyor.') };
     if (created.status === 201) return { kind: 'saved', revision: 1 };
     if (created.status === 409 && created.body.error?.code === 'WORKFLOW_EXISTS') {
       const current = await this.call(
@@ -103,8 +105,9 @@ export class CloudApi {
         ? { kind: 'conflict', currentRevision: revision }
         : {
             kind: 'error',
-            message:
+            message: t(
               'Bu kimlikle silinmiş bir bulut kaydı var; taslağı yeni kimlikle kaydetmek için dışa/içe aktarın.',
+            ),
           };
     }
     return { kind: 'error', message: message(created.body.error?.code) };
