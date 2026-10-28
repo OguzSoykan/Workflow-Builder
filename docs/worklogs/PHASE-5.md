@@ -22,3 +22,15 @@
 - `apps/worker/src/ai/routes.ts`: `/api/v1/ai/*` koruması ve `GET /api/v1/ai/limits`; ledger'a `quota` komutu; `AI_ENABLED` binding'i. OpenAPI'de `getAiLimits` implemented + `AiLimits` şeması.
 - 7 test (gerçek SQLite ledger'lı DO): kalan hak 1 → rezervasyon sonrası 0, kişi başı ayrı; AI kapalı/bayrak yok/doğrulanmamış → kapalı; ledger yok veya hatalı → fail-closed; korunan rota sırası (AI_DISABLED → EMAIL_NOT_VERIFIED → 404 henüz rota yok); kaba bütçe eşlemesi. İlk denemede PASS.
 - Kapılar: typecheck/lint/format, 421 Vitest + 2 + 3, coverage satır %99,11, negatif kapılar, build, secret:scan, Gitleaks PASS; E2E 42/42.
+
+## P5-005 — WB-017 merge ve WB-018 başlangıcı (2026-10-28)
+
+- [PR #26](https://github.com/OguzSoykan/Workflow-Builder/pull/26) [quality 40608488207](https://github.com/OguzSoykan/Workflow-Builder/actions/runs/40608488207) PASS sonrası agent squash merge: main `af9684e`. WB-017 Done.
+- Resmi kaynak doğrulaması (28 Ekim 2026): [OpenAI fiyatlandırma](https://developers.openai.com/api/docs/pricing) — `gpt-6-luna` girdi 0,10 / önbellekli 0,01 / çıktı 0,50 USD per 1M token; [Structured Outputs](https://developers.openai.com/api/docs/guides/structured-outputs) — Responses API `text.format: {type: json_schema, name, schema, strict: true}`, `additionalProperties: false`, tüm alanlar `required`, ret `refusal` ile. API reference sayfası 403 verdi (yanıt alanları guides + bilinen şema ile kuruldu; canlı eval'de doğrulanacak).
+- `feat/WB-018-openai-adapter` açıldı. Plan: yalnız fiyatı kodda doğrulanmış model; girdi token üst sınırı = UTF-8 bayt (BPE token ≥ 1 bayt), maliyet tavanı mikro-USD yukarı yuvarlanır; sonuç → ledger uzlaştırması (billed/unknown/not_billed); retry yok; zaman aşımı; mock sağlayıcı; key yalnız Worker secret.
+
+## P5-006 — WB-018 OpenAI adaptörü (2026-10-28)
+
+- `apps/worker/src/ai/provider.ts`: Responses API + strict Structured Outputs, fiyat tablosu, bayt tabanlı maliyet tavanı, uzlaştırma eşlemesi, mock sağlayıcı, `providerFromEnv`; `Bindings`'e `AI_PROVIDER`/`OPENAI_API_KEY`/`AI_MODEL`; `infra/.dev.vars.example`.
+- Hatalar: testte `undefined` argümanı varsayılan parametreyi tetikledi (`null` ile düzeltildi), `exactOptionalPropertyTypes` tip hatası. Repo `secret:scan` `.dev.vars.example` içindeki yorum satırı `OPENAI_API_KEY=…` atamasını işaretledi (FAIL); kural gevşetilmedi, satır açıklamaya çevrildi → 0 bulgu.
+- Kapılar: typecheck/lint/format, 435 Vitest + 2 + 3, coverage satır %99,14 (provider %100 satır), negatif kapılar, build, secret:scan (düzeltme sonrası), Gitleaks PASS; E2E 42/42. Canlı OpenAI çağrısı yok. Karar ADR-022.

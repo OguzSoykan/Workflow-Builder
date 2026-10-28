@@ -1,5 +1,9 @@
-# Phase 1 health works without this file. No active secrets or bindings.
-# Future server-only placeholders; do not uncomment before the owning phase.
-# OPENAI_API_KEY=<REPLACE_ME>
-# TURNSTILE_SECRET_KEY=<REPLACE_ME>
-# SESSION_SIGNING_SECRET=<REPLACE_ME>
+# Copy to infra/.dev.vars for local development (git-ignored). Placeholders only; never commit real values.
+# FIREBASE_PROJECT_ID=your-firebase-project-id
+# FIREBASE_WEB_API_KEY=your-public-web-api-key
+# AI_ENABLED=true
+# AI_PROVIDER=mock
+# AI_PROVIDER=openai
+# OpenAI key: add a line named OPENAI_API_KEY to infra/.dev.vars yourself (separate project key);
+# for deployments use `wrangler secret put OPENAI_API_KEY`. Never paste it into chat, logs or commits.
+# AI_MODEL=gpt-6-luna

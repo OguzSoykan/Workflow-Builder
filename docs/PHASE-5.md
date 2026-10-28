@@ -21,3 +21,8 @@ Kaynak: PRD FR-06–08/12, AC-06/07/09–11, Architecture §4, Data Model §5–
 
 - `/api/v1/ai/*` koruması: `AI_ENABLED` “true” değilse `403 AI_DISABLED`, doğrulanmamış e-posta `403 EMAIL_NOT_VERIFIED`; ledger çağrısından önce. Misafir yolu ve Turnstile yoktur (kullanıcı kararı).
 - `GET /api/v1/ai/limits`: `aiEnabled`, `memberRemaining` (UTC günü 1 hak), kaba `budgetState` (ok/low/exhausted/unavailable); ledger tutarları açılmaz, ledger yoksa AI kapalı.
+
+## WB-018 uygulama sınırı
+
+- Ayrıntılar [ADR-022](adr/ADR-022-openai-adapter.md). Henüz rota yok; WB-019 sağlayıcıyı ledger rezervasyonu ve uzlaştırmasıyla sarar.
+- `infra/.dev.vars.example` yalnız yer tutucu içerir; key satırı açıklama olarak yazıldı (repo secret taraması atama biçimini haklı olarak yakaladı).
