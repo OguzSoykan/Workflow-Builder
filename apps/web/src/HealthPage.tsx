@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react';
+import { t } from './i18n/i18n';
 
 type HealthState = 'loading' | 'ready' | 'error';
 
@@ -44,22 +45,24 @@ export function HealthPage() {
 
   return (
     <main className="health-page">
-      <p className="eyebrow">AI WORKFLOW BUILDER</p>
-      <h1>Geliştirme temeli</h1>
-      <p className="intro">Workflow tasarımı ve simülasyonu için ilk adım.</p>
+      <p className="eyebrow">{t('AI WORKFLOW BUILDER')}</p>
+      <h1>{t('Geliştirme temeli')}</h1>
+      <p className="intro">{t('Workflow tasarımı ve simülasyonu için ilk adım.')}</p>
       <section aria-labelledby="health-heading">
-        <h2 id="health-heading">Servis bağlantısı</h2>
+        <h2 id="health-heading">{t('Servis bağlantısı')}</h2>
         {state === 'error' ? (
-          <p role="alert">Servise ulaşılamadı. Lütfen yeniden deneyin.</p>
+          <p role="alert">{t('Servise ulaşılamadı. Lütfen yeniden deneyin.')}</p>
         ) : (
-          <p role="status">{state === 'loading' ? 'Bağlantı kontrol ediliyor…' : 'Servis hazır'}</p>
+          <p role="status">
+            {state === 'loading' ? t('Bağlantı kontrol ediliyor…') : t('Servis hazır')}
+          </p>
         )}
         <button disabled={state === 'loading'} onClick={() => setAttempt((value) => value + 1)}>
-          Yeniden kontrol et
+          {t('Yeniden kontrol et')}
         </button>
       </section>
-      <p className="note">Servis bağlantısını bu ekrandan kontrol edebilirsiniz.</p>
-      <a href="/">Editöre dön</a>
+      <p className="note">{t('Servis bağlantısını bu ekrandan kontrol edebilirsiniz.')}</p>
+      <a href="/">{t('Editöre dön')}</a>
     </main>
   );
 }

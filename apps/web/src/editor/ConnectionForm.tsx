@@ -1,6 +1,7 @@
 import { useState, type Dispatch } from 'react';
 import { NODE_HANDLES, type Workflow } from '@workflow-builder/workflow-contract';
 import { HANDLE_LABELS, type EditorAction } from './model';
+import { t } from '../i18n/i18n';
 
 export function ConnectionForm({
   workflow,
@@ -31,9 +32,9 @@ export function ConnectionForm({
         });
       }}
     >
-      <h3>Adımları bağla</h3>
+      <h3>{t('Adımları bağla')}</h3>
       <label htmlFor="connection-source">
-        Kaynak adım
+        {t('Kaynak adım')}
         <select
           id="connection-source"
           name="source"
@@ -41,7 +42,7 @@ export function ConnectionForm({
           value={source?.id ?? ''}
           onChange={(event) => setSourceId(event.target.value)}
         >
-          <option value="">Adım seçin</option>
+          <option value="">{t('Adım seçin')}</option>
           {workflow.nodes
             .filter((node) => node.type !== 'end')
             .map((node, index) => (
@@ -52,7 +53,7 @@ export function ConnectionForm({
         </select>
       </label>
       <label htmlFor="connection-handle">
-        Çıkış
+        {t('Çıkış')}
         <select
           id="connection-handle"
           key={`${source?.id ?? 'none'}:${free ?? ''}`}
@@ -60,19 +61,19 @@ export function ConnectionForm({
           required
           defaultValue={free ?? handles[0] ?? ''}
         >
-          {!handles.length && <option value="">Önce kaynak seçin</option>}
+          {!handles.length && <option value="">{t('Önce kaynak seçin')}</option>}
           {handles.map((handle) => (
             <option key={handle} value={handle}>
-              {HANDLE_LABELS[handle]}
-              {connected(handle) ? ' (bağlı)' : ''}
+              {t(HANDLE_LABELS[handle])}
+              {connected(handle) ? t(' (bağlı)') : ''}
             </option>
           ))}
         </select>
       </label>
       <label htmlFor="connection-target">
-        Hedef adım
+        {t('Hedef adım')}
         <select id="connection-target" name="target" required defaultValue="">
-          <option value="">Adım seçin</option>
+          <option value="">{t('Adım seçin')}</option>
           {workflow.nodes
             .filter((node) => node.type !== 'start')
             .map((node, index) => (
@@ -83,7 +84,7 @@ export function ConnectionForm({
         </select>
       </label>
       <button type="submit" className="secondary" disabled={!workflow.nodes.length}>
-        Bağlantı ekle
+        {t('Bağlantı ekle')}
       </button>
     </form>
   );

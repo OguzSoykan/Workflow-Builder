@@ -8,6 +8,7 @@ import {
   type WorkflowEdge,
   type WorkflowNode,
 } from '@workflow-builder/workflow-contract';
+import { getLocale, t } from '../i18n/i18n';
 
 export type NodeKind = WorkflowNode['type'];
 export type EditableProperties = {
@@ -45,8 +46,8 @@ export function emptyWorkflow(id: string): Workflow {
   return {
     schemaVersion: 1,
     workflowId: id,
-    title: 'Yeni iş akışı',
-    locale: 'tr',
+    title: t('Yeni iş akışı'),
+    locale: getLocale(),
     inputs: [],
     nodes: [],
     edges: [],
@@ -54,7 +55,7 @@ export function emptyWorkflow(id: string): Workflow {
 }
 
 function newNode(edit: Extract<Edit, { type: 'add-node' }>): WorkflowNode {
-  const base = { id: edit.id, label: NODE_LABELS[edit.kind], position: edit.position };
+  const base = { id: edit.id, label: t(NODE_LABELS[edit.kind]), position: edit.position };
   switch (edit.kind) {
     case 'start':
       return { ...base, type: 'start', config: {} };
@@ -78,22 +79,23 @@ export function connectionError(
   handle: string,
   targetId: string,
 ): string | null {
-  if (workflow.edges.length >= WORKFLOW_LIMITS.edges) return 'En fazla 100 bağlantı eklenebilir.';
+  if (workflow.edges.length >= WORKFLOW_LIMITS.edges)
+    return t('En fazla 100 bağlantı eklenebilir.');
   const source = workflow.nodes.find((node) => node.id === sourceId);
   const target = workflow.nodes.find((node) => node.id === targetId);
-  if (!source || !target) return 'Kaynak ve hedef adımı seçin.';
-  if (sourceId === targetId) return 'Bir adım kendisine bağlanamaz.';
-  if (target.type === 'start') return 'Başlangıç adımına bağlantı kurulamaz.';
+  if (!source || !target) return t('Kaynak ve hedef adımı seçin.');
+  if (sourceId === targetId) return t('Bir adım kendisine bağlanamaz.');
+  if (target.type === 'start') return t('Başlangıç adımına bağlantı kurulamaz.');
   if (!(NODE_HANDLES[source.type] as readonly string[]).includes(handle))
-    return 'Bu adım için geçerli bir çıkış seçin.';
+    return t('Bu adım için geçerli bir çıkış seçin.');
   if (workflow.edges.some((edge) => edge.sourceNodeId === sourceId && edge.sourceHandle === handle))
-    return 'Bu çıkış zaten bağlı. Önce mevcut bağlantıyı silin.';
+    return t('Bu çıkış zaten bağlı. Önce mevcut bağlantıyı silin.');
   const pending = [targetId];
   const visited = new Set<string>();
   while (pending.length) {
     const id = pending.pop();
     if (!id || visited.has(id)) continue;
-    if (id === sourceId) return 'Bu bağlantı bir döngü oluşturur.';
+    if (id === sourceId) return t('Bu bağlantı bir döngü oluşturur.');
     visited.add(id);
     for (const edge of workflow.edges)
       if (edge.sourceNodeId === id) pending.push(edge.targetNodeId);
@@ -112,11 +114,11 @@ export function applyEdit(
   switch (edit.type) {
     case 'add-node':
       if (workflow.nodes.length >= WORKFLOW_LIMITS.nodes)
-        return reject('En fazla 50 adım eklenebilir.');
+        return reject(t('En fazla 50 adım eklenebilir.'));
       if (workflow.nodes.some((node) => node.id === edit.id))
-        return reject('Adım kimliği zaten kullanılıyor.');
+        return reject(t('Adım kimliği zaten kullanılıyor.'));
       if (edit.kind === 'start' && workflow.nodes.some((node) => node.type === 'start'))
-        return reject('Yalnızca bir başlangıç adımı eklenebilir.');
+        return reject(t('Yalnızca bir başlangıç adımı eklenebilir.'));
       candidate = { ...workflow, nodes: [...workflow.nodes, newNode(edit)] };
       break;
     case 'rename-node':
@@ -129,8 +131,8 @@ export function applyEdit(
       break;
     case 'update-properties': {
       const node = workflow.nodes.find((item) => item.id === edit.id);
-      if (!node) return reject('Düzenlenecek adım bulunamadı.');
-      if (node.type !== edit.properties.type) return reject('Adım türü değiştirilemez.');
+      if (!node) return reject(t('Düzenlenecek adım bulunamadı.'));
+      if (node.type !== edit.properties.type) return reject(t('Adım türü değiştirilemez.'));
       candidate = {
         ...workflow,
         nodes: workflow.nodes.map((item) =>
@@ -160,7 +162,7 @@ export function applyEdit(
       const error = connectionError(workflow, edit.source, edit.handle, edit.target);
       if (error) return reject(error);
       if (workflow.edges.some((edge) => edge.id === edit.id))
-        return reject('Bağlantı kimliği zaten kullanılıyor.');
+        return reject(t('Bağlantı kimliği zaten kullanılıyor.'));
       const edge: WorkflowEdge = {
         id: edit.id,
         sourceNodeId: edit.source,
@@ -182,8 +184,13 @@ export function applyEdit(
     ? { workflow: parsed.data, error: null }
     : reject(
         edit.type === 'update-properties'
-          ? `Değişiklik uygulanmadı: ad ve rol boş olamaz, en fazla 120 karakter olabilir; açıklama en fazla ${WORKFLOW_LIMITS.text} karakter olmalı, bitiş sonucu geçerli olmalıdır.`
-          : 'Değişiklik geçersiz: etiket boş olamaz, en fazla 120 karakter olmalıdır; belge limitleri korunmalıdır.',
+          ? t(
+              'Değişiklik uygulanmadı: ad ve rol boş olamaz, en fazla 120 karakter olabilir; açıklama en fazla {text} karakter olmalı, bitiş sonucu geçerli olmalıdır.',
+              { text: WORKFLOW_LIMITS.text },
+            )
+          : t(
+              'Değişiklik geçersiz: etiket boş olamaz, en fazla 120 karakter olmalıdır; belge limitleri korunmalıdır.',
+            ),
       );
 }
 

@@ -30,6 +30,8 @@ import { historyReducer, initialHistory } from './history';
 import { useDraft, type DraftStatus } from './use-draft';
 import { connectionError, emptyWorkflow, HANDLE_LABELS, NODE_LABELS, type NodeKind } from './model';
 import '@xyflow/react/dist/style.css';
+import { setLocale, t, type Locale } from '../i18n/i18n';
+import { useLocale } from '../i18n/use-locale';
 
 const nodeTypes = { workflow: WorkflowCard };
 const kinds: NodeKind[] = ['start', 'approval', 'condition', 'end'];
@@ -59,6 +61,8 @@ function EditorWorkspace() {
   );
   const state = history.present;
   const account = useAccount();
+  // Canvas cards are memoized by React Flow; the locale in their data makes them re-render.
+  const locale = useLocale();
   const { workflow } = state;
   useEffect(() => {
     // Text controls keep their native undo; the shortcut only applies to the workflow.
@@ -75,7 +79,8 @@ function EditorWorkspace() {
     return () => window.removeEventListener('keydown', listener);
   }, []);
   const draft = useDraft(store, load, workflow, dispatch);
-  const issues = useMemo(() => describeWorkflow(workflow), [workflow]);
+  // Messages are translated when computed, so the language is part of the cache key.
+  const issues = useMemo(() => describeWorkflow(workflow), [workflow, locale]);
   const [run, setRun] = useState<SimulationRun | null>(null);
   // Layout is outside the content hash, so moving steps keeps a run current (ADR-014/017).
   const stale = useMemo(
@@ -94,6 +99,7 @@ function EditorWorkspace() {
       type: 'workflow',
       position: node.position,
       data: {
+        locale,
         node,
         summary: invalid.has(node.id) ? null : conditionSummary(workflow, node),
         issueCount: counts.get(node.id) ?? 0,
@@ -106,9 +112,9 @@ function EditorWorkspace() {
       },
       selected: state.nodeId === node.id,
       ...(measurements[node.id] ? { measured: measurements[node.id] } : {}),
-      ariaLabel: `${NODE_LABELS[node.type]}: ${node.label}`,
+      ariaLabel: `${t(NODE_LABELS[node.type])}: ${node.label}`,
     }));
-  }, [workflow, issues, run, stale, path, state.nodeId, measurements]);
+  }, [workflow, issues, run, stale, path, state.nodeId, measurements, locale]);
   const edges = useMemo<Edge[]>(
     () =>
       workflow.edges.map((edge) => ({
@@ -117,13 +123,13 @@ function EditorWorkspace() {
         target: edge.targetNodeId,
         sourceHandle: edge.sourceHandle,
         targetHandle: 'input',
-        label: HANDLE_LABELS[edge.sourceHandle],
+        label: t(HANDLE_LABELS[edge.sourceHandle]),
         selected: state.edgeId === edge.id,
         type: 'smoothstep',
         animated: path?.edges.has(edge.id) ?? false,
         ...(path?.edges.has(edge.id) ? { className: 'sim-edge' } : {}),
       })),
-    [workflow.edges, state.edgeId, path],
+    [workflow.edges, state.edgeId, path, locale],
   );
   const selectedNode = workflow.nodes.find((node) => node.id === state.nodeId);
   const selectedEdge = workflow.edges.find((edge) => edge.id === state.edgeId);
@@ -139,79 +145,94 @@ function EditorWorkspace() {
     <main className="editor-shell">
       <header className="editor-header">
         <div>
-          <p className="eyebrow">WORKFLOW BUILDER</p>
-          <h1>İş akışı tasarımı</h1>
+          <p className="eyebrow">{t('WORKFLOW BUILDER')}</p>
+          <h1>{t('İş akışı tasarımı')}</h1>
         </div>
         <div className="header-meta">
-          <div className="history-buttons" role="group" aria-label="Geçmiş">
+          <label className="language-switch">
+            <span className="visually-hidden">{t('Dil')}</span>
+            <select
+              aria-label={t('Dil')}
+              value={locale}
+              onChange={(event) => setLocale(event.target.value as Locale)}
+            >
+              <option value="tr">Türkçe</option>
+              <option value="en">English</option>
+            </select>
+          </label>
+          <div className="history-buttons" role="group" aria-label={t('Geçmiş')}>
             <button
               type="button"
               className="secondary"
               disabled={!history.past.length}
-              title="Ctrl/Cmd+Z"
+              title={t('Ctrl/Cmd+Z')}
               onClick={() => dispatch({ type: 'undo' })}
             >
-              Geri al
+              {t('Geri al')}
             </button>
             <button
               type="button"
               className="secondary"
               disabled={!history.future.length}
-              title="Ctrl/Cmd+Shift+Z veya Ctrl+Y"
+              title={t('Ctrl/Cmd+Shift+Z veya Ctrl+Y')}
               onClick={() => dispatch({ type: 'redo' })}
             >
-              Yinele
+              {t('Yinele')}
             </button>
           </div>
           <span className="draft-badge" role="status">
-            {draft.conflict ? 'Otomatik kayıt duraklatıldı' : STATUS_LABELS[draft.status]}
+            {draft.conflict ? t('Otomatik kayıt duraklatıldı') : t(STATUS_LABELS[draft.status])}
           </span>
           <AccountPanel account={account} />
-          <a href="/health">Servis durumu</a>
+          <a href="/health">{t('Servis durumu')}</a>
         </div>
       </header>
       <div className="draft-notice">
-        Taslak bu tarayıcıda otomatik kaydedilir; eksik adımlar olsa da yenilemede geri gelir. Hesap
-        veya bulut kaydı yoktur.
+        {t(
+          'Taslak bu tarayıcıda otomatik kaydedilir; eksik adımlar olsa da yenilemede geri gelir. Hesap veya bulut kaydı yoktur.',
+        )}
       </div>
       {load.status === 'corrupt' && (
         <div className="draft-alert" role="alert">
-          Önceki taslak okunamadı. {load.backedUp ? 'Yedeklendi ve' : 'Yedeklenemedi;'} boş bir
-          taslakla başlandı.
+          {load.backedUp
+            ? t('Önceki taslak okunamadı. Yedeklendi ve boş bir taslakla başlandı.')
+            : t('Önceki taslak okunamadı. Yedeklenemedi; boş bir taslakla başlandı.')}
         </div>
       )}
       {!draft.conflict && draft.status === 'quota' && (
         <div className="draft-alert" role="alert">
-          Tarayıcı depolaması dolu olduğu için son değişiklikler kaydedilmedi. Sayfayı yenilerseniz
-          kaybolur.
+          {t(
+            'Tarayıcı depolaması dolu olduğu için son değişiklikler kaydedilmedi. Sayfayı yenilerseniz kaybolur.',
+          )}
         </div>
       )}
       {!draft.conflict && draft.status === 'unavailable' && (
         <div className="draft-alert" role="alert">
-          Tarayıcı depolamasına erişilemiyor; değişiklikler yalnız bu oturumda kalır.
+          {t('Tarayıcı depolamasına erişilemiyor; değişiklikler yalnız bu oturumda kalır.')}
         </div>
       )}
       {draft.conflict && (
         <div className="draft-alert" role="alert">
           <p>
-            Bu taslak başka bir sekmede değiştirildi. Otomatik kayıt duraklatıldı; hangi sürümle
-            devam edeceğinizi seçin.
+            {t(
+              'Bu taslak başka bir sekmede değiştirildi. Otomatik kayıt duraklatıldı; hangi sürümle devam edeceğinizi seçin.',
+            )}
           </p>
           {draft.conflictError && (
-            <p>Diğer sekmedeki kayıt okunamadı. Bu sekmedeki taslağı kaydedebilirsiniz.</p>
+            <p>{t('Diğer sekmedeki kayıt okunamadı. Bu sekmedeki taslağı kaydedebilirsiniz.')}</p>
           )}
           <button type="button" className="secondary" onClick={draft.loadOther}>
-            Diğer sekmedeki sürümü yükle
+            {t('Diğer sekmedeki sürümü yükle')}
           </button>{' '}
           <button type="button" onClick={draft.keepThis}>
-            Bu sekmedekini kaydet
+            {t('Bu sekmedekini kaydet')}
           </button>
         </div>
       )}
       <div className="editor-layout">
-        <aside className="palette" aria-label="Adım paleti">
-          <h2>Adım ekle</h2>
-          <p className="muted">Akışınızı adım adım oluşturun.</p>
+        <aside className="palette" aria-label={t('Adım paleti')}>
+          <h2>{t('Adım ekle')}</h2>
+          <p className="muted">{t('Akışınızı adım adım oluşturun.')}</p>
           {kinds.map((kind) => (
             <button
               key={kind}
@@ -233,14 +254,18 @@ function EditorWorkspace() {
               }
             >
               <span className="kind-dot" />
-              {NODE_LABELS[kind]} ekle<span aria-hidden="true">+</span>
+              {t('{kind} ekle', { kind: t(NODE_LABELS[kind]) })}
+              <span aria-hidden="true">+</span>
             </button>
           ))}
-          <h2 className="list-heading">Akıştaki adımlar</h2>
+          <h2 className="list-heading">{t('Akıştaki adımlar')}</h2>
           <p className="muted">
-            {workflow.nodes.length} / 50 adım · {workflow.edges.length} / 100 bağlantı
+            {t('{nodes} / 50 adım · {edges} / 100 bağlantı', {
+              nodes: workflow.nodes.length,
+              edges: workflow.edges.length,
+            })}
           </p>
-          <ol className="node-list" aria-label="Akıştaki adımlar">
+          <ol className="node-list" aria-label={t('Akıştaki adımlar')}>
             {workflow.nodes.map((node) => (
               <li key={node.id}>
                 <button
@@ -249,7 +274,7 @@ function EditorWorkspace() {
                   onClick={() => dispatch({ type: 'select-node', id: node.id })}
                 >
                   {node.label}
-                  <small>{NODE_LABELS[node.type]}</small>
+                  <small>{t(NODE_LABELS[node.type])}</small>
                 </button>
               </li>
             ))}
@@ -259,10 +284,10 @@ function EditorWorkspace() {
           <TransferPanel workflow={workflow} dispatch={dispatch} />
           <CloudPanel workflow={workflow} executable={issues.length === 0} account={account} />
         </aside>
-        <section className="canvas-panel" aria-label="İş akışı tuvali">
+        <section className="canvas-panel" aria-label={t('İş akışı tuvali')}>
           <div className="canvas-title">
             <h2>{workflow.title}</h2>
-            <span>Çıkış noktalarını sürükleyerek bağlayın</span>
+            <span>{t('Çıkış noktalarını sürükleyerek bağlayın')}</span>
           </div>
           <div className="flow-canvas">
             <ReactFlow<CanvasNode>
@@ -313,10 +338,10 @@ function EditorWorkspace() {
               edgesReconnectable={false}
               deleteKeyCode={['Backspace', 'Delete']}
               ariaLabelConfig={{
-                'controls.zoomIn.ariaLabel': 'Yakınlaştır',
-                'controls.zoomOut.ariaLabel': 'Uzaklaştır',
-                'controls.fitView.ariaLabel': 'Tümünü göster',
-                'controls.interactive.ariaLabel': 'Düzenlemeyi kilitle veya aç',
+                'controls.zoomIn.ariaLabel': t('Yakınlaştır'),
+                'controls.zoomOut.ariaLabel': t('Uzaklaştır'),
+                'controls.fitView.ariaLabel': t('Tümünü göster'),
+                'controls.interactive.ariaLabel': t('Düzenlemeyi kilitle veya aç'),
               }}
             >
               <Background gap={24} size={1} />
@@ -326,8 +351,8 @@ function EditorWorkspace() {
             {!nodes.length && (
               <div className="canvas-empty">
                 <span aria-hidden="true">↗</span>
-                <h3>İlk adımla başlayın</h3>
-                <p>Soldan bir başlangıç adımı ekleyin.</p>
+                <h3>{t('İlk adımla başlayın')}</h3>
+                <p>{t('Soldan bir başlangıç adımı ekleyin.')}</p>
               </div>
             )}
           </div>
@@ -340,8 +365,8 @@ function EditorWorkspace() {
             setRun={setRun}
           />
         </section>
-        <aside className="inspector" aria-label="Adım özellikleri">
-          <h2>Özellikler</h2>
+        <aside className="inspector" aria-label={t('Adım özellikleri')}>
+          <h2>{t('Özellikler')}</h2>
           {selectedNode ? (
             <NodePropertiesForm
               key={selectedNode.id}
@@ -351,16 +376,18 @@ function EditorWorkspace() {
             />
           ) : selectedEdge ? (
             <div>
-              <p>{HANDLE_LABELS[selectedEdge.sourceHandle]} bağlantısı</p>
+              <p>
+                {t('{handle} bağlantısı', { handle: t(HANDLE_LABELS[selectedEdge.sourceHandle]) })}
+              </p>
               <button
                 className="danger"
                 onClick={() => dispatch({ type: 'delete-edge', id: selectedEdge.id })}
               >
-                Bağlantıyı sil
+                {t('Bağlantıyı sil')}
               </button>
             </div>
           ) : (
-            <p className="muted">Düzenlemek için tuvalden veya listeden bir adım seçin.</p>
+            <p className="muted">{t('Düzenlemek için tuvalden veya listeden bir adım seçin.')}</p>
           )}
           <ConnectionForm workflow={workflow} dispatch={dispatch} />
           <div className="editor-feedback" aria-live="polite">
@@ -368,8 +395,8 @@ function EditorWorkspace() {
           </div>
           {!!workflow.edges.length && (
             <div className="connections">
-              <h3>Bağlantılar</h3>
-              <ul aria-label="Akış bağlantıları">
+              <h3>{t('Bağlantılar')}</h3>
+              <ul aria-label={t('Akış bağlantıları')}>
                 {workflow.edges.map((edge) => (
                   <li key={edge.id}>
                     <button
@@ -379,7 +406,7 @@ function EditorWorkspace() {
                     >
                       {workflow.nodes.find((node) => node.id === edge.sourceNodeId)?.label} →{' '}
                       {workflow.nodes.find((node) => node.id === edge.targetNodeId)?.label}
-                      <small>{HANDLE_LABELS[edge.sourceHandle]}</small>
+                      <small>{t(HANDLE_LABELS[edge.sourceHandle])}</small>
                     </button>
                   </li>
                 ))}

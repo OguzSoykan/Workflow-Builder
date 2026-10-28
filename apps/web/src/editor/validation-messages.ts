@@ -1,13 +1,14 @@
 import type { ValidationIssue, Workflow, WorkflowEdge } from '@workflow-builder/workflow-contract';
 import { validateWorkflow } from '@workflow-builder/workflow-core';
 import { HANDLE_LABELS } from './model';
+import { t } from '../i18n/i18n';
 
 export type IssueTarget = { kind: 'node' | 'edge'; id: string } | null;
 export type DescribedIssue = { key: string; text: string; target: IssueTarget };
 
 function handleLabel(handle: unknown): string {
   return typeof handle === 'string' && handle in HANDLE_LABELS
-    ? HANDLE_LABELS[handle as WorkflowEdge['sourceHandle']]
+    ? t(HANDLE_LABELS[handle as WorkflowEdge['sourceHandle']])
     : String(handle);
 }
 
@@ -18,36 +19,41 @@ export function describeIssue(workflow: Workflow, issue: ValidationIssue): strin
   switch (issue.code) {
     case 'START_COUNT_INVALID':
       return issue.translationParams?.count === 0
-        ? 'Akışta başlangıç adımı yok; bir başlangıç adımı ekleyin.'
-        : `Akışta ${String(issue.translationParams?.count)} başlangıç adımı var; yalnız bir tane olmalı.`;
+        ? t('Akışta başlangıç adımı yok; bir başlangıç adımı ekleyin.')
+        : t('Akışta {count} başlangıç adımı var; yalnız bir tane olmalı.', {
+            count: String(issue.translationParams?.count),
+          });
     case 'END_MISSING':
-      return 'Akışta bitiş adımı yok; en az bir bitiş adımı ekleyin.';
+      return t('Akışta bitiş adımı yok; en az bir bitiş adımı ekleyin.');
     case 'EDGE_DANGLING':
-      return 'Bir bağlantı var olmayan bir adıma işaret ediyor; bağlantıyı silin.';
+      return t('Bir bağlantı var olmayan bir adıma işaret ediyor; bağlantıyı silin.');
     case 'HANDLE_MISSING':
-      return `${step} adımının ${handle} çıkışı bağlı değil.`;
+      return t('{step} adımının {handle} çıkışı bağlı değil.', { step, handle });
     case 'HANDLE_INVALID':
-      return `${step} adımında bu türe ait olmayan ${handle} çıkışı kullanılmış.`;
+      return t('{step} adımında bu türe ait olmayan {handle} çıkışı kullanılmış.', {
+        step,
+        handle,
+      });
     case 'DUPLICATE_HANDLE':
-      return `${step} adımının ${handle} çıkışında birden fazla bağlantı var.`;
+      return t('{step} adımının {handle} çıkışında birden fazla bağlantı var.', { step, handle });
     case 'START_INCOMING':
-      return `${step} başlangıç adımına bağlantı gelemez.`;
+      return t('{step} başlangıç adımına bağlantı gelemez.', { step });
     case 'END_OUTGOING':
-      return `${step} bitiş adımından bağlantı çıkamaz.`;
+      return t('{step} bitiş adımından bağlantı çıkamaz.', { step });
     case 'UNREACHABLE_NODE':
-      return `${step} adımına başlangıçtan ulaşılamıyor.`;
+      return t('{step} adımına başlangıçtan ulaşılamıyor.', { step });
     case 'CYCLE_DETECTED':
-      return `${step} adımı bir döngünün parçası; akış sonsuza kadar sürebilir.`;
+      return t('{step} adımı bir döngünün parçası; akış sonsuza kadar sürebilir.', { step });
     case 'PATH_NOT_TERMINATING':
-      return `${step} adımından sonraki her yol bir bitiş adımına varmıyor.`;
+      return t('{step} adımından sonraki her yol bir bitiş adımına varmıyor.', { step });
     case 'INPUT_FIELD_MISSING':
-      return `${step} koşulu tanımlı bir giriş alanına bağlı değil.`;
+      return t('{step} koşulu tanımlı bir giriş alanına bağlı değil.', { step });
     case 'OPERATOR_TYPE_MISMATCH':
-      return `${step} koşulundaki karşılaştırma alan türüyle kullanılamaz.`;
+      return t('{step} koşulundaki karşılaştırma alan türüyle kullanılamaz.', { step });
     case 'CONDITION_VALUE_INVALID':
-      return `${step} koşulunun değeri alan türüne veya seçeneklerine uymuyor.`;
+      return t('{step} koşulunun değeri alan türüne veya seçeneklerine uymuyor.', { step });
     default:
-      return `Belge şemaya uymuyor (${issue.code}).`;
+      return t('Belge şemaya uymuyor ({code}).', { code: issue.code });
   }
 }
 

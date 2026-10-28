@@ -6,6 +6,7 @@ import {
   type Workflow,
 } from '@workflow-builder/workflow-contract';
 import { describeWorkflow } from './validation-messages';
+import { t } from '../i18n/i18n';
 
 export type ImportResult =
   | { ok: true; workflow: Workflow; hashMismatch: boolean; issueCount: number }
@@ -34,7 +35,7 @@ export function exportWorkflow(
     // Schema IDs are already filename-safe ([A-Za-z0-9_-]).
     return { ok: true, fileName: `${workflow.workflowId.slice(0, 64)}.workflow.json`, text };
   } catch {
-    return { ok: false, error: 'İçerik özeti eklenince belge 256 KiB sınırını aşıyor.' };
+    return { ok: false, error: t('İçerik özeti eklenince belge 256 KiB sınırını aşıyor.') };
   }
 }
 
@@ -52,8 +53,8 @@ export function readImport(text: string): ImportResult {
     return {
       ok: false,
       error:
-        IMPORT_ERRORS[issue?.code ?? ''] ??
-        `Dosya Workflow v1 şemasına uymuyor${path ? ` (${String(path)})` : ''}.`,
+        (IMPORT_ERRORS[issue?.code ?? ''] && t(IMPORT_ERRORS[issue?.code ?? ''] as string)) ??
+        t('Dosya Workflow v1 şemasına uymuyor{path}.', { path: path ? ` (${String(path)})` : '' }),
     };
   }
   const hashMismatch = parsed.data.contentHash !== undefined && !hasValidContentHash(parsed.data);

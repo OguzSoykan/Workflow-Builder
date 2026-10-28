@@ -22,6 +22,7 @@ export default defineConfig({
         'apps/web/src/account/firebase-auth.ts',
         'apps/web/src/account/cloud-api.ts',
         'apps/web/src/account/ai-api.ts',
+        'apps/web/src/i18n/i18n.ts',
       ],
       reporter: ['text', 'json-summary', 'html'],
     },

@@ -8,6 +8,7 @@ import { BranchStatus } from './BranchStatus';
 import { ConditionFields } from './ConditionFields';
 import { conditionFromForm } from './condition-model';
 import { NODE_LABELS, type EditableProperties, type EditorAction } from './model';
+import { t } from '../i18n/i18n';
 
 export function NodePropertiesForm({
   workflow,
@@ -62,14 +63,14 @@ export function NodePropertiesForm({
           dispatch({ type: 'update-properties', id: node.id, label, properties });
         }}
       >
-        <p className="muted">{NODE_LABELS[node.type]} adımı</p>
+        <p className="muted">{t('{kind} adımı', { kind: t(NODE_LABELS[node.type]) })}</p>
         <label>
-          Adım adı
+          {t('Adım adı')}
           <input name="label" defaultValue={node.label} required maxLength={120} />
         </label>
         {node.type === 'start' && (
           <label>
-            Başlangıç açıklaması (isteğe bağlı)
+            {t('Başlangıç açıklaması (isteğe bağlı)')}
             <textarea
               name="description"
               defaultValue={node.config.description ?? ''}
@@ -80,35 +81,36 @@ export function NodePropertiesForm({
         {node.type === 'approval' && (
           <>
             <label>
-              Onaylayan rolü
+              {t('Onaylayan rolü')}
               <input name="role" defaultValue={node.config.roleLabel} required maxLength={120} />
             </label>
             <p className="muted">
-              Onaylayan kabul ederse “Onaylandı”, reddederse “Reddedildi” çıkışı izlenir.
+              {t('Onaylayan kabul ederse “Onaylandı”, reddederse “Reddedildi” çıkışı izlenir.')}
             </p>
           </>
         )}
         {node.type === 'end' && (
           <label htmlFor="node-outcome">
-            Bitiş sonucu
+            {t('Bitiş sonucu')}
             <select id="node-outcome" name="outcome" defaultValue={node.config.outcome}>
-              <option value="completed">Tamamlandı</option>
-              <option value="rejected">Reddedildi</option>
+              <option value="completed">{t('Tamamlandı')}</option>
+              <option value="rejected">{t('Reddedildi')}</option>
             </select>
           </label>
         )}
         {node.type === 'condition' && <ConditionFields node={node} inputs={workflow.inputs} />}
         <p className="muted">
-          Alanları düzenleyip değişiklikleri uygulayın. Uygulanmayan girişler başka bir adım
-          seçilince silinir.
+          {t(
+            'Alanları düzenleyip değişiklikleri uygulayın. Uygulanmayan girişler başka bir adım seçilince silinir.',
+          )}
         </p>
-        <button type="submit">Değişiklikleri uygula</button>
+        <button type="submit">{t('Değişiklikleri uygula')}</button>
         <button
           type="button"
           className="danger"
           onClick={() => dispatch({ type: 'delete-node', id: node.id })}
         >
-          Adımı sil
+          {t('Adımı sil')}
         </button>
       </form>
       <BranchStatus workflow={workflow} node={node} />

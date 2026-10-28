@@ -8,20 +8,21 @@ import {
 } from '@workflow-builder/workflow-core';
 import { INPUT_LABELS } from './input-draft';
 import { describeStep, inputIssueText, simulationInputsFromForm } from './simulation-view';
+import { t } from '../i18n/i18n';
 
 function InputControl({ field, used }: { field: InputField; used: boolean }) {
   const name = `sim:${field.key}`;
   const initial = field.defaultValue === undefined ? '' : String(field.defaultValue);
-  const label = `${field.label} (${INPUT_LABELS[field.type]}${field.required || used ? ', gerekli' : ''})`;
+  const label = `${field.label} (${t(INPUT_LABELS[field.type])}${field.required || used ? ', gerekli' : ''})`;
   if (field.type === 'boolean' || field.type === 'enum')
     return (
       <>
         <label htmlFor={`sim-${field.key}`}>{label}</label>
         <select id={`sim-${field.key}`} name={name} defaultValue={initial}>
-          <option value="">Seçilmedi</option>
+          <option value="">{t('Seçilmedi')}</option>
           {(field.type === 'enum' ? field.options : ['true', 'false']).map((option) => (
             <option key={option} value={option}>
-              {field.type === 'boolean' ? (option === 'true' ? 'Doğru' : 'Yanlış') : option}
+              {field.type === 'boolean' ? (option === 'true' ? t('Doğru') : t('Yanlış')) : option}
             </option>
           ))}
         </select>
@@ -69,16 +70,18 @@ export function SimulationPanel({
     if (!run) return;
     const result = decideApproval(workflow, run, decision);
     if (result.ok) setRun(result.run);
-    else setErrors(['Akış değişti; simülasyonu yeniden başlatın.']);
+    else setErrors([t('Akış değişti; simülasyonu yeniden başlatın.')]);
   };
   return (
-    <section className="simulation-panel" aria-label="Simülasyon">
-      <h2>Simülasyon</h2>
+    <section className="simulation-panel" aria-label={t('Simülasyon')}>
+      <h2>{t('Simülasyon')}</h2>
       <p className="simulation-note">
-        Yalnız simülasyon: e-posta, onay isteği veya harici işlem gönderilmez; sonuç kaydedilmez.
+        {t(
+          'Yalnız simülasyon: e-posta, onay isteği veya harici işlem gönderilmez; sonuç kaydedilmez.',
+        )}
       </p>
       {!executable ? (
-        <p className="muted">Simülasyon için önce doğrulama sorunlarını giderin.</p>
+        <p className="muted">{t('Simülasyon için önce doğrulama sorunlarını giderin.')}</p>
       ) : (
         <form
           onSubmit={(event) => {
@@ -95,24 +98,24 @@ export function SimulationPanel({
               setErrors(
                 result.error === 'INPUT_INVALID'
                   ? result.inputIssues.map((issue) => inputIssueText(issue, workflow))
-                  : ['Akış simüle edilemiyor; doğrulama sorunlarını kontrol edin.'],
+                  : [t('Akış simüle edilemiyor; doğrulama sorunlarını kontrol edin.')],
               );
           }}
         >
           {workflow.inputs.length ? (
             <fieldset className="simulation-inputs">
-              <legend>Girdi değerleri</legend>
+              <legend>{t('Girdi değerleri')}</legend>
               {workflow.inputs.map((field) => (
                 <InputControl key={field.key} field={field} used={used.has(field.key)} />
               ))}
             </fieldset>
           ) : (
-            <p className="muted">Akışta giriş alanı yok.</p>
+            <p className="muted">{t('Akışta giriş alanı yok.')}</p>
           )}
-          <button type="submit">{run ? 'Yeniden başlat' : 'Simülasyonu başlat'}</button>{' '}
+          <button type="submit">{run ? t('Yeniden başlat') : t('Simülasyonu başlat')}</button>{' '}
           {run && (
             <button type="button" className="secondary" onClick={() => setRun(null)}>
-              Simülasyonu temizle
+              {t('Simülasyonu temizle')}
             </button>
           )}
         </form>
@@ -128,16 +131,21 @@ export function SimulationPanel({
         <div className="simulation-run">
           <p role="status">
             <strong>
-              {stale ? 'Akış değişti; simülasyonu yeniden başlatın.' : STATUS_TEXT[run.status]}
+              {stale
+                ? t('Akış değişti; simülasyonu yeniden başlatın.')
+                : t(STATUS_TEXT[run.status])}
             </strong>
           </p>
           {run.status === 'waiting_for_approval' && current?.type === 'approval' && (
-            <div className="simulation-decision" role="group" aria-label="Onay kararı">
+            <div className="simulation-decision" role="group" aria-label={t('Onay kararı')}>
               <p>
-                “{current.label}” — {current.config.roleLabel} olarak karar verin.
+                {t('“{label}” — {role} olarak karar verin.', {
+                  label: current.label,
+                  role: current.config.roleLabel,
+                })}
               </p>
               <button type="button" disabled={stale} onClick={() => decide('approved')}>
-                Onayla
+                {t('Onayla')}
               </button>{' '}
               <button
                 type="button"
@@ -145,12 +153,12 @@ export function SimulationPanel({
                 disabled={stale}
                 onClick={() => decide('rejected')}
               >
-                Reddet
+                {t('Reddet')}
               </button>
             </div>
           )}
-          <h3>Adım kaydı</h3>
-          <ol aria-label="Simülasyon adımları">
+          <h3>{t('Adım kaydı')}</h3>
+          <ol aria-label={t('Simülasyon adımları')}>
             {run.trace.map((step) => (
               <li key={step.stepIndex}>{describeStep(workflow, step, run)}</li>
             ))}

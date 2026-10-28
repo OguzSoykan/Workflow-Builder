@@ -9,6 +9,7 @@ import { INPUT_LABELS, inputFromForm } from './input-draft';
 import { editInput, inputReferences, type InputEdit } from './input-model';
 import type { EditorAction } from './model';
 import type { Dispatch } from 'react';
+import { t } from '../i18n/i18n';
 
 function FieldForm({
   field,
@@ -44,23 +45,24 @@ function FieldForm({
         save(inputFromForm(new FormData(event.currentTarget), type));
       }}
     >
-      <h3>{field ? 'Alanı düzenle' : 'Yeni alan'}</h3>
+      <h3>{field ? t('Alanı düzenle') : 'Yeni alan'}</h3>
       <p className="muted">
-        Değişiklikleri uygulamadan başka bir alan seçerseniz girişleriniz silinir.
+        {t('Değişiklikleri uygulamadan başka bir alan seçerseniz girişleriniz silinir.')}
       </p>
       <label>
-        Alan anahtarı
+        {t('Alan anahtarı')}
         <input name="key" required maxLength={64} defaultValue={field?.key ?? ''} />
       </label>
       <p className="muted">
-        A–Z, a–z veya alt çizgiyle başlayın; devamında rakam da kullanabilirsiniz. Anahtar değişince
-        bağlı koşullar güncellenir.
+        {t(
+          'A–Z, a–z veya alt çizgiyle başlayın; devamında rakam da kullanabilirsiniz. Anahtar değişince bağlı koşullar güncellenir.',
+        )}
       </p>
       <label>
-        Alan adı
+        {t('Alan adı')}
         <input name="label" required maxLength={120} defaultValue={field?.label ?? ''} />
       </label>
-      <label htmlFor="input-type">Alan türü</label>
+      <label htmlFor="input-type">{t('Alan türü')}</label>
       <select
         id="input-type"
         value={type}
@@ -77,12 +79,12 @@ function FieldForm({
       </select>
       <label className="checkbox-label">
         <input type="checkbox" name="required" defaultChecked={field?.required ?? false} />
-        Zorunlu alan
+        {t('Zorunlu alan')}
       </label>
       <div key={type}>
         {type === 'enum' && (
           <label>
-            Seçenekler (her satıra bir seçenek)
+            {t('Seçenekler (her satıra bir seçenek)')}
             <textarea
               name="options"
               required
@@ -98,24 +100,24 @@ function FieldForm({
             checked={hasDefault}
             onChange={(event) => setHasDefault(event.target.checked)}
           />
-          Varsayılan değer kullan
+          {t('Varsayılan değer kullan')}
         </label>
         {hasDefault &&
           (type === 'boolean' ? (
             <>
-              <label htmlFor="input-default">Varsayılan değer</label>
+              <label htmlFor="input-default">{t('Varsayılan değer')}</label>
               <select
                 id="input-default"
                 name="defaultValue"
                 defaultValue={String(initial?.defaultValue ?? false)}
               >
-                <option value="false">Yanlış</option>
-                <option value="true">Doğru</option>
+                <option value="false">{t('Yanlış')}</option>
+                <option value="true">{t('Doğru')}</option>
               </select>
             </>
           ) : (
             <label>
-              Varsayılan değer
+              {t('Varsayılan değer')}
               <input
                 name="defaultValue"
                 type={type === 'number' ? 'number' : type === 'date' ? 'date' : 'text'}
@@ -129,7 +131,7 @@ function FieldForm({
         {(type === 'number' || type === 'string' || type === 'date') && (
           <>
             <label>
-              {type === 'string' ? 'En az karakter' : 'Alt sınır'}
+              {type === 'string' ? 'En az karakter' : t('Alt sınır')}
               <input
                 name="min"
                 type={type === 'date' ? 'date' : 'number'}
@@ -138,7 +140,7 @@ function FieldForm({
               />
             </label>
             <label>
-              {type === 'string' ? 'En fazla karakter' : 'Üst sınır'}
+              {type === 'string' ? 'En fazla karakter' : t('Üst sınır')}
               <input
                 name="max"
                 type={type === 'date' ? 'date' : 'number'}
@@ -149,9 +151,9 @@ function FieldForm({
           </>
         )}
       </div>
-      <button type="submit">Alanı uygula</button>{' '}
+      <button type="submit">{t('Alanı uygula')}</button>{' '}
       <button type="button" onClick={cancel}>
-        Vazgeç
+        {t('Vazgeç')}
       </button>
     </form>
   );
@@ -175,45 +177,49 @@ export function InputFields({
   };
   const issues = validateWorkflow(workflow).issues.filter((issue) => issue.fieldKey !== undefined);
   return (
-    <section className="input-fields" aria-label="Giriş alanları">
-      <h2>Giriş alanları</h2>
+    <section className="input-fields" aria-label={t('Giriş alanları')}>
+      <h2>{t('Giriş alanları')}</h2>
       <p className="muted">
-        {workflow.inputs.length} / {WORKFLOW_LIMITS.inputs} alan · Koşullarda kullanılacak bilgileri
-        tanımlayın.
+        {t('{count} / {max} alan · Koşullarda kullanılacak bilgileri tanımlayın.', {
+          count: workflow.inputs.length,
+          max: WORKFLOW_LIMITS.inputs,
+        })}
       </p>
-      <ul className="input-list" aria-label="Tanımlı alanlar">
+      <ul className="input-list" aria-label={t('Tanımlı alanlar')}>
         {workflow.inputs.map((field) => {
           const references = inputReferences(workflow, field.key);
           return (
             <li key={field.key}>
-              <strong>{field.label}</strong> <code>{field.key}</code> · {INPUT_LABELS[field.type]} ·{' '}
-              {field.required ? 'Zorunlu' : 'İsteğe bağlı'}
+              <strong>{field.label}</strong> <code>{field.key}</code> ·{' '}
+              {t(INPUT_LABELS[field.type])} · {field.required ? 'Zorunlu' : t('İsteğe bağlı')}
               <p className="muted">
                 {references.length
-                  ? `Bağlı koşullar: ${references.map((node) => node.label).join(', ')}`
-                  : 'Bağlı koşul yok.'}
+                  ? t('Bağlı koşullar: {join}', {
+                      join: references.map((node) => node.label).join(', '),
+                    })
+                  : t('Bağlı koşul yok.')}
               </p>
               {issues.some((issue) => issue.fieldKey === field.key) && (
-                <p>Bu alanı kullanan koşulun tür veya değer ayarını kontrol edin.</p>
+                <p>{t('Bu alanı kullanan koşulun tür veya değer ayarını kontrol edin.')}</p>
               )}
               <button
                 type="button"
-                aria-label={`${field.label} alanını düzenle`}
+                aria-label={t('{label} alanını düzenle', { label: field.label })}
                 onClick={() => {
                   setEditing(field.key);
                   setError(null);
                 }}
               >
-                Düzenle
+                {t('Düzenle')}
               </button>{' '}
               <button
                 type="button"
                 className="danger"
-                aria-label={`${field.label} alanını sil`}
+                aria-label={t('{label} alanını sil', { label: field.label })}
                 disabled={references.length > 0}
                 onClick={() => perform({ type: 'delete-input', key: field.key })}
               >
-                Sil
+                {t('Sil')}
               </button>
             </li>
           );
@@ -227,7 +233,7 @@ export function InputFields({
           setError(null);
         }}
       >
-        Alan ekle
+        {t('Alan ekle')}
       </button>
       {editing !== undefined && (
         <FieldForm

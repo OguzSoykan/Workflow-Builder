@@ -35,18 +35,21 @@ test('undoes and redoes meaningful edits with buttons and shortcuts', async ({ p
   await add(page, 'Başlangıç');
   await add(page, 'Bitiş');
   const end = page.locator('.react-flow__node').last();
-  const before = await end.getAttribute('style');
+  // Compare only the position: the style also flips visibility once React Flow has measured the node.
+  await expect(end).toBeVisible();
+  const transform = () => end.evaluate((element) => (element as HTMLElement).style.transform);
+  const before = await transform();
   const box = await end.boundingBox();
   if (!box) throw new Error('Node is not rendered');
   await page.mouse.move(box.x + 55, box.y + 35);
   await page.mouse.down();
   await page.mouse.move(box.x + 135, box.y + 95, { steps: 12 });
   await page.mouse.up();
-  await expect(end).not.toHaveAttribute('style', before ?? '');
+  await expect.poll(transform).not.toBe(before);
 
   // One drag is one step; selection changes are not steps.
   await undo(page).click();
-  await expect(end).toHaveAttribute('style', before ?? '');
+  await expect.poll(transform).toBe(before);
   await expect(steps(page)).toHaveCount(2);
   await undo(page).click();
   await expect(steps(page)).toHaveCount(1);

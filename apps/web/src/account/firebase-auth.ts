@@ -1,3 +1,4 @@
+import { t } from '../i18n/i18n';
 // Firebase Auth over its public REST API (ADR-020). Passwords go only to Firebase, never to /api.
 export interface FirebaseConfig {
   projectId: string;
@@ -32,7 +33,8 @@ const MESSAGES: Record<string, string> = {
 
 export function authErrorMessage(code: string): string {
   // Firebase may append details, e.g. "WEAK_PASSWORD : Password should be at least 6 characters".
-  return MESSAGES[code.split(' ')[0] ?? ''] ?? 'Hesap işlemi tamamlanamadı. Lütfen tekrar deneyin.';
+  const known = MESSAGES[code.split(' ')[0] ?? ''];
+  return known ? t(known) : t('Hesap işlemi tamamlanamadı. Lütfen tekrar deneyin.');
 }
 
 export class FirebaseAuthClient {
@@ -71,7 +73,7 @@ export class FirebaseAuthClient {
         body,
       });
     } catch {
-      return { ok: false, error: 'Firebase hizmetine ulaşılamadı. Bağlantınızı kontrol edin.' };
+      return { ok: false, error: t('Firebase hizmetine ulaşılamadı. Bağlantınızı kontrol edin.') };
     }
     const json = (await response.json().catch(() => ({}))) as Record<string, unknown> & {
       error?: { message?: string };
