@@ -24,7 +24,10 @@ ayrı insan review kaydı gerekmez. Merge edilen her PR günlüğe yazılır.
 28 Ekim 2026 “devam” talimatı (Faz 4 sonrası) WB-016–021 (Faz 5, AI) uygulama onayıdır; plan
 [Faz 5](docs/PHASE-5.md), günlük [docs/worklogs/PHASE-5.md](docs/worklogs/PHASE-5.md). Testler sahte sağlayıcıyla yapılır;
 ücretli OpenAI çağrısı yalnız WB-021 canlı değerlendirmesinde, kullanıcının sağladığı ayrı key ve
-kayıtlı bütçe sınırıyla yapılır. Key repoya, loga veya sohbete yazılmaz. Faz 6 kapsam dışıdır.
+kayıtlı bütçe sınırıyla yapılır. Key repoya, loga veya sohbete yazılmaz.
+28 Ekim 2026 “kalan geliştirmelere devam et” talimatı Faz 6 (WB-022/023) onayıdır; plan [Faz 6](docs/PHASE-6.md),
+günlük [docs/worklogs/PHASE-6.md](docs/worklogs/PHASE-6.md). Gerçek bulut hesabı açma, secret yükleme ve deploy ayrıca
+açık kullanıcı onayı ister (dışa dönük, geri alınması zor işlemler).
 
 ## Kaynakların önceliği
 

@@ -6,6 +6,8 @@
 27 Ekim'de squash merge edildi: `e5ad0ea`. PR check ve merge sonrası main `quality`
 check'i geçti. Main run: [40495104283](https://github.com/OguzSoykan/Workflow-Builder/actions/runs/40495104283).
 
+**Faz 6 başladı (28 Ekim, kullanıcı onayı):** [plan](docs/PHASE-6.md), [günlük](docs/worklogs/PHASE-6.md). WB-022A TR/EN arayüz uygulandı ([ADR-025](docs/adr/ADR-025-i18n.md)); PR bekleniyor.
+
 **Faz 5 tamamlandı (28 Ekim):** [plan](docs/PHASE-5.md), [günlük](docs/worklogs/PHASE-5.md). WB-016 bütçe ledger'ı [PR #25](https://github.com/OguzSoykan/Workflow-Builder/pull/25) (`5960e2b`) ile main'de ([ADR-021](docs/adr/ADR-021-ai-budget-ledger.md)). WB-017 AI erişim politikası [PR #26](https://github.com/OguzSoykan/Workflow-Builder/pull/26) (`af9684e`) ile main'de. WB-018 OpenAI adaptörü [PR #27](https://github.com/OguzSoykan/Workflow-Builder/pull/27) (`673fdee`) ile main'de ([ADR-022](docs/adr/ADR-022-openai-adapter.md)). WB-019 oluşturma [PR #28](https://github.com/OguzSoykan/Workflow-Builder/pull/28) (`80b1c24`) ile main'de ([ADR-023](docs/adr/ADR-023-ai-create.md)). WB-020 AI düzenleme [PR #29](https://github.com/OguzSoykan/Workflow-Builder/pull/29) (`b6625d4`) ile main'de ([ADR-024](docs/adr/ADR-024-ai-edit-patch.md)). WB-021 tamamlandı: canlı 20 prompt değerlendirmesi **19/20 (%95, hedef %85)**, gerçek harcama 0,0104 USD ([rapor](docs/evals/README.md)). Tek ücretli OpenAI kullanımı bu değerlendirmedir (0,0104 USD). Faz 4 tamamlandı: WB-012–015 PR #21–#24 ile main'de (`561efb6`).
 
 **Faz 4 başladı (28 Ekim, kullanıcı onayı):** [plan](docs/PHASE-4.md), [günlük](docs/worklogs/PHASE-4.md). WB-013 token doğrulaması ve `/me` [PR #21](https://github.com/OguzSoykan/Workflow-Builder/pull/21) (`89f6e45`) ile main'de ([ADR-018](docs/adr/ADR-018-firebase-token-verification.md)). WB-014 D1 workflow API [PR #22](https://github.com/OguzSoykan/Workflow-Builder/pull/22) (`2cfc5c9`) ile main'de ([ADR-019](docs/adr/ADR-019-d1-workflow-storage.md)). WB-012 hesap arayüzü [PR #23](https://github.com/OguzSoykan/Workflow-Builder/pull/23) (`65729d8`) ile main'de ([ADR-020](docs/adr/ADR-020-browser-auth.md)). WB-015 buluta kayıt ve revizyon listesi uygulandı; kapılar PASS (403 Vitest, 42 E2E). Merge sonrası Faz 4 tamamlanır; Faz 5 (AI, bütçe) ayrı onay ister. Gerçek Firebase projesi/D1 açılmadı (D-12). Faz 3 tamamlandı: WB-009–011 PR #18–#20 ile main'de (`c30bc4a`).
@@ -34,7 +36,7 @@ Görev dalında `/` görsel editör, `/health` servis ekranıdır. Dört adım t
 
 ## Sıradaki işler
 
-1. **Faz 6:** WB-022 TR/EN, klavye erişimi ve dar ekran (yerel); WB-023 operasyon, staging/prod ve kontrollü deploy — gerçek Firebase/Cloudflare hesapları ve deploy kullanıcı onayı ister. Canlı eval'de 1/20 çıktı tavanı hatası izlenecek risk.
+1. **Faz 6:** WB-022A TR/EN review → WB-022B klavye/erişilebilirlik ve dar ekran (yerel); WB-023 operasyon, staging/prod ve kontrollü deploy — gerçek Firebase/Cloudflare hesapları ve deploy kullanıcı onayı ister. Canlı eval'de 1/20 çıktı tavanı hatası izlenecek risk.
 2. **Açık takip:** React Flow declaration yaması upstream [#6038](https://github.com/xyflow/xyflow/issues/6038) düzeltmesi yayınlanınca kaldırılacak (ADR-015); düzeltme PR'ları #6039/#6045/#6060 27 Ekim'de açık. Bağımsız insan review yok.
 3. **Tamamlanan güvenlik takibi:** Zod 4.6.7 + saf paketlerde `skipLibCheck` (ADR-016); ES-only sınırı probe ile doğrulandı.
 4. **Sonraki fazlar:** Simülasyon → auth/bulut kayıt → bütçe kontrollü AI → yayın kalitesi.
