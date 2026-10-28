@@ -21,6 +21,10 @@ gerçek Firebase/Cloudflare hesabı kullanımı kapsam dışıdır; testler saht
 28 Ekim 2026 kullanıcı talimatı (“pr ı sen onayla insan incelemesine gerek yok artık ve tamamladıktan sonra devam et”):
 agent, required `quality` PASS sonrası kendi PR'larını squash merge eder ve sonraki karta geçer;
 ayrı insan review kaydı gerekmez. Merge edilen her PR günlüğe yazılır.
+28 Ekim 2026 “devam” talimatı (Faz 4 sonrası) WB-016–021 (Faz 5, AI) uygulama onayıdır; plan
+[Faz 5](docs/PHASE-5.md), günlük [docs/worklogs/PHASE-5.md](docs/worklogs/PHASE-5.md). Testler sahte sağlayıcıyla yapılır;
+ücretli OpenAI çağrısı yalnız WB-021 canlı değerlendirmesinde, kullanıcının sağladığı ayrı key ve
+kayıtlı bütçe sınırıyla yapılır. Key repoya, loga veya sohbete yazılmaz. Faz 6 kapsam dışıdır.
 
 ## Kaynakların önceliği
 
