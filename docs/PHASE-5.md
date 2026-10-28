@@ -1,6 +1,6 @@
 # Faz 5 — AI ve bütçe koruması
 
-**Durum:** Kullanıcı onayıyla başladı (28 Ekim 2026). İşlem kaydı: [çalışma günlüğü](worklogs/PHASE-5.md).
+**Durum:** Tamamlandı (28 Ekim 2026): WB-016–021 main'de; canlı kalite değerlendirmesi 19/20 (%95), 0,0104 USD. İşlem kaydı: [çalışma günlüğü](worklogs/PHASE-5.md).
 Kaynak: PRD FR-06–08/12, AC-06/07/09–11, Architecture §4, Data Model §5–6, API Contract §5, DECISIONS Faz 5 kararları.
 
 | Kart   | İş                                                    | Durum   | Kabul                                                                                        |
@@ -40,4 +40,4 @@ Kaynak: PRD FR-06–08/12, AC-06/07/09–11, Architecture §4, Data Model §5–
 ## WB-021 durumu
 
 - Onay/ret/geri al UX'i WB-019/020'de tamamlandı (E2E: reddetmek hiçbir şey yazmaz, uygula + geri al, eski taslağa uygulanmaz).
-- Değerlendirme aracı ve ön kayıt: [docs/evals](evals/README.md). Canlı çalıştırma kullanıcının `infra/.dev.vars`'a key koymasını bekliyor; sonuç geldiğinde kart kapanır.
+- Değerlendirme: [docs/evals](evals/README.md). Canlı sonuç 19/20 (%95, hedef %85), harcama 0,0104 USD. Kalan risk: model nadiren çıktı tavanına takılıyor (1/20, faturalanmış hata).

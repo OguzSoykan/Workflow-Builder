@@ -67,3 +67,10 @@
 - `apps/worker/eval/cases.ts` (20 sentetik vaka + rubrik), `apps/worker/eval/run.mjs` (`npm run ai:eval`; mock/canlı, en kötü durum tavanı, key yalnız `infra/.dev.vars`, rapor `docs/evals/`), `apps/worker/test/ai-eval.test.ts`. İlk konum `scripts/` idi; lint `no-restricted-imports` uygulama içi import'u reddetti → araç Worker paketinin içine taşındı (kural gevşetilmedi), `tsconfig.test` eval'i kapsar.
 - Mock çalıştırma: 5/20 (sabit mock akış; rubrik farkları doğru yakaladı), 0 USD. Canlı en kötü durum offline hesaplandı: 85.366 µUSD ≈ 0,085 USD; sınır 0,50 USD. Ön kayıt `docs/evals/README.md`.
 - Canlı eval: NOT RUN — kullanıcı `infra/.dev.vars` dosyasına `OPENAI_API_KEY` satırını kendisi ekleyecek; key sohbete yazılmayacak.
+
+## P5-013 — Canlı değerlendirme ve Faz 5 kapanışı (2026-10-28)
+
+- [PR #30](https://github.com/OguzSoykan/Workflow-Builder/pull/30) agent squash merge: main `0eb3c93`.
+- Kullanıcı OpenAI key'ini sohbete yapıştırdı (talimat dosyaya kendisinin eklemesiydi). Key yalnız git dışı `infra/.dev.vars`'a yazıldı (`git check-ignore` doğrulandı), çalıştırma sonrası dosya silindi; rapor ve git geçmişinde yok (`grep` 0, Gitleaks + repo taraması PASS). Kullanıcıya key'i iptal edip yenilemesi önerildi.
+- `npm run ai:eval -- --max-usd 0.50`: 19/20 (%95, hedef %85), 19 geçerli öneri, harcama 10.374 µUSD ≈ 0,0104 USD (en kötü durum 85.366 µUSD). Başarısız: `expense-invoice` `AI_PROVIDER_INVALID_RESPONSE` 4.056 µUSD (çıktı tavanı; faturalanmış hata). Canlı yanıt biçimi ADR-022 varsayımıyla eşleşti. Harcama 5 USD tahsisinden düşülür.
+- Faz 5 tamamlandı. Sonraki: Faz 6 (WB-022 TR/EN, klavye, dar ekran; WB-023 operasyon/staging/deploy — deploy ve bulut hesapları kullanıcı onayı ister).

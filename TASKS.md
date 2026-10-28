@@ -8,7 +8,7 @@ Zod advisory 27 Ekim'de Zod 4.6.7 ile kapatıldı (ADR-016). [STATUS](STATUS.md)
 ## Aktif Faz 2
 
 Kullanıcı WB-005–008 için başlama onayı verdi. Küçük kartlar ve kabul koşulları
-[Faz 2 planında](docs/PHASE-2.md); WB-005A/B ve WB-006A/B PR #8–#12 ile main’de; D-03/D-08 onaylandı; WB-007A/B PR #13/#14 ile main’de; WB-008A/B PR #15/#16 ile main’de; Faz 2 tamamlandı. Faz 3 28 Ekim'de onaylandı ([plan](docs/PHASE-3.md)): WB-009–011 PR #18–#20 ile main’de; Faz 3 tamamlandı. Faz 4 28 Ekim'de onaylandı ([plan](docs/PHASE-4.md)): WB-012–015 PR #21–#24 ile main’de; Faz 4 tamamlandı. Faz 5 28 Ekim'de onaylandı ([plan](docs/PHASE-5.md)): WB-016–020 PR #25–#29 ile main’de; WB-021 canlı eval kullanıcı key'ini bekliyor. Her anlamlı adım
+[Faz 2 planında](docs/PHASE-2.md); WB-005A/B ve WB-006A/B PR #8–#12 ile main’de; D-03/D-08 onaylandı; WB-007A/B PR #13/#14 ile main’de; WB-008A/B PR #15/#16 ile main’de; Faz 2 tamamlandı. Faz 3 28 Ekim'de onaylandı ([plan](docs/PHASE-3.md)): WB-009–011 PR #18–#20 ile main’de; Faz 3 tamamlandı. Faz 4 28 Ekim'de onaylandı ([plan](docs/PHASE-4.md)): WB-012–015 PR #21–#24 ile main’de; Faz 4 tamamlandı. Faz 5 28 Ekim'de onaylandı ([plan](docs/PHASE-5.md)): WB-016–021 PR #25–#30 ile main’de; canlı eval 19/20 (%95). Faz 5 tamamlandı. Her anlamlı adım
 [çalışma günlüğüne](docs/worklogs/PHASE-2.md) eklenir. Aşağıdaki Faz 1 kayıtları korunur.
 
 ## Hazır ve tamamlanmış iş tanımı
@@ -139,17 +139,17 @@ WB-001A'da henüz uygulama/test runner yoktur: Q-TEST yerine workspace/config do
 
 Faz 1 tamamlandı; Faz 2 kullanıcı talimatıyla başladı. Güncel alt kartlar Faz 2 planında; güvenlik bulgusu açık.
 
-| Sıra | İş                                            | Durum       | Tamamlanma / başlangıç koşulu                                                                         |
-| ---- | --------------------------------------------- | ----------- | ----------------------------------------------------------------------------------------------------- |
-| 1    | Zod güvenlik bulgusu                          | Done        | Zod 4.6.7, ADR-016; audit 0, ES-only probe ve tüm kapılar PASS                                        |
-| 2    | Faz 2 görev ve karar hazırlığı                | Done        | Alt kartlar oluşturuldu; D-03/D-08 27 Ekim'de kullanıcı onayıyla çözüldü                              |
-| 3    | WB-005: React Flow canvas ve node özellikleri | Done        | WB-005A/B PR #8/#9/#10 ile main’de                                                                    |
-| 4    | WB-006: Input ve koşul/onay dalları editörü   | Done        | WB-006A/B PR #11/#12 ile main’de                                                                      |
-| 5    | WB-007: Yerel kayıt ve güvenli import/export  | Done        | WB-007A/B PR #13/#14 ile main’de                                                                      |
-| 6    | WB-008: Validation UX ve undo/redo            | Done        | WB-008A/B PR #15/#16 ile main’de                                                                      |
-| 7    | WB-009–011: Faz 3 simülasyon                  | Done        | WB-009–011 PR #18–#20 ile main’de                                                                     |
-| 8    | WB-012–015: Faz 4 kimlik ve bulut kayıt       | Done        | PR #21–#24 ile main’de                                                                                |
-| 9    | WB-016–021: Faz 5 AI ve bütçe                 | In Progress | WB-016–020 main’de; WB-021 eval aracı hazır, canlı çalıştırma bekliyor; canlı eval kullanıcı key'iyle |
+| Sıra | İş                                            | Durum | Tamamlanma / başlangıç koşulu                                            |
+| ---- | --------------------------------------------- | ----- | ------------------------------------------------------------------------ |
+| 1    | Zod güvenlik bulgusu                          | Done  | Zod 4.6.7, ADR-016; audit 0, ES-only probe ve tüm kapılar PASS           |
+| 2    | Faz 2 görev ve karar hazırlığı                | Done  | Alt kartlar oluşturuldu; D-03/D-08 27 Ekim'de kullanıcı onayıyla çözüldü |
+| 3    | WB-005: React Flow canvas ve node özellikleri | Done  | WB-005A/B PR #8/#9/#10 ile main’de                                       |
+| 4    | WB-006: Input ve koşul/onay dalları editörü   | Done  | WB-006A/B PR #11/#12 ile main’de                                         |
+| 5    | WB-007: Yerel kayıt ve güvenli import/export  | Done  | WB-007A/B PR #13/#14 ile main’de                                         |
+| 6    | WB-008: Validation UX ve undo/redo            | Done  | WB-008A/B PR #15/#16 ile main’de                                         |
+| 7    | WB-009–011: Faz 3 simülasyon                  | Done  | WB-009–011 PR #18–#20 ile main’de                                        |
+| 8    | WB-012–015: Faz 4 kimlik ve bulut kayıt       | Done  | PR #21–#24 ile main’de                                                   |
+| 9    | WB-016–021: Faz 5 AI ve bütçe                 | Done  | WB-016–021 main’de; canlı eval 19/20; canlı eval kullanıcı key'iyle      |
 
 WB-005–027'nin üst kapsamı [ROADMAP](ROADMAP.md) ve korunmuş
 [BACKLOG](docs/BACKLOG.md) içinde bulunur. Sonraki fazlar sırasıyla simulator,
