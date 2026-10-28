@@ -31,3 +31,8 @@ Kaynak: PRD FR-06–08/12, AC-06/07/09–11, Architecture §4, Data Model §5–
 
 - Ayrıntılar [ADR-023](adr/ADR-023-ai-create.md): `POST /api/v1/ai/workflows/generate`, ledger'da saklı yanıt ile idempotent tekrar, strict taslak şeması → sunucuda ID/yerleşim → contract + validator; web “AI ile oluştur” paneli (kalan hak, önizleme, onaylı ve geri alınabilir uygulama, ret hiçbir şey yazmaz).
 - Kanıt: 462 Vitest + 2 scanner + 3 OpenAPI; 45 Chromium. Canlı model: NOT RUN (WB-021).
+
+## WB-020 uygulama sınırı
+
+- Ayrıntılar [ADR-024](adr/ADR-024-ai-edit-patch.md): çekirdekte `applyPatch`/`diffWorkflows`, `POST /api/v1/ai/workflows/edit`, AI panelinde “Bu akışı düzenle” modu (diff özeti, uygulamadan önce hash kontrolü).
+- Kanıt: 488 Vitest + 2 scanner + 3 OpenAPI; 47 Chromium. Canlı model: NOT RUN (WB-021).
