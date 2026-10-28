@@ -13,3 +13,9 @@
 - E2E iki gerçek hata yakaladı: doğrulama mesajları dil değişince önbellekten eski dilde geliyordu (memo'ya dil eklendi); React Flow kartları için dil kart verisine eklendi. Örnek akışlar artık seçili dilde oluşur.
 - Kapılar: typecheck/lint/format, 494 Vitest (i18n katalog/kalıntı/t testleri dahil) + 2 + 3, coverage, negatif kapılar, build, secret:scan, Gitleaks PASS; E2E 49/49. İngilizce masaüstü ve 390px ekran görüntüleri incelendi (taşma yok). Karar ADR-025.
 - Hosted CI ([run 40765564853](https://github.com/OguzSoykan/Workflow-Builder/actions/runs/40765564853)) FAIL: `phase2-exit` sürükle/geri al testi, düğümün tam `style` metnini React Flow ölçümünden önce (`visibility: hidden`) okuyup geri almadan sonra `visible` ile karşılaştırdığı için iki denemede de düştü (zamanlama yarışı; davranış hatası değil). Test yalnız `transform` değerini düğüm görünür olduktan sonra karşılaştıracak şekilde düzeltildi; `editor.spec` aynı zayıf kalıptan arındırıldı. `--repeat-each=8` 16/16, tam E2E 49/49 PASS.
+
+## P6-003 — WB-022A merge ve WB-022B erişilebilirlik (2026-10-28)
+
+- [PR #32](https://github.com/OguzSoykan/Workflow-Builder/pull/32) [quality 40766081069](https://github.com/OguzSoykan/Workflow-Builder/actions/runs/40766081069) PASS (test düzeltmesi sonrası) agent squash merge: main `bd8ecc3`. WB-022A Done.
+- `feat/WB-022B-a11y`: `@axe-core/playwright` 4.14.0 devDependency (audit 0). Keşif taraması 4 durumda yalnız `color-contrast` (serious) buldu; renkler koyulaştırıldı, yeniden tarama 0 ihlal. `tests/e2e/a11y.spec.ts`: 6 durumda axe, klavye-yalnız ana senaryo (ilk sürüm tutar alanına `focus()` ile gidiyordu; etiket tanıyan Tab yardımcısıyla gerçekten klavye-yalnız yapıldı), görünür odak.
+- Kapılar: typecheck/lint/format, 494 Vitest + 2 + 3, negatif kapılar, build, secret:scan, Gitleaks PASS; E2E 52/52; a11y spec `--repeat-each=3` 9/9.

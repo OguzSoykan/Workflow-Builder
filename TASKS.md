@@ -8,7 +8,7 @@ Zod advisory 27 Ekim'de Zod 4.6.7 ile kapatıldı (ADR-016). [STATUS](STATUS.md)
 ## Aktif Faz 2
 
 Kullanıcı WB-005–008 için başlama onayı verdi. Küçük kartlar ve kabul koşulları
-[Faz 2 planında](docs/PHASE-2.md); WB-005A/B ve WB-006A/B PR #8–#12 ile main’de; D-03/D-08 onaylandı; WB-007A/B PR #13/#14 ile main’de; WB-008A/B PR #15/#16 ile main’de; Faz 2 tamamlandı. Faz 3 28 Ekim'de onaylandı ([plan](docs/PHASE-3.md)): WB-009–011 PR #18–#20 ile main’de; Faz 3 tamamlandı. Faz 4 28 Ekim'de onaylandı ([plan](docs/PHASE-4.md)): WB-012–015 PR #21–#24 ile main’de; Faz 4 tamamlandı. Faz 5 28 Ekim'de onaylandı ([plan](docs/PHASE-5.md)): WB-016–021 PR #25–#31 ile main’de; Faz 5 tamamlandı. Faz 6 onaylandı ([plan](docs/PHASE-6.md)): WB-022A TR/EN Review. Her anlamlı adım
+[Faz 2 planında](docs/PHASE-2.md); WB-005A/B ve WB-006A/B PR #8–#12 ile main’de; D-03/D-08 onaylandı; WB-007A/B PR #13/#14 ile main’de; WB-008A/B PR #15/#16 ile main’de; Faz 2 tamamlandı. Faz 3 28 Ekim'de onaylandı ([plan](docs/PHASE-3.md)): WB-009–011 PR #18–#20 ile main’de; Faz 3 tamamlandı. Faz 4 28 Ekim'de onaylandı ([plan](docs/PHASE-4.md)): WB-012–015 PR #21–#24 ile main’de; Faz 4 tamamlandı. Faz 5 28 Ekim'de onaylandı ([plan](docs/PHASE-5.md)): WB-016–021 PR #25–#31 ile main’de; Faz 5 tamamlandı. Faz 6 onaylandı ([plan](docs/PHASE-6.md)): WB-022A PR #32 ile main’de; WB-022B a11y Review. Her anlamlı adım
 [çalışma günlüğüne](docs/worklogs/PHASE-2.md) eklenir. Aşağıdaki Faz 1 kayıtları korunur.
 
 ## Hazır ve tamamlanmış iş tanımı
@@ -150,7 +150,7 @@ Faz 1 tamamlandı; Faz 2 kullanıcı talimatıyla başladı. Güncel alt kartlar
 | 7    | WB-009–011: Faz 3 simülasyon                  | Done        | WB-009–011 PR #18–#20 ile main’de                                        |
 | 8    | WB-012–015: Faz 4 kimlik ve bulut kayıt       | Done        | PR #21–#24 ile main’de                                                   |
 | 9    | WB-016–021: Faz 5 AI ve bütçe                 | Done        | WB-016–021 main’de; canlı eval 19/20; canlı eval kullanıcı key'iyle      |
-| 10   | WB-022–023: Faz 6 yayın hazırlığı             | In Progress | WB-022A TR/EN Review; WB-022B a11y sırada; WB-023 deploy onayı ister     |
+| 10   | WB-022–023: Faz 6 yayın hazırlığı             | In Progress | WB-022A main’de; WB-022B Review; WB-023 deploy onayı ister               |
 
 WB-005–027'nin üst kapsamı [ROADMAP](ROADMAP.md) ve korunmuş
 [BACKLOG](docs/BACKLOG.md) içinde bulunur. Sonraki fazlar sırasıyla simulator,
