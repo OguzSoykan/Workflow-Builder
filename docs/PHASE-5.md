@@ -16,3 +16,8 @@ Kaynak: PRD FR-06–08/12, AC-06/07/09–11, Architecture §4, Data Model §5–
 
 - Ayrıntılar [ADR-021](adr/ADR-021-ai-budget-ledger.md). Henüz AI rotası yok; ledger WB-018/019'da sağlayıcı çağrısını sarar.
 - Kanıt: gerçek SQLite üzerinde ledger testleri, DO protokol/fail-closed testleri, build dry-run'da DO binding'i.
+
+## WB-017 uygulama sınırı
+
+- `/api/v1/ai/*` koruması: `AI_ENABLED` “true” değilse `403 AI_DISABLED`, doğrulanmamış e-posta `403 EMAIL_NOT_VERIFIED`; ledger çağrısından önce. Misafir yolu ve Turnstile yoktur (kullanıcı kararı).
+- `GET /api/v1/ai/limits`: `aiEnabled`, `memberRemaining` (UTC günü 1 hak), kaba `budgetState` (ok/low/exhausted/unavailable); ledger tutarları açılmaz, ledger yoksa AI kapalı.
