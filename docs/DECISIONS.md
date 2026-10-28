@@ -102,3 +102,17 @@ WB-007A/B; cloud-save (WB-014) kuralı değişmez.
   silme (P1) bu fazda yoktur, açık risk olarak izlenir.
 - D-10 (teknik): Atomik kayıt D1 `batch` (tek transaction) + `(workflow_id, revision_number)`
   UNIQUE + koşullu güncelleme ile sağlanır; paralel PUT testi WB-014 kanıtıdır.
+
+## 28 Ekim 2026 — Faz 5 kararları: D-07/D-13 ve kota (onaylandı)
+
+- D-07: Tek global Durable Object ledger'ı; tutarlar tam sayı mikro-USD. Rezervasyon yalnız
+  `committed + outstanding + requested_max ≤ 4.500.000` iken kabul edilir (eşikte çağrı yok, AC-09).
+  Başarılı çağrıda gerçek maliyet düşülür, fark iade edilir. Zaman aşımı/bilinmeyen maliyette tam
+  rezervasyon harcanmış sayılır (fail-closed); bekleyen rezervasyonlar kendiliğinden serbest bırakılmaz.
+  Sağlayıcının kesin olarak ücretlendirmediği hatalarda (istek gönderilemedi, 4xx doğrulama) rezervasyon
+  ve kota iade edilir. Aynı `requestId` tekrarında yeni rezervasyon/çağrı yapılmaz.
+- Kota (D-05 ile birlikte): misafir AI hakkı yoktur; yalnız e-postası doğrulanmış üyeler UTC günü
+  başına 1 AI isteği yapabilir. Turnstile ve misafir cookie'si bu kararla kapsam dışıdır.
+- D-13: Testler mock/kayıtlı yanıtlarla yapılır. 20 prompt'luk canlı kalite değerlendirmesi kullanıcının
+  sağlayacağı ayrı OpenAI key'iyle, çalıştırma öncesi model fiyatı, token üst sınırı ve harcama sınırı
+  kaydedilerek bir kez yapılır. Key repoya/loga/sohbete yazılmaz.

@@ -6,6 +6,7 @@ import { WorkflowRepository } from './workflows/repository';
 import { registerWorkflowRoutes } from './workflows/routes';
 
 export type { AppEnv, Bindings } from './http';
+export { AiBudget } from './ai/budget-object';
 export interface AppDependencies {
   keys?: KeySource;
   now?: () => number;
