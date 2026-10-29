@@ -54,7 +54,13 @@ test('shows a proposal that changes nothing until applied, and can be undone', a
   const keys = await fakeAi(page);
   await page.goto('/');
   await openTab(page, 'Oluştur');
-  await expect(ai(page)).toHaveCount(0);
+  // Signed out: a faded, inert preview explains on hover why it is unavailable.
+  await expect(ai(page)).toHaveAccessibleDescription(
+    'AI ile oluşturmak için giriş yapın. Üyeler günde 1 kez kullanabilir.',
+  );
+  await expect(ai(page).getByRole('tooltip')).toBeHidden();
+  await ai(page).hover();
+  await expect(ai(page).getByRole('tooltip')).toBeVisible();
   await openTab(page, 'Adımlar');
   await page.getByRole('button', { name: 'Başlangıç ekle', exact: true }).click();
   await signIn(page);

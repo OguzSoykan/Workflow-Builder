@@ -1,4 +1,4 @@
-import { useEffect, useState, type Dispatch } from 'react';
+import { useEffect, useId, useState, type Dispatch } from 'react';
 import type { Workflow } from '@workflow-builder/workflow-contract';
 import type { EditorAction } from '../editor/model';
 import {
@@ -45,7 +45,7 @@ export function AiPanel({
     };
   }, [signedIn, token, proposal]);
 
-  if (!signedIn) return null;
+  if (!signedIn) return <LockedAiPanel configured={account.configured} />;
   const available = limits?.aiEnabled === true && limits.memberRemaining > 0;
   return (
     <section className="ai-panel" aria-label={t('AI ile oluştur')}>
@@ -184,6 +184,47 @@ export function AiPanel({
         </div>
       )}
       {message && <p role={message.kind === 'error' ? 'alert' : 'status'}>{message.text}</p>}
+    </section>
+  );
+}
+
+/**
+ * Signed-out members still see that AI creation exists: a faded, inert preview whose
+ * reason appears on hover or keyboard focus (and is read as the region's description).
+ */
+function LockedAiPanel({ configured }: { configured: boolean | null }) {
+  const reasonId = useId();
+  const reason =
+    configured === false
+      ? t(
+          'AI ile oluşturma bu sunucuda henüz etkin değil. Bulut hesabı yapılandırıldığında üyeler günde 1 kez kullanabilir.',
+        )
+      : t('AI ile oluşturmak için giriş yapın. Üyeler günde 1 kez kullanabilir.');
+  return (
+    <section
+      className="ai-panel ai-locked"
+      aria-label={t('AI ile oluştur')}
+      aria-describedby={reasonId}
+      tabIndex={0}
+    >
+      <h2 className="list-heading">
+        {t('AI ile oluştur')} <span className="ai-lock-badge">{t('Kilitli')}</span>
+      </h2>
+      <div className="ai-locked-preview" inert>
+        <label>
+          {t('Süreci anlatın')}
+          <textarea
+            disabled
+            placeholder={t('Örn. 10.000 TL üzeri satın almalar yönetici onayına gitsin.')}
+          />
+        </label>
+        <button type="button" className="secondary" disabled>
+          {t('Akış öner')}
+        </button>
+      </div>
+      <p className="ai-lock-reason" id={reasonId} role="tooltip">
+        {reason}
+      </p>
     </section>
   );
 }
