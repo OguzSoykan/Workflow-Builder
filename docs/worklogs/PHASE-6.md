@@ -27,3 +27,12 @@
 - `scripts/check-deploy-config.mjs` (yer tutucu D1 ID'de deploy'u durdurur; şu an iki ortamda da doğru şekilde reddediyor), `scripts/smoke.mjs` (salt okunur), `.github/workflows/deploy.yml` (manuel, main, environment, kapılar → migration → deploy → smoke, SHA sabit), `scripts/release.test.mjs`, `apps/worker/test/environments.test.ts`, `docs/OPERATIONS.md`, ENVIRONMENTS güncellemesi.
 - Kapılar: typecheck/lint/format, 496 Vitest + 5 security/release + 3 docs, coverage, negatif kapılar, build (3 config), secret:scan, Gitleaks PASS; E2E 52/52.
 - NOT RUN: gerçek Cloudflare/Firebase kaynakları, secret yükleme, deploy, smoke, ücretsiz katman ölçümü — ürün sahibinin açık onayı ve hesap erişimi gerekir.
+
+## P6-005 — Arayüz yenileme: çalışma alanı düzeni ve koyu tema (2026-10-29)
+
+- [PR #34](https://github.com/OguzSoykan/Workflow-Builder/pull/34) (WB-023) PR CI `quality` SUCCESS sonrası merge edildi: main `f398abe`.
+- Kullanıcı arayüzü beğenmediğini söyledi; seçenekler soruldu: “Çalışma alanı düzeni” ve “Açık + koyu (sisteme uyar)” seçildi. `feat/WB-UI-workspace-redesign`.
+- Tespit edilen sorunlar: sayfa belge gibi kayıyordu (tuval sabit 620 px, simülasyon/alanlar altta), akış tuvale sığmıyordu, yan paneller kalabalıktı, ham dosya seçici.
+- Uygulama: tam ekran grid (üst çubuk, sol sekmeler Adımlar/Alanlar/Oluştur/Dosya, tam yükseklik tuval, sağ sekmeler Özellikler/Simülasyon); erişilebilir `Tabs` (WAI-ARIA, ok tuşları, gizli paneller bağlı kalır); belge değişince otomatik sığdırma; tuval üstünde yüzen doğrulama kartı; seçimde Özellikler sekmesine geçiş; token tabanlı yeni stil dosyası (açık/koyu), `ui/theme.ts` (sistem/açık/koyu, kalıcı, React Flow `colorMode`). Yeni metinler katalogda.
+- Hatalar: uyarı yokken grid satırı kayıyor, çalışma alanı kısalıyordu → uyarılar her zaman var olan kapsayıcıda. E2E'ler 8787'de kullanıcının `wrangler dev`'iyle çakıştığı için ayrı `npm run e2e:server` (8797) eklendi; kullanıcının sunucusuna dokunulmadı. 26 E2E sekme arkasında kalan bölgeler yüzünden kırıldı → `tests/e2e/ui.ts` `openTab` + ifade bazlı ekleme betiği (ilk sürüm çok satırlı ifadeleri ve döngü gövdelerini kaçırdı, düzeltildi) + elle düzeltmeler (klavye testi sekmelere de klavyeyle gider; i18n İngilizce sekme adları).
+- Kanıt: typecheck/lint/format, 496 Vitest + 5 + 3, negatif kapılar, build, secret:scan, Gitleaks PASS; E2E 53/53 (koyu tema axe 0 ihlal ve tema kalıcılığı dahil). Açık/koyu/simülasyon/390px ekran görüntüleri incelendi; yatay taşma yok.

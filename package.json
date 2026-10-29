@@ -20,6 +20,7 @@
     "build": "npm run build --workspace=@workflow-builder/web && npm run build --workspace=@workflow-builder/worker && npm run build:envs --workspace=@workflow-builder/worker",
     "dev": "npm run build --workspace=@workflow-builder/web && npm run dev:worker",
     "dev:worker": "npm run dev --workspace=@workflow-builder/worker",
+    "e2e:server": "npm run build --workspace=@workflow-builder/web && wrangler dev --config infra/wrangler.jsonc --local --port 8797 --show-interactive-dev-session=false",
     "db:migrate:local": "wrangler d1 migrations apply DB --local --config infra/wrangler.jsonc",
     "dev:web": "npm run dev --workspace=@workflow-builder/web",
     "test": "vitest run && npm run test:security && npm run test:docs",

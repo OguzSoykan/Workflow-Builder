@@ -7,7 +7,8 @@ export default defineConfig({
   retries: process.env.CI ? 1 : 0,
   reporter: [['list'], ['html', { open: 'never' }]],
   use: {
-    baseURL: 'http://127.0.0.1:8787',
+    // A dedicated port so tests never collide with a developer's `npm run dev` on 8787.
+    baseURL: 'http://127.0.0.1:8797',
     // UI language follows the browser (FR-11); existing scenarios assert Turkish copy.
     locale: 'tr-TR',
     trace: 'retain-on-failure',
@@ -15,8 +16,8 @@ export default defineConfig({
   projects: [{ name: 'chromium', use: { ...devices['Desktop Chrome'] } }],
   webServer: [
     {
-      command: 'npm run dev',
-      url: 'http://127.0.0.1:8787/api/health',
+      command: 'npm run e2e:server',
+      url: 'http://127.0.0.1:8797/api/health',
       reuseExistingServer: false,
       timeout: 120_000,
       env: { WRANGLER_SEND_METRICS: 'false' },

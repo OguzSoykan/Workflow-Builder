@@ -1,4 +1,5 @@
 import { expect, test } from '@playwright/test';
+import { openTab } from './ui';
 
 test('opens an empty editor, adds all node kinds and preserves IDs on rename and drag', async ({
   page,
@@ -8,13 +9,17 @@ test('opens an empty editor, adds all node kinds and preserves IDs on rename and
   await expect(
     page.getByText('Taslak bu tarayıcıda otomatik kaydedilir', { exact: false }),
   ).toBeVisible();
+  await openTab(page, 'Adımlar');
   for (const kind of ['Başlangıç', 'Onay', 'Koşul', 'Bitiş'])
     await page.getByRole('button', { name: `${kind} ekle`, exact: true }).click();
   await expect(page.locator('.react-flow__node')).toHaveCount(4);
+  await openTab(page, 'Adımlar');
   await expect(page.getByRole('button', { name: 'Başlangıç ekle', exact: true })).toBeDisabled();
   const end = page.locator('.react-flow__node').last();
   const id = await end.getAttribute('data-id');
+  await openTab(page, 'Özellikler');
   await page.getByLabel('Adım adı', { exact: true }).fill('Bitiş güncellendi');
+  await openTab(page, 'Özellikler');
   await page.getByRole('button', { name: 'Değişiklikleri uygula', exact: true }).click();
   await expect(end).toContainText('Bitiş güncellendi');
   const transform = () => end.evaluate((element) => (element as HTMLElement).style.transform);
@@ -38,14 +43,20 @@ test('connects via the keyboard-accessible form, rejects occupied outputs and de
   page,
 }) => {
   await page.goto('/');
+  await openTab(page, 'Adımlar');
   await page.getByRole('button', { name: 'Başlangıç ekle', exact: true }).click();
+  await openTab(page, 'Adımlar');
   await page.getByRole('button', { name: 'Bitiş ekle', exact: true }).click();
+  await openTab(page, 'Özellikler');
   await page
     .getByRole('combobox', { name: 'Kaynak adım', exact: true })
     .selectOption({ label: 'Başlangıç (1)' });
+  await openTab(page, 'Özellikler');
   await page
     .getByRole('combobox', { name: 'Hedef adım', exact: true })
     .selectOption({ label: 'Bitiş (1)' });
+  await openTab(page, 'Adımlar');
+  await openTab(page, 'Özellikler');
   const connect = page.getByRole('button', { name: 'Bağlantı ekle', exact: true });
   await connect.focus();
   await page.keyboard.press('Enter');
@@ -53,10 +64,12 @@ test('connects via the keyboard-accessible form, rejects occupied outputs and de
   await connect.click();
   await expect(page.getByRole('alert')).toContainText('zaten bağlı');
   await expect(page.locator('.react-flow__edge')).toHaveCount(1);
+  await openTab(page, 'Adımlar');
   await page
     .getByRole('list', { name: 'Akıştaki adımlar', exact: true })
     .getByRole('button', { name: 'Bitiş', exact: false })
     .click();
+  await openTab(page, 'Özellikler');
   await page.getByRole('button', { name: 'Adımı sil', exact: true }).click();
   await expect(page.locator('.react-flow__node')).toHaveCount(1);
   await expect(page.locator('.react-flow__edge')).toHaveCount(0);
@@ -66,7 +79,9 @@ test('connects rendered handles and deletes a selected edge with the keyboard', 
   page,
 }) => {
   await page.goto('/');
+  await openTab(page, 'Adımlar');
   await page.getByRole('button', { name: 'Başlangıç ekle', exact: true }).click();
+  await openTab(page, 'Adımlar');
   await page.getByRole('button', { name: 'Bitiş ekle', exact: true }).click();
   const source = await page.locator('.react-flow__handle[data-handleid="next"]').boundingBox();
   const target = await page.locator('.react-flow__handle[data-handleid="input"]').boundingBox();
@@ -87,9 +102,12 @@ test('connects rendered handles and deletes a selected edge with the keyboard', 
 test('renders labels as text and keeps the narrow layout within the viewport', async ({ page }) => {
   await page.setViewportSize({ width: 390, height: 844 });
   await page.goto('/');
+  await openTab(page, 'Adımlar');
   await page.getByRole('button', { name: 'Başlangıç ekle', exact: true }).click();
   const label = '<img src=x onerror=alert(1)>';
+  await openTab(page, 'Özellikler');
   await page.getByLabel('Adım adı', { exact: true }).fill(label);
+  await openTab(page, 'Özellikler');
   await page.getByRole('button', { name: 'Değişiklikleri uygula', exact: true }).click();
   await expect(page.locator('.react-flow__node')).toContainText(label);
   await expect(page.locator('.react-flow__node img')).toHaveCount(0);
@@ -108,8 +126,11 @@ test('edits properties atomically and restores saved values when switching nodes
   page,
 }) => {
   await page.goto('/');
+  await openTab(page, 'Özellikler');
   const save = page.getByRole('button', { name: 'Değişiklikleri uygula', exact: true });
+  await openTab(page, 'Adımlar');
   const list = page.getByRole('list', { name: 'Akıştaki adımlar', exact: true });
+  await openTab(page, 'Adımlar');
   await page.getByRole('button', { name: 'Başlangıç ekle', exact: true }).click();
   const description = page.getByRole('textbox', {
     name: 'Başlangıç açıklaması (isteğe bağlı)',
@@ -117,22 +138,28 @@ test('edits properties atomically and restores saved values when switching nodes
   });
   await description.fill('Başvuru bilgilerini hazırlayın.');
   await save.click();
+  await openTab(page, 'Adımlar');
   await page.getByRole('button', { name: 'Onay ekle', exact: true }).click();
   const approval = page.locator('.react-flow__node').last();
   const id = await approval.getAttribute('data-id');
+  await openTab(page, 'Özellikler');
   await page.getByLabel('Adım adı', { exact: true }).fill('Finans onayı');
+  await openTab(page, 'Özellikler');
   await page.getByLabel('Onaylayan rolü', { exact: true }).fill('   ');
   await save.click();
   await expect(page.getByRole('alert')).toContainText('Değişiklik uygulanmadı');
   await expect(approval).toContainText('Onaylayan');
   await expect(approval).not.toContainText('Finans onayı');
+  await openTab(page, 'Özellikler');
   await page.getByLabel('Onaylayan rolü', { exact: true }).fill('Finans yöneticisi');
   await save.click();
   await expect(page.getByRole('alert')).toHaveCount(0);
   await expect(approval).toContainText('Finans onayı');
   await expect(approval).toContainText('Finans yöneticisi');
   await expect(approval).toHaveAttribute('data-id', id ?? '');
+  await openTab(page, 'Adımlar');
   await page.getByRole('button', { name: 'Bitiş ekle', exact: true }).click();
+  await openTab(page, 'Özellikler');
   await page.getByRole('combobox', { name: 'Bitiş sonucu', exact: true }).selectOption('rejected');
   await save.click();
   await expect(page.locator('.react-flow__node').last()).toContainText('Akış reddedilir');
@@ -140,23 +167,29 @@ test('edits properties atomically and restores saved values when switching nodes
   await expect(description).toHaveValue('Başvuru bilgilerini hazırlayın.');
   await description.fill('Uygulanmamış değişiklik');
   await list.getByRole('button', { name: 'Finans onayı', exact: false }).click();
+  await openTab(page, 'Özellikler');
   await expect(page.getByLabel('Onaylayan rolü', { exact: true })).toHaveValue('Finans yöneticisi');
   await list.getByRole('button', { name: 'Başlangıç', exact: false }).click();
   await expect(description).toHaveValue('Başvuru bilgilerini hazırlayın.');
   await description.fill('');
   await save.click();
   await list.getByRole('button', { name: 'Bitiş', exact: false }).click();
+  await openTab(page, 'Özellikler');
   await expect(page.getByRole('combobox', { name: 'Bitiş sonucu', exact: true })).toHaveValue(
     'rejected',
   );
+  await openTab(page, 'Özellikler');
   await page.getByRole('combobox', { name: 'Bitiş sonucu', exact: true }).selectOption('completed');
   await save.click();
   await expect(page.locator('.react-flow__node').last()).toContainText('Akış tamamlanır');
   await list.getByRole('button', { name: 'Başlangıç', exact: false }).click();
   await expect(description).toHaveValue('');
+  await openTab(page, 'Adımlar');
   await page.getByRole('button', { name: 'Koşul ekle', exact: true }).click();
   await expect(page.getByText('önce aşağıdaki “Giriş alanları”', { exact: false })).toBeVisible();
+  await openTab(page, 'Özellikler');
   await expect(page.getByLabel('Onaylayan rolü', { exact: true })).toHaveCount(0);
+  await openTab(page, 'Özellikler');
   await page.getByLabel('Adım adı', { exact: true }).fill('Tutar kontrolü');
   await save.click();
   await expect(page.locator('.react-flow__node').last()).toContainText('Tutar kontrolü');

@@ -1,5 +1,6 @@
 import { expect, test, type Page, type Request } from '@playwright/test';
 import { fakeFirebase, PASSWORD } from './fake-firebase';
+import { openTab } from './ui';
 
 const panel = (page: Page) => page.getByRole('region', { name: 'Hesap', exact: true });
 
@@ -11,13 +12,15 @@ test('shows that cloud accounts are not configured on a plain deployment', async
 
 test('signs up, verifies email, survives reload and signs out without touching the draft', async ({
   page,
+  baseURL,
 }) => {
   const calls = await fakeFirebase(page);
   const apiRequests: Request[] = [];
   page.on('request', (request) => {
-    if (request.url().startsWith('http://127.0.0.1:8787/')) apiRequests.push(request);
+    if (request.url().startsWith(`${baseURL}/`)) apiRequests.push(request);
   });
   await page.goto('/');
+  await openTab(page, 'Adımlar');
   await page.getByRole('button', { name: 'Başlangıç ekle', exact: true }).click();
   await page.locator('summary', { hasText: 'Giriş yap' }).click();
   await panel(page).getByLabel('E-posta', { exact: true }).fill('ayse@example.com');
@@ -42,6 +45,7 @@ test('signs up, verifies email, survives reload and signs out without touching t
   await expect(panel(page)).toContainText('E-posta doğrulandı');
   await panel(page).getByRole('button', { name: 'Çıkış yap', exact: true }).click();
   await expect(page.locator('summary', { hasText: 'Giriş yap' })).toBeVisible();
+  await openTab(page, 'Adımlar');
   await expect(
     page.getByRole('list', { name: 'Akıştaki adımlar', exact: true }).getByRole('button'),
   ).toHaveCount(1);

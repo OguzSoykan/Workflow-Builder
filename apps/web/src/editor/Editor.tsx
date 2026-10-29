@@ -5,6 +5,7 @@ import {
   MiniMap,
   ReactFlow,
   ReactFlowProvider,
+  useReactFlow,
   type Connection,
   type Edge,
 } from '@xyflow/react';
@@ -32,9 +33,12 @@ import { connectionError, emptyWorkflow, HANDLE_LABELS, NODE_LABELS, type NodeKi
 import '@xyflow/react/dist/style.css';
 import { setLocale, t, type Locale } from '../i18n/i18n';
 import { useLocale } from '../i18n/use-locale';
+import { Tabs } from '../ui/Tabs';
+import { setTheme, useTheme } from '../ui/theme';
 
 const nodeTypes = { workflow: WorkflowCard };
 const kinds: NodeKind[] = ['start', 'approval', 'condition', 'end'];
+const FIT_VIEW = { padding: 0.2, maxZoom: 1 };
 const STATUS_LABELS: Record<DraftStatus, string> = {
   idle: 'Kaydedilecek değişiklik yok',
   saved: 'Tarayıcıda kaydedildi',
@@ -79,6 +83,20 @@ function EditorWorkspace() {
     return () => window.removeEventListener('keydown', listener);
   }, []);
   const draft = useDraft(store, load, workflow, dispatch);
+  const theme = useTheme();
+  const flow = useReactFlow();
+  const [leftTab, setLeftTab] = useState('steps');
+  const [rightTab, setRightTab] = useState('properties');
+  // Selecting a step or connection always shows its properties.
+  useEffect(() => {
+    if (state.nodeId || state.edgeId) setRightTab('properties');
+  }, [state.nodeId, state.edgeId]);
+  // A different document (example, import, AI proposal, other tab) is fitted into view once.
+  const workflowId = workflow.workflowId;
+  useEffect(() => {
+    const handle = window.setTimeout(() => void flow.fitView(FIT_VIEW), 50);
+    return () => window.clearTimeout(handle);
+  }, [workflowId, flow]);
   // Messages are translated when computed, so the language is part of the cache key.
   const issues = useMemo(() => describeWorkflow(workflow), [workflow, locale]);
   const [run, setRun] = useState<SimulationRun | null>(null);
@@ -141,57 +159,8 @@ function EditorWorkspace() {
       target: connection.target,
       handle: connection.sourceHandle ?? '',
     });
-  return (
-    <main className="editor-shell">
-      <header className="editor-header">
-        <div>
-          <p className="eyebrow">{t('WORKFLOW BUILDER')}</p>
-          <h1>{t('İş akışı tasarımı')}</h1>
-        </div>
-        <div className="header-meta">
-          <label className="language-switch">
-            <span className="visually-hidden">{t('Dil')}</span>
-            <select
-              aria-label={t('Dil')}
-              value={locale}
-              onChange={(event) => setLocale(event.target.value as Locale)}
-            >
-              <option value="tr">Türkçe</option>
-              <option value="en">English</option>
-            </select>
-          </label>
-          <div className="history-buttons" role="group" aria-label={t('Geçmiş')}>
-            <button
-              type="button"
-              className="secondary"
-              disabled={!history.past.length}
-              title={t('Ctrl/Cmd+Z')}
-              onClick={() => dispatch({ type: 'undo' })}
-            >
-              {t('Geri al')}
-            </button>
-            <button
-              type="button"
-              className="secondary"
-              disabled={!history.future.length}
-              title={t('Ctrl/Cmd+Shift+Z veya Ctrl+Y')}
-              onClick={() => dispatch({ type: 'redo' })}
-            >
-              {t('Yinele')}
-            </button>
-          </div>
-          <span className="draft-badge" role="status">
-            {draft.conflict ? t('Otomatik kayıt duraklatıldı') : t(STATUS_LABELS[draft.status])}
-          </span>
-          <AccountPanel account={account} />
-          <a href="/health">{t('Servis durumu')}</a>
-        </div>
-      </header>
-      <div className="draft-notice">
-        {t(
-          'Taslak bu tarayıcıda otomatik kaydedilir; eksik adımlar olsa da yenilemede geri gelir. Hesap veya bulut kaydı yoktur.',
-        )}
-      </div>
+  const alerts = (
+    <>
       {load.status === 'corrupt' && (
         <div className="draft-alert" role="alert">
           {load.backedUp
@@ -229,60 +198,239 @@ function EditorWorkspace() {
           </button>
         </div>
       )}
-      <div className="editor-layout">
-        <aside className="palette" aria-label={t('Adım paleti')}>
-          <h2>{t('Adım ekle')}</h2>
-          <p className="muted">{t('Akışınızı adım adım oluşturun.')}</p>
-          {kinds.map((kind) => (
+    </>
+  );
+  const stepsTab = (
+    <>
+      <h2 className="panel-heading">{t('Adım ekle')}</h2>
+      <p className="muted">{t('Akışınızı adım adım oluşturun.')}</p>
+      <div className="palette-grid">
+        {kinds.map((kind) => (
+          <button
+            key={kind}
+            className={`palette-button kind-${kind}`}
+            disabled={
+              workflow.nodes.length >= WORKFLOW_LIMITS.nodes ||
+              (kind === 'start' && workflow.nodes.some((node) => node.type === 'start'))
+            }
+            onClick={() =>
+              dispatch({
+                type: 'add-node',
+                id: `node_${crypto.randomUUID()}`,
+                kind,
+                position: {
+                  x: (workflow.nodes.length % 2) * 320 + 40,
+                  y: Math.floor(workflow.nodes.length / 2) * 170 + 40,
+                },
+              })
+            }
+          >
+            <span className="kind-dot" />
+            {t('{kind} ekle', { kind: t(NODE_LABELS[kind]) })}
+            <span aria-hidden="true" className="palette-plus">
+              +
+            </span>
+          </button>
+        ))}
+      </div>
+      <h2 className="panel-heading">{t('Akıştaki adımlar')}</h2>
+      <p className="muted">
+        {t('{nodes} / 50 adım · {edges} / 100 bağlantı', {
+          nodes: workflow.nodes.length,
+          edges: workflow.edges.length,
+        })}
+      </p>
+      <ol className="node-list" aria-label={t('Akıştaki adımlar')}>
+        {workflow.nodes.map((node) => (
+          <li key={node.id}>
             <button
-              key={kind}
-              className={`palette-button kind-${kind}`}
-              disabled={
-                workflow.nodes.length >= WORKFLOW_LIMITS.nodes ||
-                (kind === 'start' && workflow.nodes.some((node) => node.type === 'start'))
-              }
-              onClick={() =>
-                dispatch({
-                  type: 'add-node',
-                  id: `node_${crypto.randomUUID()}`,
-                  kind,
-                  position: {
-                    x: (workflow.nodes.length % 2) * 320 + 40,
-                    y: Math.floor(workflow.nodes.length / 2) * 170 + 40,
-                  },
-                })
-              }
+              className={`list-button kind-${node.type}`}
+              aria-pressed={state.nodeId === node.id}
+              onClick={() => dispatch({ type: 'select-node', id: node.id })}
             >
-              <span className="kind-dot" />
-              {t('{kind} ekle', { kind: t(NODE_LABELS[kind]) })}
-              <span aria-hidden="true">+</span>
+              <span className="kind-dot" aria-hidden="true" />
+              <span className="list-text">
+                {node.label}
+                <small>{t(NODE_LABELS[node.type])}</small>
+              </span>
             </button>
-          ))}
-          <h2 className="list-heading">{t('Akıştaki adımlar')}</h2>
-          <p className="muted">
-            {t('{nodes} / 50 adım · {edges} / 100 bağlantı', {
-              nodes: workflow.nodes.length,
-              edges: workflow.edges.length,
-            })}
-          </p>
-          <ol className="node-list" aria-label={t('Akıştaki adımlar')}>
-            {workflow.nodes.map((node) => (
-              <li key={node.id}>
+          </li>
+        ))}
+      </ol>
+      <p className="draft-notice">
+        {t(
+          'Taslak bu tarayıcıda otomatik kaydedilir; eksik adımlar olsa da yenilemede geri gelir. Hesap veya bulut kaydı yoktur.',
+        )}
+      </p>
+    </>
+  );
+  const propertiesTab = (
+    <>
+      {selectedNode ? (
+        <NodePropertiesForm
+          key={selectedNode.id}
+          workflow={workflow}
+          node={selectedNode}
+          dispatch={dispatch}
+        />
+      ) : selectedEdge ? (
+        <div className="card">
+          <p>{t('{handle} bağlantısı', { handle: t(HANDLE_LABELS[selectedEdge.sourceHandle]) })}</p>
+          <button
+            className="danger"
+            onClick={() => dispatch({ type: 'delete-edge', id: selectedEdge.id })}
+          >
+            {t('Bağlantıyı sil')}
+          </button>
+        </div>
+      ) : (
+        <p className="empty-hint">{t('Düzenlemek için tuvalden veya listeden bir adım seçin.')}</p>
+      )}
+      <ConnectionForm workflow={workflow} dispatch={dispatch} />
+      <div className="editor-feedback" aria-live="polite">
+        {state.error && <p role="alert">{state.error}</p>}
+      </div>
+      {!!workflow.edges.length && (
+        <div className="connections">
+          <h3>{t('Bağlantılar')}</h3>
+          <ul aria-label={t('Akış bağlantıları')}>
+            {workflow.edges.map((edge) => (
+              <li key={edge.id}>
                 <button
                   className="list-button"
-                  aria-pressed={state.nodeId === node.id}
-                  onClick={() => dispatch({ type: 'select-node', id: node.id })}
+                  aria-pressed={state.edgeId === edge.id}
+                  onClick={() => dispatch({ type: 'select-edge', id: edge.id })}
                 >
-                  {node.label}
-                  <small>{t(NODE_LABELS[node.type])}</small>
+                  <span className="list-text">
+                    {workflow.nodes.find((node) => node.id === edge.sourceNodeId)?.label} →{' '}
+                    {workflow.nodes.find((node) => node.id === edge.targetNodeId)?.label}
+                    <small>{t(HANDLE_LABELS[edge.sourceHandle])}</small>
+                  </span>
                 </button>
               </li>
             ))}
-          </ol>
-          <AiPanel account={account} workflow={workflow} dispatch={dispatch} />
-          <ExamplesPanel dispatch={dispatch} />
-          <TransferPanel workflow={workflow} dispatch={dispatch} />
-          <CloudPanel workflow={workflow} executable={issues.length === 0} account={account} />
+          </ul>
+        </div>
+      )}
+    </>
+  );
+  const themeLabel = t('Tema: {mode}', {
+    mode: theme.choice === 'system' ? t('Sistem') : theme.choice === 'dark' ? t('Koyu') : t('Açık'),
+  });
+  return (
+    <div className="app">
+      <header className="topbar">
+        <div className="brand">
+          <span className="brand-mark" aria-hidden="true">
+            WB
+          </span>
+          <div>
+            <p className="eyebrow">{t('WORKFLOW BUILDER')}</p>
+            <h1>{t('İş akışı tasarımı')}</h1>
+          </div>
+        </div>
+        <div className="topbar-actions">
+          <div className="history-buttons" role="group" aria-label={t('Geçmiş')}>
+            <button
+              type="button"
+              className="ghost"
+              disabled={!history.past.length}
+              title={t('Ctrl/Cmd+Z')}
+              onClick={() => dispatch({ type: 'undo' })}
+            >
+              <span aria-hidden="true">↶ </span>
+              {t('Geri al')}
+            </button>
+            <button
+              type="button"
+              className="ghost"
+              disabled={!history.future.length}
+              title={t('Ctrl/Cmd+Shift+Z veya Ctrl+Y')}
+              onClick={() => dispatch({ type: 'redo' })}
+            >
+              <span aria-hidden="true">↷ </span>
+              {t('Yinele')}
+            </button>
+          </div>
+          <span
+            className={`draft-badge status-${draft.conflict ? 'conflict' : draft.status}`}
+            role="status"
+          >
+            {draft.conflict ? t('Otomatik kayıt duraklatıldı') : t(STATUS_LABELS[draft.status])}
+          </span>
+          <button
+            type="button"
+            className="ghost icon-button"
+            aria-label={themeLabel}
+            title={themeLabel}
+            onClick={() =>
+              setTheme(
+                theme.choice === 'system' ? 'light' : theme.choice === 'light' ? 'dark' : 'system',
+              )
+            }
+          >
+            <span aria-hidden="true">
+              {theme.choice === 'system' ? '◐' : theme.choice === 'dark' ? '☾' : '☀'}
+            </span>
+          </button>
+          <label className="language-switch">
+            <span className="visually-hidden">{t('Dil')}</span>
+            <select
+              aria-label={t('Dil')}
+              value={locale}
+              onChange={(event) => setLocale(event.target.value as Locale)}
+            >
+              <option value="tr">Türkçe</option>
+              <option value="en">English</option>
+            </select>
+          </label>
+          <AccountPanel account={account} />
+          <a className="service-link" href="/health">
+            {t('Servis durumu')}
+          </a>
+        </div>
+      </header>
+      {/* Always rendered so the workspace keeps the flexible grid row. */}
+      <div className="alerts">{alerts}</div>
+      <main className="workspace">
+        <aside className="side-panel palette" aria-label={t('Adım paleti')}>
+          <Tabs
+            label={t('Araçlar')}
+            active={leftTab}
+            onChange={setLeftTab}
+            items={[
+              { id: 'steps', label: t('Adımlar'), content: stepsTab },
+              {
+                id: 'fields',
+                label: t('Alanlar'),
+                content: <InputFields workflow={workflow} dispatch={dispatch} />,
+              },
+              {
+                id: 'create',
+                label: t('Oluştur'),
+                content: (
+                  <>
+                    <AiPanel account={account} workflow={workflow} dispatch={dispatch} />
+                    <ExamplesPanel dispatch={dispatch} />
+                  </>
+                ),
+              },
+              {
+                id: 'file',
+                label: t('Dosya'),
+                content: (
+                  <>
+                    <TransferPanel workflow={workflow} dispatch={dispatch} />
+                    <CloudPanel
+                      workflow={workflow}
+                      executable={issues.length === 0}
+                      account={account}
+                    />
+                  </>
+                ),
+              },
+            ]}
+          />
         </aside>
         <section className="canvas-panel" aria-label={t('İş akışı tuvali')}>
           <div className="canvas-title">
@@ -294,6 +442,7 @@ function EditorWorkspace() {
               nodes={nodes}
               edges={edges}
               nodeTypes={nodeTypes}
+              colorMode={theme.resolved}
               onConnect={connect}
               isValidConnection={(connection) =>
                 !connectionError(
@@ -332,7 +481,8 @@ function EditorWorkspace() {
                     dispatch({ type: 'select-edge', id: change.id });
                 }
               }}
-              defaultViewport={{ x: 30, y: 30, zoom: 0.85 }}
+              fitView
+              fitViewOptions={FIT_VIEW}
               minZoom={0.2}
               maxZoom={2}
               edgesReconnectable={false}
@@ -345,78 +495,44 @@ function EditorWorkspace() {
               }}
             >
               <Background gap={24} size={1} />
-              <Controls />
-              <MiniMap pannable zoomable nodeColor="#87a8c5" />
+              <Controls position="bottom-right" />
+              <MiniMap position="top-right" pannable zoomable className="minimap" />
             </ReactFlow>
             {!nodes.length && (
               <div className="canvas-empty">
-                <span aria-hidden="true">↗</span>
+                <span aria-hidden="true">↖</span>
                 <h3>{t('İlk adımla başlayın')}</h3>
                 <p>{t('Soldan bir başlangıç adımı ekleyin.')}</p>
               </div>
             )}
+            <ValidationPanel issues={issues} dispatch={dispatch} />
           </div>
-          <ValidationPanel issues={issues} dispatch={dispatch} />
-          <SimulationPanel
-            workflow={workflow}
-            executable={issues.length === 0}
-            run={run}
-            stale={stale}
-            setRun={setRun}
-          />
         </section>
-        <aside className="inspector" aria-label={t('Adım özellikleri')}>
-          <h2>{t('Özellikler')}</h2>
-          {selectedNode ? (
-            <NodePropertiesForm
-              key={selectedNode.id}
-              workflow={workflow}
-              node={selectedNode}
-              dispatch={dispatch}
-            />
-          ) : selectedEdge ? (
-            <div>
-              <p>
-                {t('{handle} bağlantısı', { handle: t(HANDLE_LABELS[selectedEdge.sourceHandle]) })}
-              </p>
-              <button
-                className="danger"
-                onClick={() => dispatch({ type: 'delete-edge', id: selectedEdge.id })}
-              >
-                {t('Bağlantıyı sil')}
-              </button>
-            </div>
-          ) : (
-            <p className="muted">{t('Düzenlemek için tuvalden veya listeden bir adım seçin.')}</p>
-          )}
-          <ConnectionForm workflow={workflow} dispatch={dispatch} />
-          <div className="editor-feedback" aria-live="polite">
-            {state.error && <p role="alert">{state.error}</p>}
-          </div>
-          {!!workflow.edges.length && (
-            <div className="connections">
-              <h3>{t('Bağlantılar')}</h3>
-              <ul aria-label={t('Akış bağlantıları')}>
-                {workflow.edges.map((edge) => (
-                  <li key={edge.id}>
-                    <button
-                      className="list-button"
-                      aria-pressed={state.edgeId === edge.id}
-                      onClick={() => dispatch({ type: 'select-edge', id: edge.id })}
-                    >
-                      {workflow.nodes.find((node) => node.id === edge.sourceNodeId)?.label} →{' '}
-                      {workflow.nodes.find((node) => node.id === edge.targetNodeId)?.label}
-                      <small>{t(HANDLE_LABELS[edge.sourceHandle])}</small>
-                    </button>
-                  </li>
-                ))}
-              </ul>
-            </div>
-          )}
+        <aside className="side-panel inspector" aria-label={t('Adım özellikleri')}>
+          <Tabs
+            label={t('Ayrıntılar')}
+            active={rightTab}
+            onChange={setRightTab}
+            items={[
+              { id: 'properties', label: t('Özellikler'), content: propertiesTab },
+              {
+                id: 'simulation',
+                label: t('Simülasyon'),
+                content: (
+                  <SimulationPanel
+                    workflow={workflow}
+                    executable={issues.length === 0}
+                    run={run}
+                    stale={stale}
+                    setRun={setRun}
+                  />
+                ),
+              },
+            ]}
+          />
         </aside>
-      </div>
-      <InputFields workflow={workflow} dispatch={dispatch} />
-    </main>
+      </main>
+    </div>
   );
 }
 

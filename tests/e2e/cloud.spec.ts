@@ -1,5 +1,6 @@
 import { expect, test, type Page } from '@playwright/test';
 import { fakeFirebase, PASSWORD } from './fake-firebase';
+import { openTab } from './ui';
 
 type Stored = {
   revision: number;
@@ -61,10 +62,12 @@ async function signIn(page: Page) {
   await page.locator('summary', { hasText: 'ayse@example.com' }).click();
 }
 async function loadExample(page: Page) {
+  await openTab(page, 'Oluştur');
   await page
     .getByRole('region', { name: 'Örnekten başla', exact: true })
     .getByRole('button', { name: 'Satın alma talebi', exact: true })
     .click();
+  await openTab(page, 'Oluştur');
   await page.getByRole('button', { name: 'Örneği yükle', exact: true }).click();
 }
 const cloud = (page: Page) => page.getByRole('region', { name: 'Bulut kaydı', exact: true });
@@ -77,26 +80,37 @@ test('saves a confirmed copy, appends revisions and resolves a conflict explicit
   await fakeFirebase(page, { verified: true });
   const { store, state } = await fakeCloud(page);
   await page.goto('/');
+  await openTab(page, 'Dosya');
   await expect(cloud(page)).toHaveCount(0);
   await signIn(page);
   await loadExample(page);
+  await openTab(page, 'Dosya');
   await expect(cloud(page)).toContainText('Bu taslak henüz buluta kaydedilmedi.');
 
+  await openTab(page, 'Dosya');
   await cloud(page).getByRole('button', { name: 'Buluta kaydet', exact: true }).click();
+  await openTab(page, 'Dosya');
   const confirm = cloud(page).getByRole('group', { name: 'Bulut kaydı onayı', exact: true });
+  await openTab(page, 'Dosya');
   await expect(confirm).toContainText(
     'hesabınıza kopya olarak kaydedilecek. Yerel taslak silinmez.',
   );
+  await openTab(page, 'Dosya');
   await confirm.getByRole('button', { name: 'Kaydet', exact: true }).click();
+  await openTab(page, 'Dosya');
   await expect(cloud(page).getByRole('status')).toHaveText(
     'Buluta kaydedildi (sürüm 1). Yerel taslağınız da duruyor.',
   );
+  await openTab(page, 'Dosya');
   await expect(
     cloud(page).getByRole('list', { name: 'Bulut sürümleri' }).getByRole('listitem'),
   ).toHaveCount(1);
 
+  await openTab(page, 'Dosya');
   await cloud(page).getByRole('button', { name: 'Buluta kaydet', exact: true }).click();
+  await openTab(page, 'Dosya');
   await confirm.getByRole('button', { name: 'Kaydet', exact: true }).click();
+  await openTab(page, 'Dosya');
   await expect(cloud(page).getByRole('status')).toContainText('sürüm 2');
 
   // Another device saved meanwhile: the next save must ask before stacking on top.
@@ -104,20 +118,31 @@ test('saves a confirmed copy, appends revisions and resolves a conflict explicit
   const other = store.get(id!)!;
   other.revision = 3;
   other.revisions.unshift({ revision: 3, source: 'manual', createdAt: '2026-10-28T11:00:00.000Z' });
+  await openTab(page, 'Dosya');
   await cloud(page).getByRole('button', { name: 'Buluta kaydet', exact: true }).click();
+  await openTab(page, 'Dosya');
   await confirm.getByRole('button', { name: 'Kaydet', exact: true }).click();
+  await openTab(page, 'Dosya');
   const conflict = cloud(page).getByRole('group', { name: 'Bulut çakışması', exact: true });
+  await openTab(page, 'Dosya');
   await expect(conflict).toContainText('daha yeni bir sürümü var (sürüm 3)');
+  await openTab(page, 'Dosya');
   await conflict.getByRole('button', { name: 'Yine de kaydet', exact: true }).click();
+  await openTab(page, 'Dosya');
   await expect(cloud(page).getByRole('status')).toContainText('sürüm 4');
+  await openTab(page, 'Dosya');
   await expect(
     cloud(page).getByRole('list', { name: 'Bulut sürümleri' }).getByRole('listitem'),
   ).toHaveCount(4);
 
   state.fail = true;
+  await openTab(page, 'Dosya');
   await cloud(page).getByRole('button', { name: 'Buluta kaydet', exact: true }).click();
+  await openTab(page, 'Dosya');
   await confirm.getByRole('button', { name: 'Kaydet', exact: true }).click();
+  await openTab(page, 'Dosya');
   await expect(cloud(page).getByRole('alert')).toContainText('tamamlanamadı');
+  await openTab(page, 'Adımlar');
   await expect(steps(page)).toHaveCount(5);
 });
 
@@ -126,7 +151,9 @@ test('asks for a verified email and an executable workflow before saving', async
   await fakeCloud(page);
   await page.goto('/');
   await signIn(page);
+  await openTab(page, 'Dosya');
   await expect(cloud(page)).toContainText('e-postanızı doğrulayın');
+  await openTab(page, 'Dosya');
   await expect(cloud(page).getByRole('button', { name: 'Buluta kaydet' })).toHaveCount(0);
 });
 
@@ -135,6 +162,8 @@ test('does not offer saving an incomplete workflow', async ({ page }) => {
   await fakeCloud(page);
   await page.goto('/');
   await signIn(page);
+  await openTab(page, 'Adımlar');
   await page.getByRole('button', { name: 'Başlangıç ekle', exact: true }).click();
+  await openTab(page, 'Dosya');
   await expect(cloud(page)).toContainText('Yalnız doğrulama sorunu olmayan akışlar');
 });
