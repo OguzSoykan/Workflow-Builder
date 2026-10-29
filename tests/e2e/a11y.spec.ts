@@ -18,6 +18,11 @@ test('editor states pass axe in Turkish and English', async ({ page }) => {
   await page.goto('/');
   await expectNoViolations(page, 'empty');
   await openTab(page, 'Oluştur');
+  const lockedAi = page.getByRole('region', { name: 'AI ile oluştur' });
+  await expect(lockedAi).toHaveAccessibleDescription(/bu sunucuda henüz etkin değil/);
+  await lockedAi.hover();
+  await expect(lockedAi.getByRole('tooltip')).toBeVisible();
+  await expectNoViolations(page, 'locked AI preview');
   await page
     .getByRole('region', { name: 'Örnekten başla' })
     .getByRole('button', { name: 'Satın alma talebi' })

@@ -35,6 +35,11 @@ export const EN: Record<string, string> = {
   'AI hizmetine ulaşılamadı. Biraz sonra tekrar deneyin.':
     'Could not reach the AI service. Try again shortly.',
   'AI ile oluştur': 'Create with AI',
+  Kilitli: 'Locked',
+  'AI ile oluşturma bu sunucuda henüz etkin değil. Bulut hesabı yapılandırıldığında üyeler günde 1 kez kullanabilir.':
+    'AI creation is not enabled on this server yet. Once cloud accounts are set up, members can use it once a day.',
+  'AI ile oluşturmak için giriş yapın. Üyeler günde 1 kez kullanabilir.':
+    'Sign in to create with AI. Members can use it once a day.',
   'AI isteği tamamlanamadı.': 'The AI request could not be completed.',
   'AI için önce e-postanızı doğrulayın.': 'Verify your email before using AI.',
   'AI modu': 'AI mode',
