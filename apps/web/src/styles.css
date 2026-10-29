@@ -877,6 +877,8 @@ p[role='status'] {
   font-size: 12.5px;
   line-height: 1.45;
   box-shadow: 0 8px 24px rgb(0 0 0 / 18%);
+  /* Never blocks the example buttons it floats over. */
+  pointer-events: none;
   opacity: 0;
   visibility: hidden;
   transform: translateY(-4px);
