@@ -1,18 +1,24 @@
 import { expect, test, type Page } from '@playwright/test';
+import { openTab } from './ui';
 
-const add = (page: Page, kind: string) =>
-  page.getByRole('button', { name: `${kind} ekle`, exact: true }).click();
+const add = async (page: Page, kind: string) => {
+  await openTab(page, 'Adımlar');
+  await page.getByRole('button', { name: `${kind} ekle`, exact: true }).click();
+};
 const panel = (page: Page) => page.getByRole('region', { name: 'Doğrulama', exact: true });
 const issues = (page: Page) =>
   panel(page).getByRole('list', { name: 'Doğrulama sorunları', exact: true }).getByRole('listitem');
 
 async function connect(page: Page, source: string, target: string) {
+  await openTab(page, 'Özellikler');
   await page
     .getByRole('combobox', { name: 'Kaynak adım', exact: true })
     .selectOption({ label: source });
+  await openTab(page, 'Özellikler');
   await page
     .getByRole('combobox', { name: 'Hedef adım', exact: true })
     .selectOption({ label: target });
+  await openTab(page, 'Özellikler');
   await page.getByRole('button', { name: 'Bağlantı ekle', exact: true }).click();
   await expect(page.getByRole('alert')).toHaveCount(0);
 }
@@ -37,6 +43,7 @@ test('explains graph problems, selects the related step and clears when executab
   // The file panel and the validation panel report the same number of issues.
   const count = await issues(page).count();
   await expect(panel(page)).toContainText(`${count} sorun ·`);
+  await openTab(page, 'Dosya');
   await expect(page.getByRole('region', { name: 'Dosya işlemleri', exact: true })).toContainText(
     `Akışta ${count} doğrulama sorunu var`,
   );
@@ -48,8 +55,10 @@ test('explains graph problems, selects the related step and clears when executab
   await panel(page)
     .getByRole('button', { name: '“Koşul” adımına başlangıçtan ulaşılamıyor.', exact: true })
     .click();
+  await openTab(page, 'Özellikler');
   await expect(page.getByLabel('Adım adı', { exact: true })).toHaveValue('Koşul');
 
+  await openTab(page, 'Özellikler');
   await page.getByRole('button', { name: 'Adımı sil', exact: true }).click();
   await connect(page, 'Başlangıç (1)', 'Onay (1)');
   await connect(page, 'Onay (2)', 'Bitiş (2)');

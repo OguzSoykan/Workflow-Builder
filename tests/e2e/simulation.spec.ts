@@ -1,5 +1,6 @@
 import { expect, test, type Page } from '@playwright/test';
 import { purchaseWorkflow } from '../fixtures/purchase';
+import { openTab } from './ui';
 
 const panel = (page: Page) => page.getByRole('region', { name: 'Simülasyon', exact: true });
 const trace = (page: Page) =>
@@ -7,16 +8,21 @@ const trace = (page: Page) =>
 
 async function loadPurchase(page: Page) {
   await page.goto('/');
+  await openTab(page, 'Dosya');
   await page.getByLabel('JSON içe aktar', { exact: true }).setInputFiles({
     name: 'satin-alma.json',
     mimeType: 'application/json',
     buffer: Buffer.from(JSON.stringify(purchaseWorkflow())),
   });
+  await openTab(page, 'Dosya');
   await page.getByRole('button', { name: 'Taslağı değiştir', exact: true }).click();
+  await openTab(page, 'Simülasyon');
   await expect(panel(page)).toContainText('Yalnız simülasyon');
 }
 async function start(page: Page, amount: string) {
+  await openTab(page, 'Simülasyon');
   await panel(page).getByLabel('Tutar (Sayı, gerekli)', { exact: true }).fill(amount);
+  await openTab(page, 'Simülasyon');
   await panel(page)
     .getByRole('button', { name: /Simülasyonu başlat|Yeniden başlat/ })
     .click();
@@ -27,32 +33,46 @@ test('routes small amounts to completion and waits for approval on large ones', 
 }) => {
   await loadPurchase(page);
   await start(page, '5000');
+  await openTab(page, 'Simülasyon');
   await expect(panel(page).getByRole('status')).toHaveText('Sonuç: akış tamamlandı');
+  await openTab(page, 'Simülasyon');
   await expect(trace(page)).toHaveText([
     '“Başlangıç” başladı.',
     '“Tutar kontrolü”: Tutar büyüktür 10000 (değer: 5000) → Yanlış.',
     '“Tamamlandı” bitişine ulaşıldı: akış tamamlandı.',
   ]);
+  await openTab(page, 'Simülasyon');
   await expect(panel(page).getByRole('group', { name: 'Onay kararı' })).toHaveCount(0);
 
   await start(page, '15000');
+  await openTab(page, 'Simülasyon');
   await expect(panel(page).getByRole('status')).toHaveText('Onay bekleniyor');
+  await openTab(page, 'Simülasyon');
   const decision = panel(page).getByRole('group', { name: 'Onay kararı', exact: true });
+  await openTab(page, 'Simülasyon');
   await expect(decision).toContainText('“Yönetici onayı” — Yönetici olarak karar verin.');
   await expect(page.locator('.workflow-card.sim-current')).toContainText('Yönetici onayı');
   await expect(page.locator('.workflow-card.sim-visited')).toHaveCount(2);
   await expect(page.locator('.react-flow__edge.sim-edge')).toHaveCount(2);
 
+  await openTab(page, 'Simülasyon');
   await decision.getByRole('button', { name: 'Onayla', exact: true }).click();
+  await openTab(page, 'Simülasyon');
   await expect(panel(page).getByRole('status')).toHaveText('Sonuç: akış tamamlandı');
+  await openTab(page, 'Simülasyon');
   await expect(trace(page).nth(3)).toHaveText('“Yönetici onayı”: Onaylandı.');
   await expect(page.locator('.react-flow__edge.sim-edge')).toHaveCount(3);
 
   await start(page, '15000');
+  await openTab(page, 'Simülasyon');
   await decision.getByRole('button', { name: 'Reddet', exact: true }).click();
+  await openTab(page, 'Simülasyon');
   await expect(panel(page).getByRole('status')).toHaveText('Sonuç: akış reddedildi');
+  await openTab(page, 'Simülasyon');
   await expect(trace(page).last()).toHaveText('“Reddedildi” bitişine ulaşıldı: akış reddedildi.');
+  await openTab(page, 'Simülasyon');
   await panel(page).getByRole('button', { name: 'Simülasyonu temizle', exact: true }).click();
+  await openTab(page, 'Simülasyon');
   await expect(trace(page)).toHaveCount(0);
   await expect(page.locator('.workflow-card.sim-visited, .workflow-card.sim-current')).toHaveCount(
     0,
@@ -61,28 +81,40 @@ test('routes small amounts to completion and waits for approval on large ones', 
 
 test('asks for missing or invalid inputs and marks a run stale after edits', async ({ page }) => {
   await loadPurchase(page);
+  await openTab(page, 'Simülasyon');
   await panel(page).getByRole('button', { name: 'Simülasyonu başlat', exact: true }).click();
+  await openTab(page, 'Simülasyon');
   await expect(panel(page).getByRole('alert')).toHaveText(
     '“Tutar” için bir değer girin; alan zorunlu veya bir koşulda kullanılıyor.',
   );
   await start(page, '-1');
+  await openTab(page, 'Simülasyon');
   await expect(panel(page).getByRole('alert')).toContainText('sınırları dışında');
+  await openTab(page, 'Simülasyon');
   await expect(trace(page)).toHaveCount(0);
 
   await start(page, '15000');
+  await openTab(page, 'Simülasyon');
   await expect(panel(page).getByRole('status')).toHaveText('Onay bekleniyor');
+  await openTab(page, 'Adımlar');
   await page
     .getByRole('list', { name: 'Akıştaki adımlar', exact: true })
     .getByRole('button', { name: 'Yönetici onayı', exact: false })
     .click();
+  await openTab(page, 'Özellikler');
   await page.getByLabel('Onaylayan rolü', { exact: true }).fill('Finans müdürü');
+  await openTab(page, 'Özellikler');
   await page.getByRole('button', { name: 'Değişiklikleri uygula', exact: true }).click();
+  await openTab(page, 'Simülasyon');
   await expect(panel(page).getByRole('status')).toHaveText(
     'Akış değişti; simülasyonu yeniden başlatın.',
   );
+  await openTab(page, 'Simülasyon');
   await expect(panel(page).getByRole('button', { name: 'Onayla', exact: true })).toBeDisabled();
   await expect(page.locator('.react-flow__edge.sim-edge')).toHaveCount(0);
 
+  await openTab(page, 'Özellikler');
   await page.getByRole('button', { name: 'Adımı sil', exact: true }).click();
+  await openTab(page, 'Simülasyon');
   await expect(panel(page)).toContainText('Simülasyon için önce doğrulama sorunlarını giderin.');
 });

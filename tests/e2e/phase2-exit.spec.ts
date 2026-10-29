@@ -1,29 +1,39 @@
 import { readFile } from 'node:fs/promises';
 import { expect, test, type Page } from '@playwright/test';
+import { openTab } from './ui';
 
-const add = (page: Page, kind: string) =>
-  page.getByRole('button', { name: `${kind} ekle`, exact: true }).click();
+const add = async (page: Page, kind: string) => {
+  await openTab(page, 'Adımlar');
+  await page.getByRole('button', { name: `${kind} ekle`, exact: true }).click();
+};
 const steps = (page: Page) =>
   page.getByRole('list', { name: 'Akıştaki adımlar', exact: true }).getByRole('button');
 const undo = (page: Page) => page.getByRole('button', { name: 'Geri al', exact: true });
 const redo = (page: Page) => page.getByRole('button', { name: 'Yinele', exact: true });
 const validation = (page: Page) => page.getByRole('region', { name: 'Doğrulama', exact: true });
-const select = (page: Page, label: string) =>
-  page
+const select = async (page: Page, label: string) => {
+  await openTab(page, 'Adımlar');
+  await page
     .getByRole('list', { name: 'Akıştaki adımlar', exact: true })
     .getByRole('button', { name: label, exact: false })
     .click();
+};
 const apply = (page: Page) =>
   page.getByRole('button', { name: 'Değişiklikleri uygula', exact: true }).click();
 
 async function connect(page: Page, source: string, handle: string, target: string) {
+  await openTab(page, 'Özellikler');
   await page
     .getByRole('combobox', { name: 'Kaynak adım', exact: true })
     .selectOption({ label: source });
+  await openTab(page, 'Özellikler');
   await page.getByRole('combobox', { name: 'Çıkış', exact: true }).selectOption({ label: handle });
+  await openTab(page, 'Özellikler');
   await page
     .getByRole('combobox', { name: 'Hedef adım', exact: true })
     .selectOption({ label: target });
+  await openTab(page, 'Adımlar');
+  await openTab(page, 'Özellikler');
   await page.getByRole('button', { name: 'Bağlantı ekle', exact: true }).click();
   await expect(page.getByRole('alert')).toHaveCount(0);
 }
@@ -50,29 +60,38 @@ test('undoes and redoes meaningful edits with buttons and shortcuts', async ({ p
   // One drag is one step; selection changes are not steps.
   await undo(page).click();
   await expect.poll(transform).toBe(before);
+  await openTab(page, 'Adımlar');
   await expect(steps(page)).toHaveCount(2);
   await undo(page).click();
+  await openTab(page, 'Adımlar');
   await expect(steps(page)).toHaveCount(1);
   await redo(page).click();
+  await openTab(page, 'Adımlar');
   await expect(steps(page)).toHaveCount(2);
 
   await page.locator('.react-flow__pane').click({ position: { x: 5, y: 5 } });
   await page.keyboard.press('ControlOrMeta+z');
+  await openTab(page, 'Adımlar');
   await expect(steps(page)).toHaveCount(1);
   await page.keyboard.press('ControlOrMeta+Shift+z');
+  await openTab(page, 'Adımlar');
   await expect(steps(page)).toHaveCount(2);
 
   // Inside a text field the shortcut stays native and leaves the workflow alone.
   await select(page, 'Bitiş');
+  await openTab(page, 'Özellikler');
   const name = page.getByLabel('Adım adı', { exact: true });
   await name.fill('Bitiş 2');
   await name.press('ControlOrMeta+z');
   await expect(name).toHaveValue('Bitiş');
+  await openTab(page, 'Adımlar');
   await expect(steps(page)).toHaveCount(2);
   await name.fill('Bitiş 2');
   await apply(page);
+  await openTab(page, 'Adımlar');
   await expect(steps(page).last()).toContainText('Bitiş 2');
   await undo(page).click();
+  await openTab(page, 'Adımlar');
   await expect(steps(page).last()).toHaveText('BitişBitiş');
   await expect(redo(page)).toBeEnabled();
   await add(page, 'Onay');
@@ -83,23 +102,35 @@ test('phase 2 exit: build, validate, persist, export, import and undo a workflow
   page,
 }) => {
   await page.goto('/');
+  await openTab(page, 'Alanlar');
   const inputs = page.getByRole('region', { name: 'Giriş alanları', exact: true });
+  await openTab(page, 'Alanlar');
   await inputs.getByRole('button', { name: 'Alan ekle', exact: true }).click();
+  await openTab(page, 'Alanlar');
   await inputs.getByLabel('Alan anahtarı', { exact: true }).fill('tutar');
+  await openTab(page, 'Alanlar');
   await inputs.getByLabel('Alan adı', { exact: true }).fill('Tutar');
+  await openTab(page, 'Alanlar');
   await inputs.getByRole('combobox', { name: 'Alan türü', exact: true }).selectOption('number');
+  await openTab(page, 'Alanlar');
   await inputs.getByRole('button', { name: 'Alanı uygula', exact: true }).click();
 
   for (const kind of ['Başlangıç', 'Koşul', 'Onay', 'Bitiş', 'Bitiş']) await add(page, kind);
+  await openTab(page, 'Özellikler');
   await page.getByLabel('Adım adı', { exact: true }).fill('Ret');
+  await openTab(page, 'Özellikler');
   await page.getByRole('combobox', { name: 'Bitiş sonucu', exact: true }).selectOption('rejected');
   await apply(page);
   await select(page, 'Koşul');
+  await openTab(page, 'Özellikler');
   await page
     .getByRole('combobox', { name: 'Karşılaştırılacak alan', exact: true })
     .selectOption('tutar');
+  await openTab(page, 'Özellikler');
   await page.getByRole('combobox', { name: 'Karşılaştırma', exact: true }).selectOption('gt');
+  await openTab(page, 'Özellikler');
   await page.getByLabel('Karşılaştırma değeri', { exact: true }).fill('10000');
+  await openTab(page, 'Özellikler');
   await page.getByLabel('Adım adı', { exact: true }).fill('Tutar kontrolü');
   await apply(page);
   await expect(page.locator('.react-flow__node').nth(1)).toContainText('Tutar büyüktür 10000');
@@ -113,28 +144,36 @@ test('phase 2 exit: build, validate, persist, export, import and undo a workflow
   await expect(validation(page)).toContainText('Akış çalıştırılabilir');
 
   await page.reload();
+  await openTab(page, 'Adımlar');
   await expect(steps(page)).toHaveCount(5);
   await expect(page.locator('.react-flow__edge')).toHaveCount(5);
   await expect(validation(page)).toContainText('Akış çalıştırılabilir');
   await expect(undo(page)).toBeDisabled();
 
   const downloading = page.waitForEvent('download');
+  await openTab(page, 'Dosya');
   await page.getByRole('button', { name: 'JSON dışa aktar', exact: true }).click();
   const text = await readFile((await (await downloading).path()) ?? '', 'utf8');
 
   await select(page, 'Onay');
+  await openTab(page, 'Özellikler');
   await page.getByRole('button', { name: 'Adımı sil', exact: true }).click();
   await expect(validation(page)).not.toContainText('çalıştırılabilir');
+  await openTab(page, 'Dosya');
   await page
     .getByLabel('JSON içe aktar', { exact: true })
     .setInputFiles({ name: 'akis.json', mimeType: 'application/json', buffer: Buffer.from(text) });
+  await openTab(page, 'Dosya');
   await page.getByRole('button', { name: 'Taslağı değiştir', exact: true }).click();
+  await openTab(page, 'Adımlar');
   await expect(steps(page)).toHaveCount(5);
   await expect(validation(page)).toContainText('Akış çalıştırılabilir');
 
   await undo(page).click();
+  await openTab(page, 'Adımlar');
   await expect(steps(page)).toHaveCount(4);
   await redo(page).click();
+  await openTab(page, 'Adımlar');
   await expect(steps(page)).toHaveCount(5);
   await page.reload();
   await expect(validation(page)).toContainText('Akış çalıştırılabilir');

@@ -1,5 +1,14 @@
 // English UI catalog (FR-11). Keys are the Turkish source strings passed to t().
 export const EN: Record<string, string> = {
+  Araçlar: 'Tools',
+  Adımlar: 'Steps',
+  Alanlar: 'Fields',
+  Oluştur: 'Create',
+  Ayrıntılar: 'Details',
+  'Tema: {mode}': 'Theme: {mode}',
+  Sistem: 'System',
+  Koyu: 'Dark',
+  Açık: 'Light',
   ' (bağlı)': ' (connected)',
   ' (değer: {value})': ' (value: {value})',
   ' Genel AI bütçesi azalıyor.': ' The overall AI budget is running low.',

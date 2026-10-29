@@ -1,22 +1,28 @@
 import { expect, test, type Page } from '@playwright/test';
+import { openTab } from './ui';
 
 const DRAFT_KEY = 'workflow-builder:draft:v1';
 const steps = (page: Page) =>
   page.getByRole('list', { name: 'Akıştaki adımlar', exact: true }).getByRole('button');
 const badge = (page: Page) => page.locator('.draft-badge');
-const add = (page: Page, kind: string) =>
-  page.getByRole('button', { name: `${kind} ekle`, exact: true }).click();
+const add = async (page: Page, kind: string) => {
+  await openTab(page, 'Adımlar');
+  await page.getByRole('button', { name: `${kind} ekle`, exact: true }).click();
+};
 
 test('restores an incomplete draft after refresh', async ({ page }) => {
   await page.goto('/');
   await expect(badge(page)).toHaveText('Kaydedilecek değişiklik yok');
   await add(page, 'Başlangıç');
   await add(page, 'Koşul');
+  await openTab(page, 'Özellikler');
   await page.getByLabel('Adım adı', { exact: true }).fill('Tutar kontrolü');
+  await openTab(page, 'Özellikler');
   await page.getByRole('button', { name: 'Değişiklikleri uygula', exact: true }).click();
   await expect(badge(page)).toHaveText('Tarayıcıda kaydedildi');
   const before = await page.evaluate((key) => localStorage.getItem(key), DRAFT_KEY);
   await page.reload();
+  await openTab(page, 'Adımlar');
   await expect(steps(page)).toHaveText(['BaşlangıçBaşlangıç', 'Tutar kontrolüKoşul']);
   await expect(badge(page)).toHaveText('Tarayıcıda kaydedildi');
   await expect(page.getByRole('alert')).toHaveCount(0);
@@ -31,6 +37,7 @@ test('backs up a corrupt draft and opens an empty editor', async ({ page }) => {
   await expect(page.getByRole('alert')).toHaveText(
     'Önceki taslak okunamadı. Yedeklendi ve boş bir taslakla başlandı.',
   );
+  await openTab(page, 'Adımlar');
   await expect(steps(page)).toHaveCount(0);
   expect(
     await page.evaluate(
@@ -53,6 +60,7 @@ test('keeps editing when storage quota is exceeded', async ({ page }) => {
   await expect(badge(page)).toHaveText('Kaydedilemedi: depolama dolu');
   await expect(page.getByRole('alert')).toContainText('depolaması dolu');
   await add(page, 'Bitiş');
+  await openTab(page, 'Adımlar');
   await expect(steps(page)).toHaveCount(2);
 });
 

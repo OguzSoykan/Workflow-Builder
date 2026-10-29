@@ -1,10 +1,13 @@
 import { readFile } from 'node:fs/promises';
 import { expect, test, type Page } from '@playwright/test';
+import { openTab } from './ui';
 
 const steps = (page: Page) =>
   page.getByRole('list', { name: 'Akıştaki adımlar', exact: true }).getByRole('button');
-const add = (page: Page, kind: string) =>
-  page.getByRole('button', { name: `${kind} ekle`, exact: true }).click();
+const add = async (page: Page, kind: string) => {
+  await openTab(page, 'Adımlar');
+  await page.getByRole('button', { name: `${kind} ekle`, exact: true }).click();
+};
 const panel = (page: Page) => page.getByRole('region', { name: 'Dosya işlemleri', exact: true });
 const choose = (page: Page, name: string, text: string | Buffer) =>
   panel(page)
@@ -15,8 +18,10 @@ test('exports an incomplete draft and imports it back after confirmation', async
   await page.goto('/');
   await add(page, 'Başlangıç');
   await add(page, 'Koşul');
+  await openTab(page, 'Dosya');
   await expect(panel(page)).toContainText('doğrulama sorunu var');
   const downloading = page.waitForEvent('download');
+  await openTab(page, 'Dosya');
   await panel(page).getByRole('button', { name: 'JSON dışa aktar', exact: true }).click();
   const download = await downloading;
   expect(download.suggestedFilename()).toMatch(/^workflow_[0-9a-f-]+\.workflow\.json$/);
@@ -24,21 +29,33 @@ test('exports an incomplete draft and imports it back after confirmation', async
   const exported = JSON.parse(text) as { contentHash: string; nodes: unknown[] };
   expect(exported.contentHash).toMatch(/^[a-f0-9]{64}$/);
   expect(exported.nodes).toHaveLength(2);
+  await openTab(page, 'Dosya');
   await expect(panel(page).getByRole('status')).toContainText('indirildi');
 
   await add(page, 'Bitiş');
+  await openTab(page, 'Dosya');
   await choose(page, 'akis.json', text);
+  await openTab(page, 'Dosya');
   const confirm = panel(page).getByRole('group', { name: 'İçe aktarma onayı', exact: true });
+  await openTab(page, 'Dosya');
   await expect(confirm).toContainText('akis.json mevcut taslağın yerine geçecek');
+  await openTab(page, 'Dosya');
   await expect(confirm).not.toContainText('İçerik özeti eşleşmiyor');
+  await openTab(page, 'Dosya');
   await confirm.getByRole('button', { name: 'Vazgeç', exact: true }).click();
+  await openTab(page, 'Adımlar');
   await expect(steps(page)).toHaveCount(3);
 
+  await openTab(page, 'Dosya');
   await choose(page, 'akis.json', text);
+  await openTab(page, 'Dosya');
   await confirm.getByRole('button', { name: 'Taslağı değiştir', exact: true }).click();
+  await openTab(page, 'Adımlar');
   await expect(steps(page)).toHaveText(['BaşlangıçBaşlangıç', 'KoşulKoşul']);
+  await openTab(page, 'Dosya');
   await expect(panel(page).getByRole('status')).toContainText('akis.json içe aktarıldı');
   await page.reload();
+  await openTab(page, 'Adımlar');
   await expect(steps(page)).toHaveCount(2);
 });
 
@@ -50,9 +67,13 @@ test('rejects bad files without touching the working copy', async ({ page }) => 
     ['v2.json', '{"schemaVersion":2}', 'schemaVersion 1'],
     ['buyuk.json', ' '.repeat(256 * 1024 + 1), '256 KiB sınırını aşıyor; okunmadı'],
   ] as const) {
+    await openTab(page, 'Dosya');
     await choose(page, name, content);
+    await openTab(page, 'Dosya');
     await expect(panel(page).getByRole('alert')).toContainText(message);
+    await openTab(page, 'Dosya');
     await expect(panel(page).getByRole('group')).toHaveCount(0);
+    await openTab(page, 'Adımlar');
     await expect(steps(page)).toHaveText(['BaşlangıçBaşlangıç']);
   }
   const edited = JSON.stringify({
@@ -73,11 +94,17 @@ test('rejects bad files without touching the working copy', async ({ page }) => 
     edges: [],
     contentHash: '0'.repeat(64),
   });
+  await openTab(page, 'Dosya');
   await choose(page, 'elle.json', edited);
+  await openTab(page, 'Dosya');
   const confirm = panel(page).getByRole('group', { name: 'İçe aktarma onayı', exact: true });
+  await openTab(page, 'Dosya');
   await expect(confirm).toContainText('İçerik özeti eşleşmiyor');
+  await openTab(page, 'Dosya');
   await expect(confirm).toContainText('doğrulama sorunu var');
+  await openTab(page, 'Dosya');
   await confirm.getByRole('button', { name: 'Taslağı değiştir', exact: true }).click();
+  await openTab(page, 'Adımlar');
   await expect(steps(page)).toHaveText(['<b>Bitiş</b>Bitiş']);
   await expect(page.getByRole('heading', { name: 'Elle düzenlendi', exact: true })).toBeVisible();
 });
