@@ -261,6 +261,12 @@ export const EN: Record<string, string> = {
   'Hesap işlemi tamamlanamadı. Lütfen tekrar deneyin.':
     'The account action could not be completed. Please try again.',
   'Hesap oluştur': 'Create account',
+  'En az 6 karakter.': 'At least 6 characters.',
+  'Hesap oluşturmak için geçerli bir e-posta adresi girin.':
+    'Enter a valid email address to create an account.',
+  'Şifre en az 6 karakter olmalı.': 'The password must be at least 6 characters.',
+  'Şifre sıfırlama için e-posta adresinizi girin.':
+    'Enter your email address to reset your password.',
   'Hesap oluşturuldu. Doğrulama e-postası gönderildi.': 'Account created. Verification email sent.',
   Hizmet: 'Service',
   'JSON dışa aktar': 'Export JSON',
