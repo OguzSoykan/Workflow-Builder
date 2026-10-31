@@ -1,7 +1,7 @@
 # Operasyon ve yayın (WB-023)
 
 Bu belge staging/production'a çıkışın nasıl yapılacağını, kontrol listesini ve geri alma adımlarını tanımlar.
-**Staging kuruldu (2026-11-01): `https://workflow-staging.oguzsoykan.com` (Cloudflare custom domain; `workers.dev` kapalı), D1 `workflow-builder-staging`, Firebase `workflow-builder-staging-a31fe`. Production henüz açılmadı (D-12).** Aşağıdaki hesap/secret işlemleri ürün
+**Staging kuruldu (2026-11-01): `https://workflow-staging.oguzsoykan.com` (Cloudflare custom domain; `workers.dev` kapalı), D1 `workflow-builder-staging`, Firebase `workflow-builder-staging-a31fe`. Production kuruldu (2026-11-01): `https://workflow.oguzsoykan.com`, D1 `workflow-builder-production` (EEUR), AI açık (gerçek OpenAI). Şimdilik staging Firebase projesini paylaşır (ayrı proje kuralından bilinçli sapma).** Aşağıdaki hesap/secret işlemleri ürün
 sahibinin açık onayıyla yapılır.
 
 ## Ortamlar (AC-13)

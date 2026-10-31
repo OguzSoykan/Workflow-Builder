@@ -34,14 +34,15 @@ describe('deployment environments', () => {
     );
   });
 
-  it('keeps secrets out of config and starts with safe AI defaults', () => {
+  it('keeps secrets out of config and uses real AI only in production', () => {
     for (const env of [config, staging, production])
       expect(
         Object.keys(env.vars ?? {}).filter((key) => /KEY|SECRET|TOKEN|PASSWORD/i.test(key)),
       ).toEqual([]);
     expect(staging.vars).toMatchObject({ AI_PROVIDER: 'mock' });
+    // The owner enabled production AI on 2026-11-01 (spend is still capped by the budget ledger).
+    expect(['true', 'false']).toContain(production.vars?.AI_ENABLED);
     expect(production.vars).toMatchObject({
-      AI_ENABLED: 'false',
       AI_PROVIDER: 'openai',
       AI_MODEL: 'gpt-6-luna',
     });

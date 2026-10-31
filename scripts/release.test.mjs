@@ -7,20 +7,20 @@ import { smoke } from './smoke.mjs';
 const config = readFileSync(new URL('../infra/wrangler.jsonc', import.meta.url), 'utf8');
 
 test('deploy guard refuses placeholder IDs and unknown environments', () => {
-  // Staging has its real D1 ID; production keeps the placeholder until it is created.
+  // Both environments have real D1 IDs; placeholders are injected synthetically below.
   assert.deepEqual(deployProblems(config, 'staging'), []);
-  assert.match(deployProblems(config, 'production')[0], /placeholder database_id/);
+  assert.deepEqual(deployProblems(config, 'production'), []);
   assert.deepEqual(deployProblems(config, 'nope'), ['Unknown environment "nope".']);
   const placeholder = config.replace(
     /("database_name": "workflow-builder-staging",\s*"database_id": ")[^"]+/,
     '$100000000-0000-0000-0000-00000000aaaa',
   );
   assert.match(deployProblems(placeholder, 'staging')[0], /placeholder database_id/);
-  const real = config.replace(
-    '00000000-0000-0000-0000-00000000bbbb',
-    '3f1c2b4a-1111-4222-8333-444455556666',
+  const productionPlaceholder = config.replace(
+    /("database_name": "workflow-builder-production",\s*"database_id": ")[^"]+/,
+    '$100000000-0000-0000-0000-00000000bbbb',
   );
-  assert.deepEqual(deployProblems(real, 'production'), []);
+  assert.match(deployProblems(productionPlaceholder, 'production')[0], /placeholder database_id/);
 });
 
 test('smoke test passes a healthy origin and reports each failure', async () => {
