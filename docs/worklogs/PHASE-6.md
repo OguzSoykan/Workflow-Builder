@@ -58,3 +58,10 @@
 - Kanıt (bu makineden): smoke 6/6 PASS; `/api/config` Firebase dolu; geçici Firebase hesabının gerçek token'ı ile `/api/v1/me` 200 (RS256 doğrulama + D1), `/api/v1/workflows` 200, `/api/v1/ai/limits` doğrulanmamış e-postada `aiEnabled:false` (beklenen); test hesabı silindi.
 - `release.test.mjs` deploy guard testi staging'in gerçek ID'sine göre güncellendi (yer tutucu test içinde sentetik üretiliyor).
 - NOT RUN: tarayıcıda gerçek e-posta doğrulaması ve mock AI önerisi (kullanıcının gelen kutusu gerekir); production kurulumu.
+
+## P6-008 — “Hesap oluştur” sessizce devre dışı (2026-11-01)
+
+- [PR #37](https://github.com/OguzSoykan/Workflow-Builder/pull/37) merge edildi (main `d1933c9`); GitHub Smoke [run 41246279671](https://github.com/OguzSoykan/Workflow-Builder/actions/runs/41246279671) PASS.
+- Production için sohbetteki eski OpenAI key durum koduyla (değer yazdırılmadan) denendi: 401, yani iptal edilmiş. Production D1 oluşturma kullanıcı tarafından durduruldu.
+- Kullanıcı staging'de “Hesap oluştur”un devre dışı göründüğünü bildirdi: düğme e-posta boşken ve şifre < 6 iken açıklamasız `disabled` idi. Düğmeler artık yalnız işlem sürerken kapalı; eksik/geçersiz e-posta ve kısa şifre tıklayınca `role="alert"` ile açıklanıyor, şifre alanında “En az 6 karakter.” ipucu (`aria-describedby`). “Şifremi unuttum” da aynı şekilde.
+- Kanıt: typecheck/lint/format, 496 Vitest + security/release + docs, build PASS; E2E 53/53 (account.spec yeni doğrulamaları içerir; doğrulamada Firebase çağrısı yapılmadığı denetlenir). Staging'e deploy edildi.

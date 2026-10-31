@@ -23,9 +23,22 @@ test('signs up, verifies email, survives reload and signs out without touching t
   await openTab(page, 'Adımlar');
   await page.getByRole('button', { name: 'Başlangıç ekle', exact: true }).click();
   await page.locator('summary', { hasText: 'Giriş yap' }).click();
+  // The button is never silently disabled: missing input is explained instead.
+  const signUp = panel(page).getByRole('button', { name: 'Hesap oluştur', exact: true });
+  await signUp.click();
+  await expect(panel(page).getByRole('alert')).toHaveText(
+    'Hesap oluşturmak için geçerli bir e-posta adresi girin.',
+  );
   await panel(page).getByLabel('E-posta', { exact: true }).fill('ayse@example.com');
+  await panel(page).getByLabel('Şifre', { exact: true }).fill('12345');
+  await expect(panel(page).getByLabel('Şifre', { exact: true })).toHaveAccessibleDescription(
+    'En az 6 karakter.',
+  );
+  await signUp.click();
+  await expect(panel(page).getByRole('alert')).toHaveText('Şifre en az 6 karakter olmalı.');
+  expect(calls.length).toBe(0);
   await panel(page).getByLabel('Şifre', { exact: true }).fill(PASSWORD);
-  await panel(page).getByRole('button', { name: 'Hesap oluştur', exact: true }).click();
+  await signUp.click();
   await expect(panel(page).getByRole('status')).toHaveText(
     'Hesap oluşturuldu. Doğrulama e-postası gönderildi.',
   );

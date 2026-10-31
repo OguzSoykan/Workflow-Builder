@@ -5,6 +5,9 @@ import { t } from '../i18n/i18n';
 export function AccountPanel({ account }: { account: Account }) {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  // Buttons stay clickable; a missing email or short password is explained instead of silently disabling them.
+  const [formError, setFormError] = useState<string | null>(null);
+  const emailMissing = !/^\S+@\S+$/.test(email.trim());
   if (account.configured === null) return null;
   if (!account.configured)
     return (
@@ -74,7 +77,10 @@ export function AccountPanel({ account }: { account: Account }) {
                 autoComplete="email"
                 required
                 value={email}
-                onChange={(event) => setEmail(event.target.value)}
+                onChange={(event) => {
+                  setEmail(event.target.value);
+                  setFormError(null);
+                }}
               />
             </label>
             <label>
@@ -84,29 +90,48 @@ export function AccountPanel({ account }: { account: Account }) {
                 autoComplete="current-password"
                 required
                 minLength={6}
+                aria-describedby="password-hint"
                 value={password}
-                onChange={(event) => setPassword(event.target.value)}
+                onChange={(event) => {
+                  setPassword(event.target.value);
+                  setFormError(null);
+                }}
               />
             </label>
+            <p className="muted field-hint" id="password-hint">
+              {t('En az 6 karakter.')}
+            </p>
             <button type="submit" disabled={account.busy}>
               {t('Giriş yap')}
             </button>{' '}
             <button
               type="button"
               className="secondary"
-              disabled={account.busy || !email || password.length < 6}
-              onClick={() => void account.signUp(email, password)}
+              disabled={account.busy}
+              onClick={() => {
+                if (emailMissing)
+                  return setFormError(t('Hesap oluşturmak için geçerli bir e-posta adresi girin.'));
+                if (password.length < 6) return setFormError(t('Şifre en az 6 karakter olmalı.'));
+                setFormError(null);
+                void account.signUp(email.trim(), password);
+              }}
             >
               {t('Hesap oluştur')}
             </button>{' '}
             <button
               type="button"
               className="link-button"
-              disabled={account.busy || !email}
-              onClick={() => void account.resetPassword(email)}
+              disabled={account.busy}
+              onClick={() => {
+                if (emailMissing)
+                  return setFormError(t('Şifre sıfırlama için e-posta adresinizi girin.'));
+                setFormError(null);
+                void account.resetPassword(email.trim());
+              }}
             >
               {t('Şifremi unuttum')}
             </button>
+            {formError && <p role="alert">{formError}</p>}
           </form>
         )}
         {account.message && (

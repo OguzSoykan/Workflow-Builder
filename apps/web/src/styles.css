@@ -836,6 +836,10 @@ p[role='status'] {
 .ai-panel textarea {
   min-height: 96px;
 }
+.field-hint {
+  margin: -6px 0 10px;
+  font-size: 12px;
+}
 .ai-locked {
   position: relative;
   cursor: help;
