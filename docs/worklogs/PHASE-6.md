@@ -65,3 +65,11 @@
 - Production için sohbetteki eski OpenAI key durum koduyla (değer yazdırılmadan) denendi: 401, yani iptal edilmiş. Production D1 oluşturma kullanıcı tarafından durduruldu.
 - Kullanıcı staging'de “Hesap oluştur”un devre dışı göründüğünü bildirdi: düğme e-posta boşken ve şifre < 6 iken açıklamasız `disabled` idi. Düğmeler artık yalnız işlem sürerken kapalı; eksik/geçersiz e-posta ve kısa şifre tıklayınca `role="alert"` ile açıklanıyor, şifre alanında “En az 6 karakter.” ipucu (`aria-describedby`). “Şifremi unuttum” da aynı şekilde.
 - Kanıt: typecheck/lint/format, 496 Vitest + security/release + docs, build PASS; E2E 53/53 (account.spec yeni doğrulamaları içerir; doğrulamada Firebase çağrısı yapılmadığı denetlenir). Staging'e deploy edildi.
+
+## P6-009 — Production kurulumu (2026-11-01)
+
+- [PR #38](https://github.com/OguzSoykan/Workflow-Builder/pull/38) merge edildi (main `5d591d0`), staging'e deploy edildi.
+- Kullanıcı isteği: production'ı `workflow.oguzsoykan.com` adresine OpenAI key ile taşımak. Kullanıcının `!` ile ilk `secret put` denemesi etkileşimsiz olduğundan büyük ihtimalle boş değer yükledi (aynı zamanda boş `workflow-builder-production` Worker oluştu); kullanıcı `pbpaste | wrangler secret put` ile yeniden yükledi. Key hiçbir yerde yazdırılmadan doğrulandı: `/v1/models` 200, `gpt-6-luna` 200.
+- D1 `workflow-builder-production` (EEUR) oluşturuldu, ID config'e yazıldı, migration uygulandı; `FIREBASE_WEB_API_KEY` secret, `FIREBASE_PROJECT_ID` staging projesi (paylaşımlı; OPERATIONS'ta sapma olarak not edildi); custom domain `workflow.oguzsoykan.com`. İlk deploy `AI_ENABLED=false` (`f5eb875c`), smoke 6/6 PASS; ardından `AI_ENABLED=true` (`b49dcc1a`), smoke 6/6 PASS.
+- `release.test.mjs` iki ortamın gerçek ID'sine göre güncellendi (yer tutucular test içinde sentetik).
+- NOT RUN: gerçek AI isteği uçtan uca (doğrulanmış e-posta gerekir; kullanıcı deneyecek).

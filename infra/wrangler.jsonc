@@ -47,13 +47,20 @@
     },
     "production": {
       "name": "workflow-builder-production",
+      "routes": [{ "pattern": "workflow.oguzsoykan.com", "custom_domain": true }],
       "observability": { "enabled": true },
-      "vars": { "AI_ENABLED": "false", "AI_PROVIDER": "openai", "AI_MODEL": "gpt-6-luna" },
+      // Shares the staging Firebase project for now; OPENAI_API_KEY and FIREBASE_WEB_API_KEY are secrets.
+      "vars": {
+        "AI_ENABLED": "true",
+        "AI_PROVIDER": "openai",
+        "AI_MODEL": "gpt-6-luna",
+        "FIREBASE_PROJECT_ID": "workflow-builder-staging-a31fe",
+      },
       "d1_databases": [
         {
           "binding": "DB",
           "database_name": "workflow-builder-production",
-          "database_id": "00000000-0000-0000-0000-00000000bbbb",
+          "database_id": "05587e7a-0505-4614-b3d2-a94b64cb40cf",
           "migrations_dir": "migrations",
         },
       ],
