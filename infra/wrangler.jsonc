@@ -26,13 +26,20 @@
   "env": {
     "staging": {
       "name": "workflow-builder-staging",
+      // workers.dev is blocked on some networks; the custom domain is the primary staging address.
+      "routes": [{ "pattern": "workflow-staging.oguzsoykan.com", "custom_domain": true }],
       "observability": { "enabled": true },
-      "vars": { "AI_ENABLED": "true", "AI_PROVIDER": "mock" },
+      "vars": {
+        "AI_ENABLED": "true",
+        "AI_PROVIDER": "mock",
+        "FIREBASE_PROJECT_ID": "workflow-builder-staging-a31fe",
+      },
+      // FIREBASE_WEB_API_KEY is public but kept as a Worker secret so key scanners stay clean.
       "d1_databases": [
         {
           "binding": "DB",
           "database_name": "workflow-builder-staging",
-          "database_id": "00000000-0000-0000-0000-00000000aaaa",
+          "database_id": "1a90c807-0675-4711-bc59-7ebe71508f1a",
           "migrations_dir": "migrations",
         },
       ],

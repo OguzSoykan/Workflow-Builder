@@ -1,0 +1,36 @@
+name: Smoke
+# Read-only smoke test against a deployed origin from GitHub's network (no secrets, no writes).
+# Useful when the operator's own network cannot reach *.workers.dev.
+on:
+  workflow_dispatch:
+    inputs:
+      url:
+        description: Deployed origin, e.g. https://workflow-builder-staging.<account>.workers.dev
+        type: string
+        required: true
+      expect_firebase:
+        description: Also require /api/config to return a Firebase configuration
+        type: boolean
+        default: true
+
+permissions:
+  contents: read
+
+jobs:
+  smoke:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    env:
+      APP_URL: ${{ inputs.url }}
+    steps:
+      - uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # v6
+      - uses: actions/setup-node@249970729cb0ef3589644e2896645e5dc5ba9c38 # v6
+        with:
+          node-version-file: .nvmrc
+      - name: Smoke
+        run: node scripts/smoke.mjs "$APP_URL"
+      - name: Firebase configured
+        if: inputs.expect_firebase
+        run: |
+          curl -fsS "$APP_URL/api/config" \
+            | node -e 'const b=JSON.parse(require("fs").readFileSync(0,"utf8")); if(!b.data?.firebase?.projectId){console.error("firebase not configured");process.exit(1)} console.log("firebase project:", b.data.firebase.projectId)'

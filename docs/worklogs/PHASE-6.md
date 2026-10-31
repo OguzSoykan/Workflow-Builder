@@ -45,3 +45,16 @@
 - Testler: `ai.spec` giriş öncesi bölgenin yokluğu yerine açıklama + gizli/hover'da görünür tooltip doğrular; `a11y.spec` yapılandırılmamış durumda hover sonrası axe 0 ihlal.
 - Kanıt: typecheck/lint/format, 496 Vitest + 5 + 3, build, secret:scan, Gitleaks PASS; E2E 53/53. Açık/koyu hover ekran görüntüleri incelendi.
 - Hosted CI ([run 40882788209](https://github.com/OguzSoykan/Workflow-Builder/actions/runs/40882788209)) FAIL: hover sonrası açık kalan tooltip, altındaki “Örnekten başla” düğmelerinin tıklamasını yakalıyordu (gerçek kullanılabilirlik hatası; tooltip bölgenin içinde olduğu için üzerine gelince açık kalıyordu). Tooltip'e `pointer-events: none` verildi; a11y spec `--repeat-each=5` ve tam E2E yeniden çalıştırıldı.
+
+## P6-007 — Staging kurulumu (2026-11-01)
+
+- Kullanıcı `wrangler login` ve `wrangler d1 create workflow-builder-staging` (WEUR) çalıştırdı; Cloudflare skill/MCP eklentisi kullanıcı isteğiyle kuruldu (`cf` CLI isteğe bağlıydı, kurulmadı).
+- Kullanıcı onayıyla: D1 ID config'e yazıldı, `deploy:check -- staging` PASS, migration `0001_workflows.sql` uzakta uygulandı, Worker deploy edildi (Workers/D1/SQLite DO ücretsiz katman).
+- Smoke bu makineden 6/6 FAIL (`fetch failed`): DNS çözülüyor, TCP bağlanıyor, TLS el sıkışması zaman aşımı; başka `*.workers.dev` adresleri de erişilemez, `cloudflare.com` 200 → yerel ağ `workers.dev`'i engelliyor. Kullanıcının Cloud Shell'inden `/api/health` `{"status":"ok"}` döndü.
+- Firebase `workflow-builder-staging-a31fe`: Authentication konsoldan başlatıldı (öncesinde admin API `CONFIGURATION_NOT_FOUND`); Cloud Shell'den admin API ile Email/Password ve yetkili alan adı açıldı, `firebase apps:create web staging`. Buradan REST kayıt testi PASS, test kullanıcısı silindi.
+- `FIREBASE_PROJECT_ID` staging `vars`'a; Web API key Gitleaks kalıbı yüzden `wrangler secret put` ile secret olarak yüklendi; yeniden deploy (sürüm `35b1dcec`). İlk deneme otomatik izin denetiminde reddedildi; kullanıcı “hepsini sen yap” deyince yapıldı.
+- Ağ engeli yüzden doğrulama için salt okunur `.github/workflows/smoke.yml` (manuel, secret yok) eklendi; OPERATIONS güncellendi.
+- Kullanıcı kendi alan adını verdi (`oguzsoykan.com`, Cloudflare'de; kökte kişisel site var, dokunulmadı). Staging `routes` ile `workflow-staging.oguzsoykan.com` custom domain'e bağlandı (`workers.dev` bu yapılandırmayla kapandı); production'a `workflow.oguzsoykan.com` ayrıldı. Sürüm `e5fbd5e0`.
+- Kanıt (bu makineden): smoke 6/6 PASS; `/api/config` Firebase dolu; geçici Firebase hesabının gerçek token'ı ile `/api/v1/me` 200 (RS256 doğrulama + D1), `/api/v1/workflows` 200, `/api/v1/ai/limits` doğrulanmamış e-postada `aiEnabled:false` (beklenen); test hesabı silindi.
+- `release.test.mjs` deploy guard testi staging'in gerçek ID'sine göre güncellendi (yer tutucu test içinde sentetik üretiliyor).
+- NOT RUN: tarayıcıda gerçek e-posta doğrulaması ve mock AI önerisi (kullanıcının gelen kutusu gerekir); production kurulumu.
