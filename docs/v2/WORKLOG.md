@@ -5,7 +5,7 @@ gerçek komutlar ve sonuçları, sapmalar, kalan riskler ve sonraki görev. Gör
 
 ## WB2-001
 
-**Repo ve V1 baseline denetimi** · 1 Kasım 2026 · Durum: **DONE** · Dal: `wb2/001-baseline` · Taban: `7bfeaee`
+**Repo ve V1 baseline denetimi** · 1 Kasım 2026 · Durum: **DONE** · Dal: `wb2/001-baseline` · [PR #43](https://github.com/OguzSoykan/Workflow-Builder/pull/43) · Taban: `7bfeaee`
 
 - **Plan:** Kod değişikliği yok; V1'i ölç ve `docs/v2/BASELINE.md`'ye işle. Maliyet yok; production'a yalnız salt
   okunur smoke, AI çağrısı yok.
