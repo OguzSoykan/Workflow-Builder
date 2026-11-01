@@ -83,3 +83,10 @@
 - Hata: ilk sürümde `clearMessage` her render'da yeni fonksiyon olduğundan mesaj temizleme effect'i Firebase hatalarını ve “Hesap oluşturuldu” mesajını siliyordu (4 E2E düştü) → `useCallback` ve yalnız açılışta temizleme. Axe `label-content-name-mismatch` (hesap çipi `aria-label`'ı görünen metni içermiyordu) → ad görünen içerikten + gizli “Hesap:” öneki.
 - Testler: `account.spec` yeniden yazıldı (kayıt doğrulamaları, doğrulama adımları, bekleme süresi, yanlış şifre → sıfırlama → giriş, kayıtlı e-posta yönlendirmesi, AI panelinden kayıt, Esc); ortak `signIn`/`accountChip` yardımcıları; a11y'de kayıt/giriş pencereleri ve kilitli panel taranıyor; bulut testi giriş çağrısını doğruluyor.
 - Kanıt: typecheck/lint/format, 496 Vitest + security/release + docs, negatif kapılar, build, secret:scan, Gitleaks PASS; E2E 54/54. Açık/koyu, 1440/1024/390 px ekran görüntüleri incelendi.
+
+## P6-011 — Proje analizi, favicon ve production yayını (2026-11-01)
+
+- [PR #40](https://github.com/OguzSoykan/Workflow-Builder/pull/40) (yönlendirmeli giriş) merge edildi, staging'e deploy edildi (smoke 6/6). [PR #41](https://github.com/OguzSoykan/Workflow-Builder/pull/41): `docs/PROJECT_OVERVIEW.md` (iş mantığı + teknoloji analizi), README bağlantısı.
+- Kullanıcı isteği: yeni sürümü canlıya al, Chrome sekmesinde görünen ikon ekle. Uygulamada favicon yoktu; `/favicon.ico` SPA'ya düşüyordu.
+- `feat/WB-UI-favicon`: `apps/web/public/favicon.svg` (marka geçişi #2453c9→#6a4c9c, dallanan üç düğüm), Playwright ile üretilen `favicon-32.png` ve `apple-touch-icon.png` (180 px); `index.html`'e ikon bağlantıları, `theme-color` ve güncel açıklama. `health.spec`: bağlantılar ve dosyaların doğru içerik türüyle sunulması.
+- Kanıt: typecheck/lint/format, 496 Vitest + security/release + docs, build, secret:scan PASS; E2E 55/55. 16 ve 256 px önizleme incelendi.
