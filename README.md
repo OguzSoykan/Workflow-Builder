@@ -1,7 +1,8 @@
 # AI Workflow Builder
 
 Görsel veya doğal dil ile workflow tasarlama ve manuel onay/ret ile simülasyon ürünü.
-Ürün gereksinimleri [PRD v1.1](docs/PRD.md) içinde korunur.
+Ürün gereksinimleri [PRD v1.1](docs/PRD.md) içinde korunur. İş mantığı ve teknolojinin tek sayfalık
+özeti: [Proje analizi](docs/PROJECT_OVERVIEW.md). Canlı: https://workflow.oguzsoykan.com
 
 **27 Ekim 2026:** Faz 1 main'de tamamlandı; Faz 2'nin ilk kartı WB-005A uygulanıyor.
 Dört adım türü, tuval, etiket/konum düzenleme ve kurallı bağlantılar hazır.
