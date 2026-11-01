@@ -301,7 +301,7 @@ Benzersiz sürüm anahtarı, aynı sürümü iki kez yazmaya çalışan ikinci i
 | Güvenlik/yayın (node:test)            | Secret tarayıcı, deploy koruması, smoke script'i                                                                                                    |
 | Negatif kapılar                       | Bilerek bozulan kodun kapılarca reddedildiğinin kanıtı                                                                                              |
 | Coverage                              | `test:coverage` (V8)                                                                                                                                |
-| E2E (Playwright)                      | **54 test** — editör, koşullar, simülasyon, örnekler, kalıcılık, hesap, bulut, AI, i18n, erişilebilirlik (axe, açık/koyu), sağlık sayfası, sözleşme |
+| E2E (Playwright)                      | **55 test** — editör, koşullar, simülasyon, örnekler, kalıcılık, hesap, bulut, AI, i18n, erişilebilirlik (axe, açık/koyu), sağlık sayfası, sözleşme |
 | Build                                 | Web + Worker; local/staging/production için Wrangler dry-run                                                                                        |
 | Secret taraması                       | `secret:scan` + Gitleaks                                                                                                                            |
 | AI değerlendirme                      | 20 senaryoluk canlı değerlendirme (19/20)                                                                                                           |
