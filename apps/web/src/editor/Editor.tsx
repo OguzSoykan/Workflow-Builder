@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useReducer, useState } from 'react';
+import { useCallback, useEffect, useMemo, useReducer, useState } from 'react';
 import {
   Background,
   Controls,
@@ -14,7 +14,7 @@ import type { SimulationRun } from '@workflow-builder/workflow-core';
 import { InputFields } from './InputFields';
 import { TransferPanel } from './TransferPanel';
 import { ExamplesPanel } from './ExamplesPanel';
-import { AccountPanel } from '../account/AccountPanel';
+import { AccountButtons, AuthDialog, type AuthMode } from '../account/AccountPanel';
 import { useAccount } from '../account/use-account';
 import { CloudPanel } from '../account/CloudPanel';
 import { AiPanel } from '../account/AiPanel';
@@ -38,7 +38,7 @@ import { setTheme, useTheme } from '../ui/theme';
 
 const nodeTypes = { workflow: WorkflowCard };
 const kinds: NodeKind[] = ['start', 'approval', 'condition', 'end'];
-const FIT_VIEW = { padding: 0.2, maxZoom: 1 };
+const FIT_VIEW = { padding: 0.08, maxZoom: 1 };
 const STATUS_LABELS: Record<DraftStatus, string> = {
   idle: 'Kaydedilecek değişiklik yok',
   saved: 'Tarayıcıda kaydedildi',
@@ -86,6 +86,8 @@ function EditorWorkspace() {
   const theme = useTheme();
   const flow = useReactFlow();
   const [leftTab, setLeftTab] = useState('steps');
+  const [authMode, setAuthMode] = useState<AuthMode | null>(null);
+  const closeAuth = useCallback(() => setAuthMode(null), []);
   const [rightTab, setRightTab] = useState('properties');
   // Selecting a step or connection always shows its properties.
   useEffect(() => {
@@ -328,6 +330,13 @@ function EditorWorkspace() {
             <p className="eyebrow">{t('WORKFLOW BUILDER')}</p>
             <h1>{t('İş akışı tasarımı')}</h1>
           </div>
+          {/* Left of the actions, so its changing text never shifts the buttons. */}
+          <span
+            className={`draft-badge status-${draft.conflict ? 'conflict' : draft.status}`}
+            role="status"
+          >
+            {draft.conflict ? t('Otomatik kayıt duraklatıldı') : t(STATUS_LABELS[draft.status])}
+          </span>
         </div>
         <div className="topbar-actions">
           <div className="history-buttons" role="group" aria-label={t('Geçmiş')}>
@@ -352,12 +361,7 @@ function EditorWorkspace() {
               {t('Yinele')}
             </button>
           </div>
-          <span
-            className={`draft-badge status-${draft.conflict ? 'conflict' : draft.status}`}
-            role="status"
-          >
-            {draft.conflict ? t('Otomatik kayıt duraklatıldı') : t(STATUS_LABELS[draft.status])}
-          </span>
+
           <button
             type="button"
             className="ghost icon-button"
@@ -384,7 +388,7 @@ function EditorWorkspace() {
               <option value="en">English</option>
             </select>
           </label>
-          <AccountPanel account={account} />
+          <AccountButtons account={account} onOpen={setAuthMode} />
           <a className="service-link" href="/health">
             {t('Servis durumu')}
           </a>
@@ -410,7 +414,12 @@ function EditorWorkspace() {
                 label: t('Oluştur'),
                 content: (
                   <>
-                    <AiPanel account={account} workflow={workflow} dispatch={dispatch} />
+                    <AiPanel
+                      account={account}
+                      workflow={workflow}
+                      dispatch={dispatch}
+                      onAuth={setAuthMode}
+                    />
                     <ExamplesPanel dispatch={dispatch} />
                   </>
                 ),
@@ -425,6 +434,7 @@ function EditorWorkspace() {
                       workflow={workflow}
                       executable={issues.length === 0}
                       account={account}
+                      onAuth={setAuthMode}
                     />
                   </>
                 ),
@@ -496,7 +506,9 @@ function EditorWorkspace() {
             >
               <Background gap={24} size={1} />
               <Controls position="bottom-right" />
-              <MiniMap position="top-right" pannable zoomable className="minimap" />
+              {workflow.nodes.length > 0 && (
+                <MiniMap position="top-right" pannable zoomable className="minimap" />
+              )}
             </ReactFlow>
             {!nodes.length && (
               <div className="canvas-empty">
@@ -532,6 +544,7 @@ function EditorWorkspace() {
           />
         </aside>
       </main>
+      <AuthDialog account={account} mode={authMode} onMode={setAuthMode} onClose={closeAuth} />
     </div>
   );
 }

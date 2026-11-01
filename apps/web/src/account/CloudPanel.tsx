@@ -8,6 +8,7 @@ import {
   type SaveOutcome,
 } from './cloud-api';
 import type { Account } from './use-account';
+import type { AuthMode } from './AccountPanel';
 import { getLocale, t } from '../i18n/i18n';
 
 function storage(): Storage | null {
@@ -28,10 +29,12 @@ export function CloudPanel({
   workflow,
   executable,
   account,
+  onAuth,
 }: {
   workflow: Workflow;
   executable: boolean;
   account: Account;
+  onAuth: (mode: AuthMode) => void;
 }) {
   const [confirming, setConfirming] = useState(false);
   const [conflict, setConflict] = useState<number | null>(null);
@@ -39,7 +42,24 @@ export function CloudPanel({
   const [message, setMessage] = useState<{ kind: 'error' | 'info'; text: string } | null>(null);
   const [revisions, setRevisions] = useState<RevisionMeta[] | null>(null);
   const api = useMemo(() => new CloudApi(account.token), [account.token]);
-  if (!account.configured || !account.session) return null;
+  if (!account.configured) return null;
+  if (!account.session)
+    return (
+      <section className="cloud" aria-label={t('Bulut kaydı')}>
+        <h2 className="list-heading">{t('Bulut kaydı')}</h2>
+        <div className="ai-cta">
+          <p>{t('Akışlarını buluta kaydetmek ve sürüm geçmişini görmek için giriş yap.')}</p>
+          <div className="ai-cta-actions">
+            <button type="button" onClick={() => onAuth('signin')}>
+              {t('Giriş yap')}
+            </button>
+            <button type="button" className="secondary" onClick={() => onAuth('signup')}>
+              {t('Kayıt ol')}
+            </button>
+          </div>
+        </div>
+      </section>
+    );
   const uid = account.session.uid;
   const known = knownRevision(storage(), uid, workflow.workflowId);
 

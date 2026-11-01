@@ -1,7 +1,7 @@
 import AxeBuilder from '@axe-core/playwright';
 import { expect, test, type Page } from '@playwright/test';
-import { fakeFirebase, PASSWORD } from './fake-firebase';
-import { openTab } from './ui';
+import { fakeFirebase } from './fake-firebase';
+import { authDialog, headerButton, openTab, signIn } from './ui';
 
 // WB-022B: automated WCAG 2.1 A/AA checks plus a keyboard-only main scenario (FR-11).
 async function expectNoViolations(page: Page, state: string) {
@@ -54,13 +54,16 @@ test('account and AI panels pass axe', async ({ page }) => {
     }),
   );
   await page.goto('/');
-  await page.locator('summary', { hasText: 'Giriş yap' }).click();
-  await expectNoViolations(page, 'sign-in form');
-  const account = page.getByRole('region', { name: 'Hesap' });
-  await account.getByLabel('E-posta', { exact: true }).fill('ayse@example.com');
-  await account.getByLabel('Şifre', { exact: true }).fill(PASSWORD);
-  await account.getByRole('button', { name: 'Giriş yap', exact: true }).click();
   await openTab(page, 'Oluştur');
+  await expectNoViolations(page, 'locked AI panel with sign-up prompt');
+  await headerButton(page, 'Kayıt ol').click();
+  await authDialog(page).getByRole('button', { name: 'Hesap oluştur', exact: true }).click();
+  await expectNoViolations(page, 'sign-up dialog with an error');
+  await authDialog(page).getByRole('button', { name: 'Kapat' }).click();
+  await headerButton(page, 'Giriş yap').click();
+  await expectNoViolations(page, 'sign-in dialog');
+  await page.keyboard.press('Escape');
+  await signIn(page);
   await expect(page.getByRole('region', { name: 'AI ile oluştur' })).toContainText(
     'Bugün kalan AI hakkı: 1.',
   );

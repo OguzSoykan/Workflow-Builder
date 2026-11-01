@@ -1,6 +1,6 @@
 import { expect, test, type Page } from '@playwright/test';
-import { fakeFirebase, PASSWORD } from './fake-firebase';
-import { openTab } from './ui';
+import { fakeFirebase } from './fake-firebase';
+import { openTab, signIn } from './ui';
 
 type Stored = {
   revision: number;
@@ -52,15 +52,6 @@ async function fakeCloud(page: Page) {
   return { store, state };
 }
 
-async function signIn(page: Page) {
-  await page.locator('summary', { hasText: 'Giriş yap' }).click();
-  const account = page.getByRole('region', { name: 'Hesap', exact: true });
-  await account.getByLabel('E-posta', { exact: true }).fill('ayse@example.com');
-  await account.getByLabel('Şifre', { exact: true }).fill(PASSWORD);
-  await account.getByRole('button', { name: 'Giriş yap', exact: true }).click();
-  await expect(page.locator('summary', { hasText: 'ayse@example.com' })).toBeVisible();
-  await page.locator('summary', { hasText: 'ayse@example.com' }).click();
-}
 async function loadExample(page: Page) {
   await openTab(page, 'Oluştur');
   await page
@@ -81,7 +72,11 @@ test('saves a confirmed copy, appends revisions and resolves a conflict explicit
   const { store, state } = await fakeCloud(page);
   await page.goto('/');
   await openTab(page, 'Dosya');
-  await expect(cloud(page)).toHaveCount(0);
+  // Signed out: the cloud section only invites the member to sign in.
+  await expect(cloud(page)).toContainText(
+    'buluta kaydetmek ve sürüm geçmişini görmek için giriş yap',
+  );
+  await expect(cloud(page).getByRole('button', { name: 'Buluta kaydet' })).toHaveCount(0);
   await signIn(page);
   await loadExample(page);
   await openTab(page, 'Dosya');

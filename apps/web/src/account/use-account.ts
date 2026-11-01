@@ -72,17 +72,18 @@ export function useAccount() {
   }, [client, session, store]);
 
   const loadProfile = useCallback(
-    async (idToken: string) => {
+    async (idToken: string): Promise<Profile | null> => {
       const response = await fetch('/api/v1/me', {
         headers: { Authorization: `Bearer ${idToken}` },
       }).catch(() => null);
       if (!response?.ok) {
         if (response?.status === 401) store(null);
         setMessage({ kind: 'error', text: t('Hesap bilgisi alınamadı. Tekrar giriş yapın.') });
-        return;
+        return null;
       }
       const body = (await response.json()) as { data: Profile };
       setProfile(body.data);
+      return body.data;
     },
     [store],
   );
@@ -94,13 +95,20 @@ export function useAccount() {
     });
   }, [client, session, profile, token, loadProfile]);
 
-  const run = async <T>(action: () => Promise<AuthResult<T>>, done: (value: T) => void) => {
+  const clearMessage = useCallback(() => setMessage(null), []);
+
+  /** Runs one Firebase call; resolves to whether it succeeded (errors land in `message`). */
+  const run = async <T>(
+    action: () => Promise<AuthResult<T>>,
+    done: (value: T) => void,
+  ): Promise<boolean> => {
     setBusy(true);
     setMessage(null);
     const result = await action();
     setBusy(false);
     if (result.ok) done(result.value);
     else setMessage({ kind: 'error', text: result.error });
+    return result.ok;
   };
 
   return {
@@ -110,49 +118,56 @@ export function useAccount() {
     busy,
     message,
     token,
-    signIn: (email: string, password: string) =>
-      client && run(() => client.signIn(email, password), store),
-    signUp: (email: string, password: string) =>
-      client &&
-      run(
-        () => client.signUp(email, password),
-        (next) => {
-          store(next);
-          void client.sendVerification(next.idToken);
-          setMessage({
-            kind: 'info',
-            text: t('Hesap oluşturuldu. Doğrulama e-postası gönderildi.'),
-          });
-        },
-      ),
-    sendVerification: () =>
-      client &&
-      session &&
-      run(
-        () => client.sendVerification(session.idToken),
-        () => setMessage({ kind: 'info', text: t('Doğrulama e-postası gönderildi.') }),
-      ),
-    resetPassword: (email: string) =>
-      client &&
-      run(
-        () => client.sendPasswordReset(email),
-        () =>
-          setMessage({
-            kind: 'info',
-            text: t('Şifre sıfırlama bağlantısı e-posta adresinize gönderildi.'),
-          }),
-      ),
-    /** Forces a token refresh so a just-verified email reaches the Worker. */
-    refreshVerification: () =>
-      client &&
-      session &&
-      run(
+    clearMessage,
+    signIn: async (email: string, password: string) =>
+      client ? run(() => client.signIn(email, password), store) : false,
+    signUp: async (email: string, password: string) =>
+      client
+        ? run(
+            () => client.signUp(email, password),
+            (next) => {
+              store(next);
+              void client.sendVerification(next.idToken);
+              setMessage({
+                kind: 'info',
+                text: t('Hesap oluşturuldu. Doğrulama e-postası gönderildi.'),
+              });
+            },
+          )
+        : false,
+    sendVerification: async () =>
+      client && session
+        ? run(
+            () => client.sendVerification(session.idToken),
+            () => setMessage({ kind: 'info', text: t('Doğrulama e-postası gönderildi.') }),
+          )
+        : false,
+    resetPassword: async (email: string) =>
+      client
+        ? run(
+            () => client.sendPasswordReset(email),
+            () =>
+              setMessage({
+                kind: 'info',
+                text: t('Şifre sıfırlama bağlantısı e-posta adresinize gönderildi.'),
+              }),
+          )
+        : false,
+    /** Forces a token refresh so a just-verified email reaches the Worker; resolves to verified. */
+    refreshVerification: async () => {
+      if (!client || !session) return false;
+      let next: Session | null = null;
+      const ok = await run(
         () => client.refresh(session),
-        (next) => {
-          store(next);
-          void loadProfile(next.idToken);
+        (value) => {
+          next = value;
+          store(value);
         },
-      ),
+      );
+      if (!ok || !next) return false;
+      const fresh = await loadProfile((next as Session).idToken);
+      return fresh?.emailVerified === true;
+    },
     signOut: () => {
       store(null);
       setMessage({ kind: 'info', text: t('Çıkış yapıldı. Yerel taslağınız bu tarayıcıda kalır.') });

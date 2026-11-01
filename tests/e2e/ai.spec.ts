@@ -1,7 +1,7 @@
 import { expect, test, type Page } from '@playwright/test';
-import { fakeFirebase, PASSWORD } from './fake-firebase';
+import { fakeFirebase } from './fake-firebase';
 import { purchaseWorkflow } from '../fixtures/purchase';
-import { openTab } from './ui';
+import { openTab, signIn } from './ui';
 
 async function fakeAi(page: Page, options: { remaining?: number; error?: string } = {}) {
   const keys: string[] = [];
@@ -36,14 +36,6 @@ async function fakeAi(page: Page, options: { remaining?: number; error?: string 
     });
   });
   return keys;
-}
-async function signIn(page: Page) {
-  await page.locator('summary', { hasText: 'Giriş yap' }).click();
-  const account = page.getByRole('region', { name: 'Hesap', exact: true });
-  await account.getByLabel('E-posta', { exact: true }).fill('ayse@example.com');
-  await account.getByLabel('Şifre', { exact: true }).fill(PASSWORD);
-  await account.getByRole('button', { name: 'Giriş yap', exact: true }).click();
-  await expect(page.locator('summary', { hasText: 'ayse@example.com' })).toBeVisible();
 }
 const ai = (page: Page) => page.getByRole('region', { name: 'AI ile oluştur', exact: true });
 const steps = (page: Page) =>
