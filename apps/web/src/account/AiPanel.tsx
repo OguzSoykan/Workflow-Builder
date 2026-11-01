@@ -11,6 +11,7 @@ import {
   type Proposal,
 } from './ai-api';
 import type { Account } from './use-account';
+import type { AuthMode } from './AccountPanel';
 import { t } from '../i18n/i18n';
 
 const MAX_PROMPT = 2000;
@@ -19,10 +20,12 @@ export function AiPanel({
   account,
   workflow,
   dispatch,
+  onAuth,
 }: {
   account: Account;
   workflow: Workflow;
   dispatch: Dispatch<EditorAction>;
+  onAuth: (mode: AuthMode) => void;
 }) {
   const [mode, setMode] = useState<'create' | 'edit'>('create');
   const [limits, setLimits] = useState<AiLimits | null>(null);
@@ -45,7 +48,19 @@ export function AiPanel({
     };
   }, [signedIn, token, proposal]);
 
-  if (!signedIn) return <LockedAiPanel configured={account.configured} />;
+  if (!signedIn) return <LockedAiPanel configured={account.configured} onAuth={onAuth} />;
+  if (account.profile && !account.profile.emailVerified)
+    return (
+      <section className="ai-panel" aria-label={t('AI ile oluştur')}>
+        <h2 className="list-heading">{t('AI ile oluştur')}</h2>
+        <div className="ai-cta">
+          <p>{t('AI ile oluşturmak için önce e-postanı doğrula.')}</p>
+          <button type="button" onClick={() => onAuth('signin')}>
+            {t('Doğrulama adımlarını göster')}
+          </button>
+        </div>
+      </section>
+    );
   const available = limits?.aiEnabled === true && limits.memberRemaining > 0;
   return (
     <section className="ai-panel" aria-label={t('AI ile oluştur')}>
@@ -192,7 +207,13 @@ export function AiPanel({
  * Signed-out members still see that AI creation exists: a faded, inert preview whose
  * reason appears on hover or keyboard focus (and is read as the region's description).
  */
-function LockedAiPanel({ configured }: { configured: boolean | null }) {
+function LockedAiPanel({
+  configured,
+  onAuth,
+}: {
+  configured: boolean | null;
+  onAuth: (mode: AuthMode) => void;
+}) {
   const reasonId = useId();
   const reason =
     configured === false
@@ -225,6 +246,19 @@ function LockedAiPanel({ configured }: { configured: boolean | null }) {
       <p className="ai-lock-reason" id={reasonId} role="tooltip">
         {reason}
       </p>
+      {configured === true && (
+        <div className="ai-cta">
+          <p>{t('Ücretsiz hesapla günde 1 AI önerisi alırsın.')}</p>
+          <div className="ai-cta-actions">
+            <button type="button" onClick={() => onAuth('signup')}>
+              {t('Kayıt ol')}
+            </button>
+            <button type="button" className="secondary" onClick={() => onAuth('signin')}>
+              {t('Giriş yap')}
+            </button>
+          </div>
+        </div>
+      )}
     </section>
   );
 }
