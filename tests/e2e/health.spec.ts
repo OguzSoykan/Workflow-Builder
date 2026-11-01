@@ -13,6 +13,22 @@ test('built SPA reaches health on the same Worker origin', async ({ page, reques
   expect((await missing.json()).error.code).toBe('ROUTE_NOT_FOUND');
 });
 
+test('serves the browser tab icons declared in the page head', async ({ page, request }) => {
+  await page.goto('/');
+  const icons = await page
+    .locator('link[rel="icon"], link[rel="apple-touch-icon"]')
+    .evaluateAll((links) => links.map((link) => link.getAttribute('href')));
+  expect(icons).toEqual(['/favicon.svg', '/favicon-32.png', '/apple-touch-icon.png']);
+  const types = { svg: 'image/svg+xml', png: 'image/png' } as const;
+  for (const href of icons) {
+    const response = await request.get(href!);
+    expect(response.status()).toBe(200);
+    expect(response.headers()['content-type']).toContain(
+      types[href!.endsWith('.svg') ? 'svg' : 'png'],
+    );
+  }
+});
+
 for (const failure of ['network', 'invalid-json', 'invalid-body', 'http-error'] as const) {
   test(`shows ${failure} and recovers on retry`, async ({ page }) => {
     await page.route('**/api/health', async (route) => {
