@@ -1,6 +1,19 @@
 # Proje durumu
 
-**Son güncelleme:** 27 Ekim 2026 (Europe/Istanbul).
+**Son güncelleme:** 1 Kasım 2026 (Europe/Istanbul).
+
+## V2 (aktif)
+
+V1 canlıda: https://workflow.oguzsoykan.com (production, gerçek AI) ve https://workflow-staging.oguzsoykan.com
+(staging, mock AI). V2 [TECH_ROADMAP v2.1](docs/v2/TECH_ROADMAP.md) görev görev uygulanıyor;
+kayıt: [docs/v2/WORKLOG.md](docs/v2/WORKLOG.md).
+
+- **WB2-001 DONE:** [V1 baseline](docs/v2/BASELINE.md) — `7bfeaee` üzerinde 496 Vitest + 5 + 3, E2E 55/55, coverage
+  satır %98,52, build/secret taramaları PASS, staging/production smoke 6/6. Bilinen açıklar BASELINE §7'de
+  (P0: staging ve production aynı Firebase projesini paylaşıyor).
+- **Sıradaki:** WB2-002 — ortam izolasyonu.
+
+## V1 geçmişi
 
 **Faz 1 tamamlandı.** PR #5 (`feat(contract): complete Phase 1 workflow validation`)
 27 Ekim'de squash merge edildi: `e5ad0ea`. PR check ve merge sonrası main `quality`
